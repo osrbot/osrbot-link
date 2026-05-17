@@ -1,8 +1,8 @@
-# OSRBOT Share 🦞
+# OSRBOT Link 🦞
 
 > **跨平台键鼠共享器** — 一套键鼠控制多台电脑
 
-OSRBOT Share 是 [OSRBOT KVM 共享器](https://osrbot.com) 的跨平台客户端。插上共享器，局域网内任何设备打开浏览器即可远程操控被控机的键盘和鼠标。
+OSRBOT Link 是 [OSRBOT KVM 共享器](https://osrbot.com) 的跨平台客户端。插上共享器，局域网内任何设备打开浏览器即可远程操控被控机的键盘和鼠标。
 
 ## ✨ 特性
 
@@ -17,7 +17,7 @@ OSRBOT Share 是 [OSRBOT KVM 共享器](https://osrbot.com) 的跨平台客户�
 
 ```text
 ┌──────────────────────────────────────┐
-│   OSRBOT Share  v0.1                │
+│   OSRBOT Link  v0.1                │
 │                                      │
 │   🔌 连接 OSRBOT 设备                │
 │                                      │
@@ -42,8 +42,8 @@ OSRBOT Share 是 [OSRBOT KVM 共享器](https://osrbot.com) 的跨平台客户�
 
 ```bash
 # 下载后解压
-tar xzf osrbot-share-mac-arm64.tar.gz
-cd osrbot-share
+tar xzf osrbot-link-mac-arm64.tar.gz
+cd osrbot-link
 chmod +x osrbot
 ./osrbot
 ```
@@ -59,8 +59,8 @@ osrbot.exe
 **Linux:**
 
 ```bash
-tar xzf osrbot-share-linux-amd64.tar.gz
-cd osrbot-share
+tar xzf osrbot-link-linux-amd64.tar.gz
+cd osrbot-link
 chmod +x osrbot
 ./osrbot
 ```
@@ -88,8 +88,8 @@ chmod +x osrbot
 
 ```bash
 # 克隆仓库
-git clone https://github.com/osrbot/osrbot-share.git
-cd osrbot-share
+git clone https://github.com/osrbot/osrbot-link.git
+cd osrbot-link
 
 # 安装依赖
 go mod download
@@ -104,15 +104,15 @@ bash build.sh
 ### 构建 macOS .app
 
 ```bash
-go build -o dist/osrbot-share-mac-arm64 .
+go build -o dist/osrbot-link-mac-arm64 .
 bash build-mac-app.sh arm64
-# 输出: dist/OSRBOT Share.app
+# 输出: dist/OSRBOT Link.app
 ```
 
 ## 📦 项目结构
 
 ```
-osrbot-share/
+osrbot-link/
 ├── main.go              # Go 后端（HTTP + WebSocket + HID）
 ├── go.mod / go.sum      # Go 依赖
 ├── build.sh             # 多平台编译脚本

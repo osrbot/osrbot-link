@@ -7,7 +7,7 @@ ARCH="${1:-arm64}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 DIST="${DIR}/dist"
 BINARY="${DIST}/osrbot-mac-${ARCH}"
-APP_DIR="${DIST}/OSRBOT Console.app"
+APP_DIR="${DIST}/OSRBOT Link.app"
 
 if [ ! -f "$BINARY" ]; then
   echo "❌ ${BINARY} 不存在，先运行: go build -o dist/osrbot-mac-${ARCH} ." >&2
@@ -39,9 +39,9 @@ cat > "${APP_DIR}/Contents/Info.plist" <<PLIST
 <plist version="1.0">
 <dict>
   <key>CFBundleExecutable</key><string>osrbot</string>
-  <key>CFBundleIdentifier</key><string>com.osrbot.console</string>
-  <key>CFBundleName</key><string>OSRBOT Console</string>
-  <key>CFBundleDisplayName</key><string>OSRBOT Console</string>
+  <key>CFBundleIdentifier</key><string>com.osrbot.link</string>
+  <key>CFBundleName</key><string>OSRBOT Link</string>
+  <key>CFBundleDisplayName</key><string>OSRBOT Link</string>
   <key>CFBundleVersion</key><string>1.0.0</string>
   <key>CFBundleShortVersionString</key><string>1.0.0</string>
   <key>CFBundlePackageType</key><string>APPL</string>
@@ -91,7 +91,7 @@ if [ -f /tmp/osrbot-icon.png ]; then
 fi
 
 echo ""
-echo "✅ OSRBOT Console.app (${ARCH})"
+echo "✅ OSRBOT Link.app (${ARCH})"
 echo "   ${APP_DIR}"
 echo ""
-echo "启动: 双击 OSRBOT Console.app"
+echo "启动: 双击 OSRBOT Link.app"

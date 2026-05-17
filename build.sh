@@ -5,7 +5,7 @@ set -e
 APP="osrbot"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 DIST="${DIR}/dist"
-ZIP="osrbot-share"
+ZIP="osrbot-link"
 
 info()  { echo -e "\033[36m▶ $1\033[0m"; }
 ok()    { echo -e "\033[32m✓ $1\033[0m"; }
