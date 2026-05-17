@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OSRBOT Console</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <!-- 连接面板 -->
+  <div id="connect-panel" :class="{ hidden: connected }">
+    <div class="panel-card">
+      <div class="logo">
+        <img src="icon.svg" class="logo-svg"/>
+        <h1>OSRBOT</h1>
+        <span class="subtitle">Share v0.1 — 键鼠共享器</span>
+      </div>
+
+      <div class="step-section">
+        <div class="step-header">
+          <span class="step-badge">1</span>
+          <span>连接 OSRBOT 设备</span>
+        </div>
+        <div class="scan-anim" v-if="scanning">
+          <i class="fas fa-sync-alt fa-spin"></i>
+          <span>正在连接...</span>
+        </div>
+        <div class="step-actions" v-else>
+          <button class="btn btn-primary btn-block" @click="connectBackend">
+            <i class="fas fa-plug"></i> {{ backendConnected ? '重新连接' : '连接设备' }}
+          </button>
+        </div>
+        <div class="service-notice" v-if="!backendConnected && !scanning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <p>未检测到 OSRBOT 本地服务</p>
+            <p class="sub">请先运行 OSRBOT 程序，或确认设备已连接</p>
+          </div>
+        </div>
+        <div class="lan-info" v-if="lanURL">
+          <i class="fas fa-network-wired"></i>
+          <div>
+            <p>🌐 <strong>局域网控制</strong></p>
+            <p>同一 WiFi/局域网下的电脑、手机、平板，打开浏览器访问：</p>
+            <p class="lan-url">{{ lanURL }}</p>
+            <p class="hint">即可远程操控被控机键鼠，无需安装任何软件</p>
+            <p class="hint" style="margin-top:6px;color:var(--orange);">⚠️ 仅限可信网络中使用！请勿暴露到公网</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-bar" v-if="statusMsg">
+        <span :class="statusClass"><i class="fas" :class="statusIcon"></i> {{ statusMsg }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主界面 -->
+  <div id="main-ui" :class="{ hidden: !connected }">
+    <!-- 工具栏 -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <img src="icon.svg" class="tb-logo"/>
+        <span class="brand">OSRBOT</span>
+        <span class="device-status" :class="{ online: deviceOnline }">
+          <i class="fas" :class="deviceOnline ? 'fa-circle' : 'fa-circle-notch fa-spin'"></i>
+          {{ deviceOnline ? '已连接' : '连接中...' }}
+        </span>
+      </div>
+      <div class="toolbar-center">
+        <span class="indicator" :class="{ active: keyCaptureActive }">
+          <i class="fas fa-keyboard"></i> <i class="fas fa-mouse"></i>
+          {{ keyCaptureActive ? '已捕获' : '待激活' }}
+        </span>
+      </div>
+      <div class="toolbar-right">
+        <button class="tool-btn" @click="toggleDialog('switch')" title="USB 切换"><i class="fas fa-code-branch"></i></button>
+        <button class="tool-btn" @click="toggleDialog('paste')" title="远程粘贴"><i class="fas fa-clipboard"></i></button>
+        <button class="tool-btn" @click="toggleDialog('help')" title="帮助"><i class="fas fa-question-circle"></i></button>
+        <button class="tool-btn" @click="resetDevice" title="重置"><i class="fas fa-sync-alt"></i></button>
+        <button class="tool-btn" @click="disconnect" title="断开"><i class="fas fa-power-off"></i></button>
+      </div>
+    </div>
+
+    <!-- 控制区域 -->
+    <div class="control-area"
+         @mousemove="onMouseMove"
+         @mousedown="onMouseDown"
+         @mouseup="onMouseUp"
+         @wheel.prevent="onMouseWheel"
+         @contextmenu.prevent
+         tabindex="0">
+
+      <!-- 未激活时 -->
+      <div class="inactive-overlay" v-if="!keyCaptureActive">
+        <div class="inactive-card">
+          <i class="fas fa-hand-pointer"></i>
+          <h2>点击此处激活控制</h2>
+          <p>激活后鼠标将直接控制被控机</p>
+          <p class="hint">按 <kbd>Enter</kbd> 进入键盘捕获 · <kbd>Shift</kbd>+<kbd>Esc</kbd> 释放</p>
+          <button class="btn btn-primary" @click="activateCapture">
+            <i class="fas fa-play"></i> 激活
+          </button>
+        </div>
+      </div>
+
+      <!-- 已激活 -->
+      <div class="active-display" v-else>
+        <div class="kb-status">
+          <i class="fas fa-keyboard"></i>
+          <span>键盘已捕获</span>
+          <kbd>Shift</kbd>+<kbd>Esc</kbd> 退出
+        </div>
+        <div class="mouse-info">
+          鼠标位置: {{ mouseDisplayX }}, {{ mouseDisplayY }}
+        </div>
+      </div>
+
+      <!-- 局域网提示 -->
+      <div class="lan-banner" v-if="lanURL">
+        <i class="fas fa-network-wired"></i>
+        <span>局域网其他设备访问 <strong>{{ lanURL }}</strong> 可同时操控</span>
+      </div>
+    </div>
+
+    <!-- 底栏 -->
+    <div class="footer-bar">
+      <span><i class="fas fa-microchip"></i> OSRBOT KVM</span>
+      <span v-if="targetPort === 1"><i class="fas fa-laptop"></i> Host</span>
+      <span v-if="targetPort === 2"><i class="fas fa-microchip"></i> Target</span>
+    </div>
+  </div>
+
+  <!-- ── 对话框：USB 切换 ── -->
+  <div class="dialog-overlay" v-if="activeDialog === 'switch'" @click.self="activeDialog = ''">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="fas fa-code-branch"></i> USB 切换</h3>
+        <button class="dialog-close" @click="activeDialog = ''">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <div class="switch-options">
+          <button class="btn switch-btn" :class="{ active: targetPort === 1 }" @click="switchUsb(1)">
+            <i class="fas fa-laptop"></i>
+            <div><strong>上位机 (Host)</strong><p class="hint">USB 切换至操控电脑</p></div>
+          </button>
+          <button class="btn switch-btn" :class="{ active: targetPort === 2 }" @click="switchUsb(2)">
+            <i class="fas fa-microchip"></i>
+            <div><strong>被控机 (Target)</strong><p class="hint">USB 切换至被控电脑</p></div>
+          </button>
+          <button class="btn switch-btn danger" @click="switchUsb(0)">
+            <i class="fas fa-plug-slash"></i>
+            <div><strong>断开</strong><p class="hint">断开所有 USB 连接</p></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 对话框：粘贴 ── -->
+  <div class="dialog-overlay" v-if="activeDialog === 'paste'" @click.self="activeDialog = ''">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="fas fa-clipboard"></i> 远程粘贴</h3>
+        <button class="dialog-close" @click="activeDialog = ''">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <textarea v-model="pasteText" rows="5" placeholder="输入要发送的文本..."></textarea>
+        <div class="dialog-actions">
+          <button class="btn btn-primary" @click="doPaste" :disabled="!pasteText">
+            <i class="fas fa-paste"></i> 发送到被控机
+          </button>
+          <button class="btn" @click="activeDialog = ''">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 对话框：帮助 ── -->
+  <div class="dialog-overlay" v-if="activeDialog === 'help'" @click.self="activeDialog = ''">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="fas fa-question-circle"></i> 使用帮助</h3>
+        <button class="dialog-close" @click="activeDialog = ''">&times;</button>
+      </div>
+      <div class="dialog-body help-content">
+        <h4>🖱️ 鼠标</h4>
+        <ul>
+          <li>点击控制区域激活鼠标控制</li>
+          <li>移动鼠标控制被控端指针</li>
+          <li>左键/右键/滚轮直接传输</li>
+        </ul>
+        <h4>⌨️ 键盘</h4>
+        <ul>
+          <li>激活鼠标后按 <kbd>Enter</kbd> 进入键盘捕获</li>
+          <li><kbd>Shift</kbd>+<kbd>Esc</kbd> 退出键盘捕获</li>
+        </ul>
+        <h4>💡 提示</h4>
+          <ul>
+            <li>OSRBOT 共享器无需采集卡即可使用</li>
+            <li>设备直连到被控机 USB 接口</li>
+          </ul>
+          <h4>🌐 局域网控制</h4>
+          <ul>
+            <li>同一 WiFi/局域网下的其他设备，打开浏览器访问下方地址即可同时操控：</li>
+            <li v-if="lanURL" style="font-family:monospace;color:var(--accent);font-size:14px;user-select:all;">{{ lanURL }}</li>
+            <li>无需安装任何软件，打开浏览器即用</li>
+            <li>⚠️ 仅限可信局域网中使用，不要暴露到公网</li>
+          </ul>
+        <ul>
+          <li>OSRBOT 共享器无需采集卡即可使用</li>
+          <li>设备直连到被控机 USB 接口</li>
+        </ul>
+        <div class="dialog-actions">
+          <button class="btn" @click="activeDialog = ''">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

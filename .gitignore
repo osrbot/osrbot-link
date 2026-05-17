@@ -1,0 +1,21 @@
+# 编译产物
+osrbot
+osrbot.exe
+dist/
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Go
+vendor/
+
+# 依赖缓存
+package-lock.json
+node_modules/
