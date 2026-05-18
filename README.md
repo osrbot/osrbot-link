@@ -58,3 +58,24 @@ npm run hardware:hid:usb-switch-status
 ```
 
 Some firmware builds may not respond to the `0x6F` USB switch status query even though normal keyboard/mouse HID writes work.
+
+## Build macOS Test Client
+
+The current macOS test build is based on the Electron client direction and targets Apple Silicon first:
+
+```bash
+cd apps/desktop
+npm install
+npm run dist
+```
+
+Output:
+
+```text
+apps/desktop/dist/OSRBOT Link Lite-0.1.0-mac-test.0-arm64.dmg
+apps/desktop/dist/mac-arm64/OSRBOT Link Lite.app
+```
+
+Current limitation: this local test build skips the Rust native keyboard grabber because the current Mac does not have `cargo` installed. Basic app, capture-card video, HID discovery, and HID writes can be tested first; system-level hotkey blocking should be validated after installing the Rust toolchain and building `native/rdev-grabber`.
+
+This local build is ad-hoc signed only. For public macOS distribution, use an Apple Developer ID certificate and notarization.

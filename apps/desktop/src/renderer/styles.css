@@ -1,0 +1,1066 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(45, 45, 45, 0.3);
+    backdrop-filter: blur(8px);
+    padding: 8px 16px;
+    border-bottom: 1px solid #404040;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    pointer-events: auto;
+}
+
+.header.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.title-bar {
+    display: none; /* Hide custom title bar since we use system title bar */
+}
+
+.controls {
+    -webkit-app-region: no-drag;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.device-controls,
+.hid-controls,
+.quick-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.device-controls label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #ccc;
+    margin-left: 8px;
+}
+
+.device-controls label:first-child {
+    margin-left: 0;
+}
+
+.device-select {
+    min-width: 120px;
+    padding: 4px 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #3d3d3d;
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#videoDevices {
+    min-width: 200px;
+}
+
+#resolutionSelect {
+    min-width: 120px;
+}
+
+#fpsSelect {
+    min-width: 80px;
+}
+
+#hidDevices {
+    min-width: 150px;
+    max-width: 250px;
+}
+
+.device-select:focus {
+    outline: none;
+    border-color: #007acc;
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.3);
+}
+
+.btn {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #007acc;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #005a9e;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+.btn-test {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-test:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background-color: #e0a800;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    padding-top: 0;
+}
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.video-placeholder {
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+}
+
+.video-stream {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.info-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(8px);
+    border-left: 1px solid #404040;
+    padding: 16px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-label {
+    font-weight: 600;
+    color: #ccc;
+}
+
+.status-value {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-value[data-status="connected"] {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-value[data-status="disconnected"] {
+    background-color: #dc3545;
+    color: white;
+}
+
+.mouse-mode-controls,
+.scroll-controls {
+    padding-bottom: 24px;
+    border-bottom: 1px solid #404040;
+    margin-bottom: 24px;
+}
+
+.mouse-mode-controls h3,
+.scroll-controls h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+.mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #007acc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #28a745;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.mode-label {
+    font-weight: 600;
+    color: #ffffff;
+    min-width: 60px;
+}
+
+.mode-description {
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.test-controls h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+.test-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mouse-capture-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    z-index: 1000;
+    cursor: none;
+    pointer-events: none; /* Allow clicks to pass through overlay */
+}
+
+.mouse-capture-info {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: left;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    max-width: 280px;
+    pointer-events: auto; /* Re-enable pointer events just for the notification */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.mouse-capture-info kbd {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.info-panel.visible {
+    transform: translateX(0);
+}
+
+.sidebar-toggle {
+    background-color: #007acc;
+    color: white;
+    margin-left: auto;
+}
+
+.sidebar-toggle:hover:not(:disabled) {
+    background-color: #005a9e;
+}
+
+.sidebar-toggle.active {
+    background-color: #28a745;
+}
+
+.sidebar-toggle.active:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0 16px;
+    border-bottom: 1px solid #404040;
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.btn-fold {
+    background-color: #6c757d;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+.btn-fold:hover:not(:disabled) {
+    background-color: #5a6268;
+    transform: rotate(-5deg);
+}
+
+/* Virtual Keyboard Modal */
+.virtual-keyboard-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.virtual-keyboard-content {
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    padding: 16px;
+    width: fit-content;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid #404040;
+    position: relative;
+    resize: both;
+    min-width: 800px;
+}
+
+.virtual-keyboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    cursor: move;
+    padding: 8px;
+    background-color: #3d3d3d;
+    border-radius: 4px;
+    user-select: none;
+    gap: 16px;
+}
+
+.virtual-keyboard-header h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.header-left {
+    flex: 1;
+}
+
+.header-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Key Combination Display - now integrated in header */
+.combination-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.combination-label {
+    color: #ccc;
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.combination-keys {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 20px;
+    min-width: 100px;
+    padding: 4px 8px;
+    background-color: #2d2d2d;
+    border-radius: 4px;
+    border: 1px solid #555;
+    text-align: center;
+}
+
+.virtual-keyboard {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.keyboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.main-keyboard {
+    flex: 1;
+}
+
+.nav-keyboard {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: stretch;
+}
+
+.numpad-keyboard {
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.keyboard-row {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-bottom: 4px;
+}
+
+.key-btn {
+    padding: 8px 6px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #3d3d3d;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 36px;
+    height: 36px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.key-btn:hover {
+    background-color: #4d4d4d;
+    border-color: #666;
+}
+
+.key-btn:active {
+    background-color: #007acc;
+    border-color: #007acc;
+}
+
+.key-btn.active {
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+}
+
+/* Key Spacers */
+.key-spacer {
+    width: 12px;
+}
+
+.key-spacer-large {
+    width: 24px;
+}
+
+/* Function Keys */
+.function-key {
+    min-width: 39px;
+    width: 39px;
+}
+
+/* Special Key Sizes */
+.backspace-key {
+    min-width: 84px;
+}
+
+.tab-key {
+    min-width: 60px;
+}
+
+.backslash-key {
+    min-width: 60px;
+}
+
+.caps-key {
+    min-width: 70px;
+}
+
+.enter-key {
+    min-width: 90px;
+}
+
+.shift-key {
+    min-width: 100px;
+}
+
+.ctrl-key {
+    min-width: 50px;
+}
+
+.alt-key {
+    min-width: 48px;
+}
+
+.win-key {
+    min-width: 45px;
+}
+
+.space-key {
+    min-width: 240px;
+}
+
+.menu-key {
+    min-width: 50px;
+}
+
+/* Navigation Keys */
+.nav-key {
+    min-width: 38px;
+    background-color: #495057;
+}
+
+/* Modifier Keys */
+.modifier-key {
+    background-color: #6c757d;
+}
+
+.modifier-key:hover {
+    background-color: #5a6268;
+}
+
+.modifier-key.active {
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+}
+
+/* Navigation Column Specific Styles */
+.nav-keyboard .system-row {
+    margin-bottom: 12px;
+    justify-content: center;
+}
+
+.nav-keyboard .nav-row-1,
+.nav-keyboard .nav-row-2 {
+    margin-bottom: 4px;
+    justify-content: center;
+}
+
+.nav-keyboard .nav-key {
+    min-width: 39px;
+    width: 39px;
+}
+
+/* Arrow Keys Section */
+.arrow-keys-spacer {
+    height: 28px;
+}
+
+.arrow-keys-cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 12px;
+}
+
+.arrow-row-1 {
+    display: flex;
+    justify-content: center;
+}
+
+.arrow-row-2 {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+/* Numeric Keypad Section */
+.numpad-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: #3a3a3a;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    position: relative;
+}
+
+.numpad-row {
+    display: flex;
+    gap: 4px;
+    align-items: stretch;
+    position: relative;
+}
+
+.numpad-key {
+    min-width: 40px;
+    width: 40px;
+    height: 36px;
+    background-color: #4a4a4a;
+    border: 1px solid #666;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.numpad-key:hover {
+    background-color: #5a5a5a;
+}
+
+.numpad-zero {
+    width: 84px;
+}
+
+.numpad-tall {
+    position: absolute;
+    right: 0;
+    height: 76px;
+    width: 40px;
+}
+
+.numpad-enter {
+    position: absolute;
+    right: -44px;
+    height: 76px;
+    width: 40px;
+}
+
+.numpad-row-3 {
+    margin-right: 44px;
+}
+
+.numpad-row-4 {
+    margin-right: 44px;
+}
+
+/* Arrow Keys */
+.arrow-key {
+    min-width: 39px;
+    width: 39px;
+    height: 36px;
+    font-size: 14px;
+    background-color: #495057;
+    border: 1px solid #666;
+}
+
+.arrow-key:hover {
+    background-color: #5a6268;
+}
+
+/* Row-specific styling */
+.function-row {
+    margin-bottom: 8px;
+}
+
+.number-row, .top-letter-row, .middle-letter-row, .bottom-letter-row, .bottom-row {
+    margin-bottom: 4px;
+}
+
+/* Quick Controls Styling */
+.quick-controls .btn {
+    min-width: 50px;
+    height: 32px;
+}
+
+#sendCAD {
+    font-weight: bold;
+    font-size: 11px;
+    min-width: 90px;
+    height: 22px;
+}
+
+#virtualKeyboard {
+    font-size: 12px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+}
+
+#toggleFullscreen {
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header {
+        padding: 6px 12px;
+    }
+    
+    .device-controls {
+        gap: 8px;
+    }
+    
+    .device-select {
+        min-width: 100px;
+    }
+    
+    .info-panel {
+        width: 280px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .virtual-keyboard-content {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+        min-width: 350px;
+        width: 100%;
+    }
+    
+    .virtual-keyboard {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .nav-keyboard {
+        min-width: auto;
+    }
+    
+    .numpad-keyboard {
+        min-width: auto;
+    }
+    
+    .arrow-keys-spacer {
+        display: none;
+    }
+    
+    .keyboard-row {
+        gap: 2px;
+    }
+    
+    .key-btn {
+        padding: 4px 6px;
+        font-size: 10px;
+        min-width: 28px;
+        height: 28px;
+    }
+    
+    .shift-key {
+        min-width: 70px;
+    }
+    
+    .space-key {
+        min-width: 180px;
+    }
+    
+    .numpad-key {
+        min-width: 32px;
+        width: 32px;
+        height: 28px;
+    }
+    
+    .numpad-zero {
+        width: 68px;
+    }
+    
+    .arrow-key {
+        min-width: 28px;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .nav-keyboard .nav-key {
+        min-width: 32px;
+        width: 32px;
+    }
+}
+
+/* Quit Key Controls */
+.quit-key-controls {
+    margin-bottom: 20px;
+}
+
+.quit-key-setting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.quit-key-display {
+    font-family: 'Courier New', monospace;
+    background-color: #2d2d2d;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #404040;
+    color: #ffffff;
+    font-size: 14px;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Quit Key Modal */
+.quit-key-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quit-key-content {
+    background-color: #2d2d2d;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid #404040;
+    max-width: 500px;
+    width: 90%;
+    color: #ffffff;
+}
+
+.quit-key-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.quit-key-content p {
+    margin: 0 0 16px 0;
+    color: #cccccc;
+}
+
+.key-capture-area {
+    background-color: #1a1a1a;
+    border: 2px solid #404040;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s;
+}
+
+.key-capture-area.capturing {
+    border-color: #007acc;
+    background-color: #0d1117;
+}
+
+.captured-keys {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.quit-key-help {
+    background-color: #1a1a1a;
+    padding: 16px;
+    border-radius: 6px;
+    border-left: 4px solid #007acc;
+}
+
+.quit-key-help p {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.quit-key-help ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #cccccc;
+}
+
+.quit-key-help li {
+    margin-bottom: 4px;
+}
+
+.custom-resolution-controls {
+    margin-top: 20px;
+}
+
+.custom-res-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+#customResInput {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+.language-controls {
+    margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+    .quit-key-content {
+        padding: 16px;
+        max-width: 95%;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+    }
+}
