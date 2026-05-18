@@ -19,3 +19,13 @@ This branch starts from a technical direction review of:
 The recommended product direction is a modern Electron + native module client for the mainline app, with a separate legacy-compatible build strategy if Windows 7 must remain a hard requirement.
 
 See [docs/technical-direction.md](docs/technical-direction.md) for the detailed architecture notes and roadmap.
+
+## Local Validation
+
+Run the local test suite before pushing this branch:
+
+```bash
+npm test
+```
+
+The current test baseline covers the OSRBOT HID protocol encoder, including keyboard reports, absolute mouse reports, relative mouse reports, USB switch commands, and hidapi write-buffer rotation.

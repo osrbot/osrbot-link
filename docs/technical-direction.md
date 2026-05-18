@@ -226,6 +226,24 @@ Legacy Windows 7:
 5. Bring in the Rust native input module after refactoring and license review.
 6. Add GitHub Actions builds for Windows, macOS, and Linux.
 
+## Local-First Release Rule
+
+Do not push to GitHub until the local branch has passed its available validation suite.
+
+Current local command:
+
+```bash
+npm test
+```
+
+As the client grows, this gate should expand to include:
+
+- HID protocol unit tests.
+- Renderer/UI smoke tests.
+- Native input module tests per platform.
+- Hardware-in-the-loop HID tests when an OSRBOT device is connected.
+- Package build smoke tests for the target platform.
+
 ## Open Questions
 
 - Is Windows 7 a strict must-have, or can it be a separate legacy package?
