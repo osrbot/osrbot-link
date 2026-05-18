@@ -888,9 +888,7 @@ class KVMClient {
             try {
                 await window.electronAPI.exitFullscreen();
                 this.isFullscreen = false;
-                this.header.style.display = 'flex';
-                this.showHeader();
-                clearTimeout(this.hideTimer);
+                this.applyWorkspaceFullscreen(false);
             } catch (error) {
                 console.error('Error exiting fullscreen:', error);
             }
@@ -1773,23 +1771,7 @@ class KVMClient {
         }
         
         // Restore all header and video container styles
-        const videoContainer = document.querySelector('.video-container');
-        
-        // Restore header
-        this.header.style.display = '';
-        this.header.style.position = '';
-        this.header.style.top = '';
-        this.header.style.pointerEvents = '';
-        this.header.classList.remove('hidden');
-        this.headerVisible = true;
-        
-        // Restore video container to original state
-        videoContainer.style.position = '';
-        videoContainer.style.top = '';
-        videoContainer.style.left = '';
-        videoContainer.style.width = '';
-        videoContainer.style.height = '';
-        videoContainer.style.zIndex = '';
+        this.applyWorkspaceFullscreen(this.isFullscreen);
         
         console.log('macOS: Header and video container fully restored');
     }
@@ -2112,25 +2094,7 @@ class KVMClient {
             this.nativeInputAvailable = false;
         }
         
-        // Multiple approaches for macOS compatibility
-        const videoContainer = document.querySelector('.video-container');
-        
-        // 1. Hide header completely
-        this.header.style.display = 'none';
-        this.headerVisible = false;
-        
-        // 2. Remove header from document flow temporarily
-        this.header.style.position = 'absolute';
-        this.header.style.top = '-200px';
-        this.header.style.pointerEvents = 'none';
-        
-        // 3. Ensure video container fills entire viewport
-        videoContainer.style.position = 'fixed';
-        videoContainer.style.top = '0';
-        videoContainer.style.left = '0';
-        videoContainer.style.width = '100vw';
-        videoContainer.style.height = '100vh';
-        videoContainer.style.zIndex = '9999';
+        this.applyWorkspaceFullscreen(true);
         
         console.log('Header fully removed and video extended for macOS control');
         
@@ -2799,22 +2763,58 @@ class KVMClient {
             
             // Store fullscreen state for header auto-hide logic
             this.isFullscreen = isFullscreen;
-            
-            if (isFullscreen) {
-                // In fullscreen mode, enable auto-hide behavior
-                this.header.style.display = 'flex'; // Keep header available for auto-hide
-                this.showHeader(); // Show initially
-                clearTimeout(this.hideTimer);
-                this.hideTimer = setTimeout(() => this.hideHeader(), 2000); // Auto-hide after 2 seconds
-            } else {
-                // Not in fullscreen, always show header
-                this.header.style.display = 'flex';
-                this.showHeader();
-                clearTimeout(this.hideTimer); // No auto-hide when not fullscreen
-            }
+            this.applyWorkspaceFullscreen(isFullscreen || this.mouseCaptured);
         } catch (error) {
             console.error('Error toggling fullscreen:', error);
         }
+    }
+
+    applyWorkspaceFullscreen(enabled) {
+        const videoContainer = document.querySelector('.video-container');
+        const mainContent = document.querySelector('.main-content');
+
+        clearTimeout(this.hideTimer);
+
+        if (enabled) {
+            document.body.classList.add('workspace-fullscreen');
+            this.header.style.display = 'none';
+            this.header.style.position = 'absolute';
+            this.header.style.top = '-200px';
+            this.header.style.pointerEvents = 'none';
+            this.header.classList.add('hidden');
+            this.headerVisible = false;
+
+            if (mainContent) {
+                mainContent.style.marginLeft = '0';
+            }
+
+            videoContainer.style.position = 'fixed';
+            videoContainer.style.top = '0';
+            videoContainer.style.left = '0';
+            videoContainer.style.width = '100vw';
+            videoContainer.style.height = '100vh';
+            videoContainer.style.zIndex = '9999';
+            return;
+        }
+
+        document.body.classList.remove('workspace-fullscreen');
+        this.header.style.display = '';
+        this.header.style.position = '';
+        this.header.style.top = '';
+        this.header.style.pointerEvents = '';
+        this.header.classList.remove('hidden');
+        this.headerVisible = true;
+
+        if (mainContent) {
+            mainContent.style.marginLeft = '';
+        }
+
+        videoContainer.style.position = '';
+        videoContainer.style.top = '';
+        videoContainer.style.left = '';
+        videoContainer.style.width = '';
+        videoContainer.style.height = '';
+        videoContainer.style.zIndex = '';
     }
 
     // Quit Key Functions
