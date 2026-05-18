@@ -9,23 +9,29 @@ OSRBOT Link Lite 是 OSRBOT 键盘鼠标共享器 2.0 的跨平台客户端，�
 
 ## 当前版本
 
-- 客户端版本：`0.2.0-lite.0`
+- 客户端版本：`0.2.0`
 - 当前分支：`lite`
-- 构建产物会带版本号和构建时间戳，例如：
+- 构建产物会带版本号和构建日期，例如：
 
 ```text
-OSRBOT-Link-Lite-0.2.0-lite.0-20260518-194600-mac-arm64.dmg
-OSRBOT-Link-Lite-0.2.0-lite.0-20260518-194600-win-x64.exe
-OSRBOT-Link-Lite-0.2.0-lite.0-20260518-194600-linux-x64.AppImage
+OSRBOT-Link-Lite-v0.2-20260518-mac-arm64.dmg
+OSRBOT-Link-Lite-v0.2-20260518-win-x64.exe
+OSRBOT-Link-Lite-v0.2-20260518-ubuntu-x86_64.AppImage
 ```
 
 ## 平台支持
 
 主线新版客户端基于 Electron 28：
 
-- macOS：Apple Silicon 当前已可本地打包测试，Intel 后续补齐。
-- Windows：主线目标为 Windows 10/11 x64。
-- Linux：主线目标为 Ubuntu x64，优先提供 AppImage 和 deb。
+- macOS：生成 Apple Silicon arm64 和 Intel x64 两个 DMG。
+- Windows：主线目标为 Windows 10/11，默认生成 x64；ia32 需要在 Windows/CI 环境单独尝试 `npm run dist:win:ia32`。
+- Linux：主线目标为 Ubuntu x64，提供 AppImage 和 deb。
+
+当前验证状态：
+
+- macOS：已在真实硬件上验证采集卡、键鼠共享、截图/录屏等核心功能。
+- Windows：安装包可生成，但 HID 共享器识别仍需继续适配。共享器在 Windows 设备管理器中会出现在“人体学输入设备”下，后续需要参考 OSRBOT 旧 Windows 客户端的 HID 打开方式。
+- Linux：安装包可生成，但 HID/udev 权限和设备识别仍需在 Ubuntu 真机上继续验证。
 
 Windows 7 说明：
 

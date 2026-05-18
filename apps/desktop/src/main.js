@@ -363,7 +363,7 @@ ipcMain.handle('send-keyboard-event', async (event, data) => {
 ipcMain.handle('get-build-info', async () => {
   return {
     version: app.getVersion(),
-    buildTimestamp: process.env.BUILD_TIMESTAMP || null,
+    buildTimestamp: process.env.BUILD_DATE || process.env.BUILD_TIMESTAMP || null,
     platform: process.platform,
     arch: process.arch
   };

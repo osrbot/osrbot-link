@@ -1,6 +1,6 @@
 {
   "name": "osrbot-link-lite-desktop",
-  "version": "0.2.0-lite.0",
+  "version": "0.2.0",
   "description": "OSRBOT Link Lite desktop client",
   "main": "src/main.js",
   "author": {
@@ -14,10 +14,11 @@
     "build": "electron-builder",
     "build:rebuild": "electron-builder --config.buildDependenciesFromSource=true",
     "dist": "npm run dist:mac",
-    "dist:mac": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --mac --arm64 --publish=never",
-    "dist:win": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --win --x64 --publish=never",
-    "dist:linux": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --linux --x64 --publish=never",
-    "dist:all": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --mac --win --linux --x64 --arm64 --publish=never",
+    "dist:mac": "BUILD_DATE=$(date +%Y%m%d) electron-builder --mac --x64 --arm64 --publish=never",
+    "dist:win": "BUILD_DATE=$(date +%Y%m%d) electron-builder --win --x64 --publish=never",
+    "dist:win:ia32": "BUILD_DATE=$(date +%Y%m%d) electron-builder --win --ia32 --publish=never",
+    "dist:linux": "BUILD_DATE=$(date +%Y%m%d) electron-builder --linux --x64 --publish=never",
+    "dist:all": "BUILD_DATE=$(date +%Y%m%d) electron-builder --mac --win --linux --x64 --arm64 --publish=never",
     "dist:rebuild": "electron-builder --publish=never --config.buildDependenciesFromSource=true",
     "build:native": "cd native/rdev-grabber && npm install && npm run build"
   },
@@ -65,13 +66,14 @@
       }
     ],
     "mac": {
-      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-mac-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-mac-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
       "target": [
         {
           "target": "dmg",
           "arch": [
+            "x64",
             "arm64"
           ]
         }
@@ -99,21 +101,19 @@
       ]
     },
     "win": {
-      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-win-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-win-${arch}.${ext}",
       "icon": "icon.ico",
       "target": [
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         },
         {
           "target": "portable",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         }
       ]
@@ -123,10 +123,10 @@
       "allowToChangeInstallationDirectory": true
     },
     "portable": {
-      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-win-${arch}-portable.${ext}"
+      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-win-${arch}-portable.${ext}"
     },
     "linux": {
-      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-linux-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-ubuntu-${arch}.${ext}",
       "icon": "build/icons",
       "category": "Utility",
       "desktop": {
@@ -140,15 +140,13 @@
         {
           "target": "AppImage",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         },
         {
           "target": "deb",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         }
       ]
