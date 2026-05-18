@@ -379,6 +379,13 @@ ipcMain.handle('toggle-fullscreen', async () => {
   return false;
 });
 
+ipcMain.handle('exit-fullscreen', async () => {
+  if (mainWindow && mainWindow.isFullScreen()) {
+    mainWindow.setFullScreen(false);
+  }
+  return false;
+});
+
 // Handle control mode changes - starts/stops rdev keyboard grabbing
 ipcMain.handle('set-control-mode', async (_, inControlMode) => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -387,5 +394,8 @@ ipcMain.handle('set-control-mode', async (_, inControlMode) => {
   isInControlMode = inControlMode;
   updateGrabState();
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  return true;
+  return {
+    nativeInputAvailable: !!(rdevGrabber && typeof rdevGrabber.start_grab === 'function'),
+    nativeInputRunning: rdevRunning
+  };
 });

@@ -133,6 +133,7 @@ class KVMClient {
         this.mouseButtonsPressed = 0; // Track which buttons are pressed
         this.reverseScroll = false; // Natural scrolling direction
         this.isFullscreen = false; // Track fullscreen state
+        this.nativeInputAvailable = false;
         this.quitKeyCombo = { ctrlKey: true, altKey: true, shiftKey: false, metaKey: false, key: null, code: null }; // Default quit combination
 
         // Compatible KVM device list for auto-detection
@@ -595,9 +596,8 @@ class KVMClient {
             // Note: Mouse clicks when captured are handled by mousedown/mouseup events
         });
         
-        // NOTE: Keyboard events are now handled by rdev in main process when in control mode
-        // No need to listen to document keydown/keyup when rdev is active
-        // The setupGlobalKeyHandler() method handles rdev events for quit key detection
+        document.addEventListener('keydown', (e) => this.handleDocumentKey(e, true), true);
+        document.addEventListener('keyup', (e) => this.handleDocumentKey(e, false), true);
         
         // Handle pointer lock changes
         document.addEventListener('pointerlockchange', () => {
@@ -775,6 +775,83 @@ class KVMClient {
                     }
                 }
             });
+        }
+    }
+
+    async handleDocumentKey(event, isDown) {
+        if (event.defaultPrevented || this.quitKeyModal?.style.display === 'flex') {
+            return;
+        }
+
+        if (event.key === 'Escape') {
+            if (this.mouseCaptured || this.isFullscreen) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (isDown && !event.repeat) {
+                    await this.exitControlAndFullscreen();
+                }
+            }
+            return;
+        }
+
+        if (!this.mouseCaptured || !this.hidConnected || this.nativeInputAvailable) {
+            return;
+        }
+
+        if (this.isEditableTarget(event.target)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (isDown && event.repeat) {
+            return;
+        }
+
+        try {
+            await window.electronAPI.sendKeyboardEvent({
+                type: isDown ? 'keydown' : 'keyup',
+                key: event.key,
+                code: event.code,
+                metaKey: event.metaKey,
+                ctrlKey: event.ctrlKey,
+                altKey: event.altKey,
+                shiftKey: event.shiftKey
+            });
+        } catch (error) {
+            console.error('Error sending DOM keyboard event:', error);
+        }
+    }
+
+    isEditableTarget(target) {
+        if (!target) {
+            return false;
+        }
+
+        const tagName = target.tagName;
+        return target.isContentEditable ||
+            tagName === 'INPUT' ||
+            tagName === 'TEXTAREA' ||
+            tagName === 'SELECT';
+    }
+
+    async exitControlAndFullscreen() {
+        if (this.mouseCaptured) {
+            await this.releaseMouseCaptureWithKeyReset();
+        }
+
+        if (this.isFullscreen) {
+            try {
+                await window.electronAPI.exitFullscreen();
+                this.isFullscreen = false;
+                this.header.style.display = 'flex';
+                this.showHeader();
+                clearTimeout(this.hideTimer);
+            } catch (error) {
+                console.error('Error exiting fullscreen:', error);
+            }
         }
     }
 
@@ -1641,8 +1718,10 @@ class KVMClient {
         // Unregister ESC key when exiting control mode
         try {
             await window.electronAPI.setControlMode(false);
+            this.nativeInputAvailable = false;
         } catch (error) {
             console.error('Error unsetting control mode:', error);
+            this.nativeInputAvailable = false;
         }
         
         // Hide control mode notification
@@ -1973,9 +2052,11 @@ class KVMClient {
         
         // Register ESC key for control mode
         try {
-            await window.electronAPI.setControlMode(true);
+            const controlMode = await window.electronAPI.setControlMode(true);
+            this.nativeInputAvailable = !!controlMode?.nativeInputAvailable;
         } catch (error) {
             console.error('Error setting control mode:', error);
+            this.nativeInputAvailable = false;
         }
         
         // Multiple approaches for macOS compatibility

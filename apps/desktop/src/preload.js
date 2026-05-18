@@ -13,5 +13,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // Window controls
   toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen'),
+  exitFullscreen: () => ipcRenderer.invoke('exit-fullscreen'),
   setControlMode: (inControlMode) => ipcRenderer.invoke('set-control-mode', inControlMode)
 });
