@@ -17,5 +17,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setControlMode: (inControlMode) => ipcRenderer.invoke('set-control-mode', inControlMode),
 
   // Local capture files
-  saveCaptureFile: (payload) => ipcRenderer.invoke('save-capture-file', payload)
+  saveCaptureFile: (payload) => ipcRenderer.invoke('save-capture-file', payload),
+  getBuildInfo: () => ipcRenderer.invoke('get-build-info')
 });

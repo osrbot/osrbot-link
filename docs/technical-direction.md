@@ -4,9 +4,9 @@ Date: 2026-05-18
 
 ## Inputs Reviewed
 
-- OSRBOT Python/PySide client: `/Users/winter/Downloads/osrbot_client-main.zip`
-- Third-party Electron KVM client: `/Users/winter/Downloads/Electron-KVM-rdev-main.zip`
-- Hardware manual: `/Users/winter/Downloads/键盘鼠标共享器2.0用户手册-中文.pdf`
+- OSRBOT Python/PySide client archive.
+- Third-party Electron KVM client archive.
+- OSRBOT keyboard/mouse sharing hardware user manual.
 
 ## Hardware/Product Facts
 

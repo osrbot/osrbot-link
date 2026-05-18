@@ -1,6 +1,6 @@
 {
   "name": "osrbot-link-lite-desktop",
-  "version": "0.1.0-mac-test.0",
+  "version": "0.2.0-lite.0",
   "description": "OSRBOT Link Lite desktop client",
   "main": "src/main.js",
   "author": {
@@ -13,7 +13,11 @@
     "dev": "electron . --dev",
     "build": "electron-builder",
     "build:rebuild": "electron-builder --config.buildDependenciesFromSource=true",
-    "dist": "electron-builder --mac --arm64 --publish=never",
+    "dist": "npm run dist:mac",
+    "dist:mac": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --mac --arm64 --publish=never",
+    "dist:win": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --win --x64 --publish=never",
+    "dist:linux": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --linux --x64 --publish=never",
+    "dist:all": "BUILD_TIMESTAMP=$(date +%Y%m%d-%H%M%S) electron-builder --mac --win --linux --x64 --arm64 --publish=never",
     "dist:rebuild": "electron-builder --publish=never --config.buildDependenciesFromSource=true",
     "build:native": "cd native/rdev-grabber && npm install && npm run build"
   },
@@ -61,6 +65,7 @@
       }
     ],
     "mac": {
+      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-mac-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
       "target": [
@@ -94,6 +99,7 @@
       ]
     },
     "win": {
+      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-win-${arch}.${ext}",
       "icon": "icon.ico",
       "target": [
         {
@@ -117,9 +123,10 @@
       "allowToChangeInstallationDirectory": true
     },
     "portable": {
-      "artifactName": "${productName}-${version}-portable.${ext}"
+      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-win-${arch}-portable.${ext}"
     },
     "linux": {
+      "artifactName": "OSRBOT-Link-Lite-${version}-${env.BUILD_TIMESTAMP}-linux-${arch}.${ext}",
       "icon": "build/icons",
       "category": "Utility",
       "desktop": {

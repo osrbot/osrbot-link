@@ -7,7 +7,6 @@ class KVMClient {
                 deviceLabel: 'Device:',
                 resolutionLabel: 'Resolution:',
                 fpsLabel: 'FPS:',
-                productSubtitle: 'Hardware console',
                 languageTitle: 'Language',
                 languageHint: 'Auto-detected by system language; you can override here.',
                 mouseModeTitle: 'Mouse Mode',
@@ -96,7 +95,6 @@ class KVMClient {
                 deviceLabel: '设备：',
                 resolutionLabel: '分辨率：',
                 fpsLabel: 'FPS：',
-                productSubtitle: '硬件控制台',
                 languageTitle: '语言',
                 languageHint: '默认根据系统语言，可在此手动切换。',
                 mouseModeTitle: '鼠标模式',
@@ -512,6 +510,7 @@ class KVMClient {
         this.language = lang;
         localStorage.setItem('kvmLanguage', lang);
         this.applyTranslations();
+        this.loadBuildInfo();
         this.updateMouseModeDisplay();
         this.updateScrollDirectionDisplay();
     }
@@ -528,7 +527,6 @@ class KVMClient {
     applyTranslations() {
         const dict = this.I18N[this.language] || this.I18N.en;
         const mapIds = [
-            { id: 'productSubtitle', key: 'productSubtitle' },
             { id: 'sectionVideo', key: 'sectionVideo' },
             { id: 'sectionInput', key: 'sectionInput' },
             { id: 'sectionActions', key: 'sectionActions' },
@@ -602,8 +600,24 @@ class KVMClient {
             this.languageSelect.value = this.language;
         }
         this.applyTranslations();
+        this.loadBuildInfo();
         
         console.log('Applied loaded settings to UI');
+    }
+
+    async loadBuildInfo() {
+        const el = document.getElementById('buildInfo');
+        if (!el || !window.electronAPI?.getBuildInfo) return;
+
+        try {
+            const info = await window.electronAPI.getBuildInfo();
+            const parts = [`v${info.version}`];
+            if (info.buildTimestamp) parts.push(info.buildTimestamp);
+            if (info.platform && info.arch) parts.push(`${info.platform}-${info.arch}`);
+            el.textContent = parts.join(' | ');
+        } catch (error) {
+            console.warn('Failed to load build info:', error);
+        }
     }
 
     bindEvents() {

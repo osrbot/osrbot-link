@@ -3,3 +3,9 @@ node_modules/
 dist/
 coverage/
 *.log
+*.pem
+*.p12
+*.key
+*.env
+.env*
+apps/desktop/dist/

@@ -360,6 +360,15 @@ ipcMain.handle('send-keyboard-event', async (event, data) => {
   return hidManager.sendKeyboardEvent(data);
 });
 
+ipcMain.handle('get-build-info', async () => {
+  return {
+    version: app.getVersion(),
+    buildTimestamp: process.env.BUILD_TIMESTAMP || null,
+    platform: process.platform,
+    arch: process.arch
+  };
+});
+
 ipcMain.handle('save-capture-file', async (_event, payload) => {
   try {
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {

@@ -2,7 +2,7 @@
 
 ## Electron-KVM-rdev Client Baseline
 
-The initial macOS desktop test client under `apps/desktop` is based on the reviewed `Electron-KVM-rdev-main.zip` client source provided for this project evaluation.
+The initial macOS desktop test client under `apps/desktop` was informed by a reviewed third-party Electron KVM client source archive provided for this project evaluation.
 
 The upstream package metadata declares:
 

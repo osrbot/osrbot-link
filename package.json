@@ -1,6 +1,6 @@
 {
   "name": "osrbot-link-lite",
-  "version": "0.1.0",
+  "version": "0.2.0-lite.0",
   "private": true,
   "description": "Cross-platform OSRBOT keyboard and mouse sharing client.",
   "type": "module",
