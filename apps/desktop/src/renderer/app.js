@@ -7,6 +7,7 @@ class KVMClient {
                 deviceLabel: 'Device:',
                 resolutionLabel: 'Resolution:',
                 fpsLabel: 'FPS:',
+                productSubtitle: 'Hardware console',
                 languageTitle: 'Language',
                 languageHint: 'Auto-detected by system language; you can override here.',
                 mouseModeTitle: 'Mouse Mode',
@@ -22,9 +23,6 @@ class KVMClient {
                 quitKeyTitle: 'Exit Control Mode',
                 quitKeyDesc: 'Press Esc to release control and leave fullscreen.',
                 changeBtn: 'Fixed',
-                testTitle: 'Test Controls',
-                testMouse: 'Test Mouse Click',
-                testKeyboard: 'Test Keyboard (A)',
                 customResTitle: 'Custom Resolutions',
                 customResDesc: 'Append to the resolution menu (no guarantee device supports them).',
                 addBtn: 'Add',
@@ -36,7 +34,6 @@ class KVMClient {
                 btnConnectHID: 'Connect HID',
                 btnDisconnectHID: 'Disconnect HID',
                 btnCtrlAltDel: 'Ctrl+Alt+Del',
-                btnVirtualKeyboard: 'Virtual Keyboard',
                 btnFullscreen: 'Fullscreen',
                 videoDisconnected: 'Disconnected',
                 videoConnected: 'Connected',
@@ -44,8 +41,38 @@ class KVMClient {
                 hidConnected: 'Connected',
                 overlayActive: 'Control Mode Active',
                 overlayHint: 'Press <kbd>Esc</kbd> to exit',
+                forwardingActive: 'Keyboard and mouse forwarding active',
                 noValidRes: 'No valid resolutions found. Use formats like 1920x1200 or 2560*1440, separated by commas.',
                 noWebRTC: 'Browser does not support WebRTC',
+                sectionVideo: 'Video Input',
+                sectionInput: 'Keyboard / Mouse Share',
+                sectionActions: 'Actions',
+                btnScreenshot: 'Screenshot',
+                btnRecord: 'Record',
+                btnRecordStop: 'Stop Rec',
+                btnGif: 'GIF',
+                btnSwitchDisplay: 'Switch Display',
+                captureNeedVideo: 'Start video before taking a screenshot.',
+                recordNeedVideo: 'Start video before recording.',
+                gifNeedVideo: 'Start video before recording GIF.',
+                screenshotSaved: 'Screenshot saved',
+                screenshotFailed: 'Screenshot failed',
+                recordingStarted: 'Recording started.',
+                recordingSaved: 'Recording saved',
+                recordingFailed: 'Recording failed',
+                gifRecordingStarted: 'GIF recording started.',
+                gifSaved: 'GIF saved',
+                gifFailed: 'GIF failed',
+                pngFilter: 'PNG Image',
+                webmFilter: 'Compressed WebM Video',
+                gifFilter: 'GIF Image',
+                noRecordingData: 'Recording stopped with no video data.',
+                noGifData: 'GIF stopped with no frames.',
+                switchDisplaySent: 'Sent display switch shortcut (Win+P).',
+                selectVideoOption: 'Select Video Device',
+                selectResolutionOption: 'Select Resolution',
+                selectHIDOption: 'Select HID Device',
+                unsupportedRecording: 'Recording is not supported by this runtime.',
                 cameraPermission: 'Camera permission is required for video streaming',
                 noVideoDevices: 'No video devices detected',
                 selectVideoDevice: 'Please select a video device',
@@ -69,6 +96,7 @@ class KVMClient {
                 deviceLabel: '设备：',
                 resolutionLabel: '分辨率：',
                 fpsLabel: 'FPS：',
+                productSubtitle: '硬件控制台',
                 languageTitle: '语言',
                 languageHint: '默认根据系统语言，可在此手动切换。',
                 mouseModeTitle: '鼠标模式',
@@ -84,9 +112,6 @@ class KVMClient {
                 quitKeyTitle: '退出控制模式',
                 quitKeyDesc: '按 Esc 释放控制并退出全屏。',
                 changeBtn: '固定',
-                testTitle: '测试',
-                testMouse: '测试鼠标点击',
-                testKeyboard: '测试键盘 (A)',
                 customResTitle: '自定义分辨率',
                 customResDesc: '添加到分辨率列表（设备是否支持不保证）。',
                 addBtn: '添加',
@@ -98,7 +123,6 @@ class KVMClient {
                 btnConnectHID: '连接 HID',
                 btnDisconnectHID: '断开 HID',
                 btnCtrlAltDel: 'Ctrl+Alt+Del',
-                btnVirtualKeyboard: '虚拟键盘',
                 btnFullscreen: '全屏',
                 videoDisconnected: '未连接',
                 videoConnected: '已连接',
@@ -106,8 +130,38 @@ class KVMClient {
                 hidConnected: '已连接',
                 overlayActive: '控制模式已开启',
                 overlayHint: '按 <kbd>Esc</kbd> 退出',
+                forwardingActive: '键盘和鼠标正在转发',
                 noValidRes: '未找到有效分辨率。格式示例：1920x1200 或 2560*1440，使用逗号分隔。',
                 noWebRTC: '浏览器不支持 WebRTC',
+                sectionVideo: '视频采集',
+                sectionInput: '键鼠共享',
+                sectionActions: '快捷操作',
+                btnScreenshot: '截图',
+                btnRecord: '录屏',
+                btnRecordStop: '停止录屏',
+                btnGif: '录制 GIF',
+                btnSwitchDisplay: '切换显示',
+                captureNeedVideo: '请先启动视频采集后再截图。',
+                recordNeedVideo: '请先启动视频采集后再录屏。',
+                gifNeedVideo: '请先启动视频采集后再录制 GIF。',
+                screenshotSaved: '截图已保存',
+                screenshotFailed: '截图失败',
+                recordingStarted: '开始录屏。',
+                recordingSaved: '录屏已保存',
+                recordingFailed: '录屏失败',
+                gifRecordingStarted: '开始录制 GIF。',
+                gifSaved: 'GIF 已保存',
+                gifFailed: 'GIF 录制失败',
+                pngFilter: 'PNG 图片',
+                webmFilter: '压缩 WebM 视频',
+                gifFilter: 'GIF 动图',
+                noRecordingData: '录屏停止，但没有生成视频数据。',
+                noGifData: 'GIF 停止，但没有生成帧数据。',
+                switchDisplaySent: '已发送切换显示快捷键（Win+P）。',
+                selectVideoOption: '选择视频设备',
+                selectResolutionOption: '选择分辨率',
+                selectHIDOption: '选择 HID 设备',
+                unsupportedRecording: '当前运行环境不支持录屏。',
                 cameraPermission: '需要相机权限才能开启视频流',
                 noVideoDevices: '未检测到视频设备',
                 selectVideoDevice: '请选择视频设备',
@@ -140,10 +194,12 @@ class KVMClient {
         this.reverseScroll = false; // Natural scrolling direction
         this.isFullscreen = false; // Track fullscreen state
         this.nativeInputAvailable = false;
-        this.pointerLockPausedForVirtualKeyboard = false;
         this.mediaRecorder = null;
         this.recordedChunks = [];
         this.isRecording = false;
+        this.isRecordingGif = false;
+        this.gifFrames = [];
+        this.gifTimer = null;
         this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' }; // Esc exits control mode
 
         // Compatible KVM device list for auto-detection
@@ -166,7 +222,12 @@ class KVMClient {
 
         // Common resolutions (from HttpVideo.html)
         this.COMMON_RESOLUTIONS = [
-            [1920, 1080], [1280, 720], [720, 480], [640, 480]
+            [3840, 2160], [2560, 1440], [2560, 1080], [2048, 1536],
+            [1920, 1200], [1920, 1080], [1680, 1050], [1600, 1200],
+            [1600, 900], [1440, 1080], [1440, 900], [1366, 768],
+            [1360, 768], [1280, 1024], [1280, 960], [1280, 800],
+            [1280, 720], [1024, 768], [800, 600], [720, 576],
+            [720, 480], [640, 480]
         ];
 
         this.initializeElements();
@@ -213,32 +274,23 @@ class KVMClient {
         this.stopVideoBtn = document.getElementById('stopVideo');
         this.connectHIDBtn = document.getElementById('connectHID');
         this.disconnectHIDBtn = document.getElementById('disconnectHID');
-        this.testMouseBtn = document.getElementById('testMouse');
-        this.testKeyboardBtn = document.getElementById('testKeyboard');
         this.customResInput = document.getElementById('customResInput');
         this.addCustomResBtn = document.getElementById('addCustomRes');
         
         // Quick control buttons
         this.sendCADBtn = document.getElementById('sendCAD');
-        this.virtualKeyboardBtn = document.getElementById('virtualKeyboard');
+        this.switchDisplayBtn = document.getElementById('switchDisplay');
         this.captureScreenshotBtn = document.getElementById('captureScreenshot');
         this.toggleRecordingBtn = document.getElementById('toggleRecording');
+        this.recordGifBtn = document.getElementById('recordGif');
         this.toggleFullscreenBtn = document.getElementById('toggleFullscreen');
         this.fullscreenTools = document.getElementById('fullscreenTools');
-        this.fullscreenKeyboardBtn = document.getElementById('fullscreenKeyboard');
+        this.fullscreenSwitchDisplayBtn = document.getElementById('fullscreenSwitchDisplay');
         this.fullscreenScreenshotBtn = document.getElementById('fullscreenScreenshot');
         this.fullscreenRecordBtn = document.getElementById('fullscreenRecord');
+        this.fullscreenGifBtn = document.getElementById('fullscreenGif');
         this.fullscreenExitBtn = document.getElementById('fullscreenExit');
         this.languageSelect = document.getElementById('languageSelect');
-        
-        // Virtual keyboard elements
-        this.virtualKeyboardModal = document.getElementById('virtualKeyboardModal');
-        this.virtualKeyboardContent = document.getElementById('virtualKeyboardContent');
-        this.virtualKeyboardHeader = document.getElementById('virtualKeyboardHeader');
-        this.closeVirtualKeyboardBtn = document.getElementById('closeVirtualKeyboard');
-        this.combinationKeys = document.getElementById('combinationKeys');
-        this.sendCombinationBtn = document.getElementById('sendCombination');
-        this.clearCombinationBtn = document.getElementById('clearCombination');
         
         // Mouse mode controls
         this.mouseModeToggle = document.getElementById('mouseModeToggle');
@@ -476,13 +528,23 @@ class KVMClient {
     applyTranslations() {
         const dict = this.I18N[this.language] || this.I18N.en;
         const mapIds = [
+            { id: 'productSubtitle', key: 'productSubtitle' },
+            { id: 'sectionVideo', key: 'sectionVideo' },
+            { id: 'sectionInput', key: 'sectionInput' },
+            { id: 'sectionActions', key: 'sectionActions' },
             { id: 'startVideo', key: 'btnStartVideo' },
             { id: 'stopVideo', key: 'btnStopVideo' },
             { id: 'refreshDevices', key: 'btnRefresh' },
             { id: 'connectHID', key: 'btnConnectHID' },
             { id: 'disconnectHID', key: 'btnDisconnectHID' },
             { id: 'sendCAD', key: 'btnCtrlAltDel' },
-            { id: 'virtualKeyboard', key: 'btnVirtualKeyboard' },
+            { id: 'switchDisplay', key: 'btnSwitchDisplay' },
+            { id: 'captureScreenshot', key: 'btnScreenshot' },
+            { id: 'toggleRecording', key: this.isRecording ? 'btnRecordStop' : 'btnRecord' },
+            { id: 'recordGif', key: this.isRecordingGif ? 'btnRecordStop' : 'btnGif' },
+            { id: 'fullscreenSwitchDisplay', key: 'btnSwitchDisplay' },
+            { id: 'fullscreenScreenshot', key: 'btnScreenshot' },
+            { id: 'fullscreenGif', key: this.isRecordingGif ? 'btnRecordStop' : 'btnGif' },
             { id: 'toggleFullscreen', key: 'btnFullscreen' },
             { id: 'sidebarToggle', key: 'settings' },
             { id: 'mouseModeDescription', key: this.mouseMode === 'absolute' ? 'mouseModeDescAbs' : 'mouseModeDescRel' },
@@ -508,12 +570,6 @@ class KVMClient {
                 }
             }
         });
-
-        // Overlay text
-        const overlayTitle = document.querySelector('#mouseCaptureOverlay [data-i18n="controlModeTitle"]');
-        if (overlayTitle) overlayTitle.textContent = dict.overlayActive;
-        const overlayHint = document.querySelector('#mouseCaptureOverlay [data-i18n="controlModeHint"]');
-        if (overlayHint) overlayHint.innerHTML = dict.overlayHint;
 
         // Custom res placeholder
         if (this.customResInput) {
@@ -583,9 +639,6 @@ class KVMClient {
         // Quit key controls
         this.changeQuitKeyBtn.addEventListener('click', () => this.showQuitKeyModal());
         
-        // Test controls
-        this.testMouseBtn.addEventListener('click', () => this.testMouse());
-        this.testKeyboardBtn.addEventListener('click', () => this.testKeyboard());
         this.addCustomResBtn.addEventListener('click', () => this.addCustomResolutionsFromInput());
 
         if (this.languageSelect) {
@@ -594,13 +647,14 @@ class KVMClient {
         
         // Quick control buttons
         this.sendCADBtn.addEventListener('click', () => this.sendCtrlAltDelete());
-        this.virtualKeyboardBtn.addEventListener('click', () => this.showVirtualKeyboard());
+        this.switchDisplayBtn.addEventListener('click', () => this.switchRemoteDisplay());
         this.captureScreenshotBtn.addEventListener('click', () => this.captureScreenshot());
         this.toggleRecordingBtn.addEventListener('click', () => this.toggleRecording());
+        this.recordGifBtn.addEventListener('click', () => this.toggleGifRecording());
         this.toggleFullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
-        this.fullscreenKeyboardBtn.addEventListener('click', (e) => {
+        this.fullscreenSwitchDisplayBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.showVirtualKeyboard();
+            this.switchRemoteDisplay();
         });
         this.fullscreenScreenshotBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -610,13 +664,14 @@ class KVMClient {
             e.stopPropagation();
             this.toggleRecording();
         });
+        this.fullscreenGifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleGifRecording();
+        });
         this.fullscreenExitBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.exitControlAndFullscreen();
         });
-        this.closeVirtualKeyboardBtn.addEventListener('click', () => this.hideVirtualKeyboard());
-        this.sendCombinationBtn.addEventListener('click', () => this.sendCurrentCombination());
-        this.clearCombinationBtn.addEventListener('click', () => this.clearCombination());
         
         // Quit key modal event listeners
         this.confirmQuitKeyBtn.addEventListener('click', () => this.confirmQuitKeyChange());
@@ -646,9 +701,6 @@ class KVMClient {
         // Handle pointer lock changes
         document.addEventListener('pointerlockchange', () => {
             console.log('Pointer lock changed:', document.pointerLockElement);
-            if (this.pointerLockPausedForVirtualKeyboard) {
-                return;
-            }
             if (!document.pointerLockElement && this.mouseCaptured && this.mouseMode === 'relative') {
                 // Pointer lock was lost, release capture with key reset
                 this.releaseMouseCaptureWithKeyReset();
@@ -791,9 +843,6 @@ class KVMClient {
                 this.handleDeviceChange();
             });
         }
-        
-        // Virtual keyboard event listeners
-        this.setupVirtualKeyboard();
     }
 
 
@@ -1021,7 +1070,7 @@ class KVMClient {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const videoDevices = devices.filter(device => device.kind === 'videoinput');
             
-            this.videoDevicesSelect.innerHTML = '<option value="">Select Video Device</option>';
+            this.videoDevicesSelect.innerHTML = `<option value="">${this.t('selectVideoOption')}</option>`;
             
             videoDevices.forEach((device, index) => {
                 const option = document.createElement('option');
@@ -1145,7 +1194,7 @@ class KVMClient {
     }
 
     async buildResolutionFPS() {
-        this.resolutionSelect.innerHTML = '<option value="">Select Resolution</option>';
+        this.resolutionSelect.innerHTML = `<option value="">${this.t('selectResolutionOption')}</option>`;
         this.fpsSelect.innerHTML = '<option value="">Select FPS</option>';
         const deviceId = this.videoDevicesSelect.value;
         if (!deviceId) return;
@@ -1421,7 +1470,7 @@ class KVMClient {
                 // Inform user when the device negotiated a different resolution
                 if (requestedResolution && requestedResolution !== actualResolution) {
                     this.showAutoConnectNotification(
-                        `Requested ${requestedResolution}, device provided ${actualResolution}. Using ${actualResolution}.`,
+                        this.t('negotiatedResolution', { from: requestedResolution, to: actualResolution }),
                         'error'
                     );
                 }
@@ -1490,6 +1539,9 @@ class KVMClient {
         if (this.isRecording) {
             this.stopVideoRecording();
         }
+        if (this.isRecordingGif) {
+            await this.stopGifRecording();
+        }
 
         if (this.currentStream) {
             this.currentStream.getTracks().forEach(track => track.stop());
@@ -1512,7 +1564,7 @@ class KVMClient {
 
     async captureScreenshot() {
         if (!this.videoConnected || !this.videoElement.videoWidth || !this.videoElement.videoHeight) {
-            alert('Start video before taking a screenshot.');
+            alert(this.t('captureNeedVideo'));
             return;
         }
 
@@ -1527,19 +1579,19 @@ class KVMClient {
             if (!blob) throw new Error('Could not encode PNG');
 
             const result = await window.electronAPI.saveCaptureFile({
-                defaultName: `osrbot-screenshot-${this.getCaptureTimestamp()}.png`,
-                filters: [{ name: 'PNG Image', extensions: ['png'] }],
+                defaultName: `osrbot-${this.language === 'zh' ? '截图' : 'screenshot'}-${this.getCaptureTimestamp()}.png`,
+                filters: [{ name: this.t('pngFilter'), extensions: ['png'] }],
                 data: await blob.arrayBuffer()
             });
 
             if (result?.success) {
-                this.showAutoConnectNotification(`Screenshot saved: ${result.filePath}`, 'success');
+                this.showAutoConnectNotification(`${this.t('screenshotSaved')}: ${result.filePath}`, 'success');
             } else if (!result?.canceled) {
-                this.showAutoConnectNotification(`Screenshot failed: ${result?.error || 'unknown error'}`, 'error');
+                this.showAutoConnectNotification(`${this.t('screenshotFailed')}: ${result?.error || 'unknown error'}`, 'error');
             }
         } catch (error) {
             console.error('Screenshot failed:', error);
-            this.showAutoConnectNotification(`Screenshot failed: ${error.message}`, 'error');
+            this.showAutoConnectNotification(`${this.t('screenshotFailed')}: ${error.message}`, 'error');
         }
     }
 
@@ -1553,13 +1605,13 @@ class KVMClient {
 
     startVideoRecording() {
         if (!this.videoConnected || !this.videoElement.srcObject) {
-            alert('Start video before recording.');
+            alert(this.t('recordNeedVideo'));
             return;
         }
 
         const streamFactory = this.videoElement.captureStream || this.videoElement.mozCaptureStream;
         if (!streamFactory) {
-            this.showAutoConnectNotification('Recording is not supported by this runtime.', 'error');
+            this.showAutoConnectNotification(this.t('unsupportedRecording'), 'error');
             return;
         }
 
@@ -1567,7 +1619,8 @@ class KVMClient {
             const stream = streamFactory.call(this.videoElement);
             const mimeType = this.getSupportedRecordingMimeType();
             this.recordedChunks = [];
-            this.mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+            const options = mimeType ? { mimeType, videoBitsPerSecond: 2500000 } : { videoBitsPerSecond: 2500000 };
+            this.mediaRecorder = new MediaRecorder(stream, options);
 
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data && event.data.size > 0) {
@@ -1579,10 +1632,10 @@ class KVMClient {
             this.mediaRecorder.start(1000);
             this.isRecording = true;
             this.updateCaptureControls();
-            this.showAutoConnectNotification('Recording started.', 'info');
+            this.showAutoConnectNotification(this.t('recordingStarted'), 'info');
         } catch (error) {
             console.error('Recording failed to start:', error);
-            this.showAutoConnectNotification(`Recording failed: ${error.message}`, 'error');
+            this.showAutoConnectNotification(`${this.t('recordingFailed')}: ${error.message}`, 'error');
         }
     }
 
@@ -1601,15 +1654,15 @@ class KVMClient {
     async saveRecording() {
         try {
             if (this.recordedChunks.length === 0) {
-                this.showAutoConnectNotification('Recording stopped with no video data.', 'error');
+                this.showAutoConnectNotification(this.t('noRecordingData'), 'error');
                 return;
             }
 
             const type = this.mediaRecorder?.mimeType || 'video/webm';
             const blob = new Blob(this.recordedChunks, { type });
             const result = await window.electronAPI.saveCaptureFile({
-                defaultName: `osrbot-recording-${this.getCaptureTimestamp()}.webm`,
-                filters: [{ name: 'WebM Video', extensions: ['webm'] }],
+                defaultName: `osrbot-${this.language === 'zh' ? '录屏' : 'recording'}-${this.getCaptureTimestamp()}.webm`,
+                filters: [{ name: this.t('webmFilter'), extensions: ['webm'] }],
                 data: await blob.arrayBuffer()
             });
 
@@ -1617,13 +1670,13 @@ class KVMClient {
             this.mediaRecorder = null;
 
             if (result?.success) {
-                this.showAutoConnectNotification(`Recording saved: ${result.filePath}`, 'success');
+                this.showAutoConnectNotification(`${this.t('recordingSaved')}: ${result.filePath}`, 'success');
             } else if (!result?.canceled) {
-                this.showAutoConnectNotification(`Recording failed: ${result?.error || 'unknown error'}`, 'error');
+                this.showAutoConnectNotification(`${this.t('recordingFailed')}: ${result?.error || 'unknown error'}`, 'error');
             }
         } catch (error) {
             console.error('Recording save failed:', error);
-            this.showAutoConnectNotification(`Recording failed: ${error.message}`, 'error');
+            this.showAutoConnectNotification(`${this.t('recordingFailed')}: ${error.message}`, 'error');
         }
     }
 
@@ -1641,10 +1694,217 @@ class KVMClient {
         return new Date().toISOString().replace(/[:.]/g, '-');
     }
 
+    toggleGifRecording() {
+        if (this.isRecordingGif) {
+            this.stopGifRecording();
+        } else {
+            this.startGifRecording();
+        }
+    }
+
+    startGifRecording() {
+        if (!this.videoConnected || !this.videoElement.videoWidth || !this.videoElement.videoHeight) {
+            alert(this.t('gifNeedVideo'));
+            return;
+        }
+
+        this.gifFrames = [];
+        this.isRecordingGif = true;
+        this.updateCaptureControls();
+
+        const maxWidth = 640;
+        const scale = Math.min(1, maxWidth / this.videoElement.videoWidth);
+        const width = Math.max(2, Math.round(this.videoElement.videoWidth * scale));
+        const height = Math.max(2, Math.round(this.videoElement.videoHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+
+        this.gifTimer = setInterval(() => {
+            if (!this.isRecordingGif || this.gifFrames.length >= 80) {
+                this.stopGifRecording();
+                return;
+            }
+
+            context.drawImage(this.videoElement, 0, 0, width, height);
+            const image = context.getImageData(0, 0, width, height);
+            this.gifFrames.push({
+                width,
+                height,
+                delayCs: 12,
+                pixels: this.quantizeGifFrame(image.data)
+            });
+        }, 120);
+
+        this.showAutoConnectNotification(this.t('gifRecordingStarted'), 'info');
+    }
+
+    async stopGifRecording() {
+        if (this.gifTimer) {
+            clearInterval(this.gifTimer);
+            this.gifTimer = null;
+        }
+
+        this.isRecordingGif = false;
+        this.updateCaptureControls();
+
+        if (this.gifFrames.length === 0) {
+            this.showAutoConnectNotification(this.t('noGifData'), 'error');
+            return;
+        }
+
+        try {
+            const gif = this.encodeGif(this.gifFrames);
+            const result = await window.electronAPI.saveCaptureFile({
+                defaultName: `osrbot-${this.language === 'zh' ? '动图' : 'gif'}-${this.getCaptureTimestamp()}.gif`,
+                filters: [{ name: this.t('gifFilter'), extensions: ['gif'] }],
+                data: gif.buffer
+            });
+
+            this.gifFrames = [];
+
+            if (result?.success) {
+                this.showAutoConnectNotification(`${this.t('gifSaved')}: ${result.filePath}`, 'success');
+            } else if (!result?.canceled) {
+                this.showAutoConnectNotification(`${this.t('gifFailed')}: ${result?.error || 'unknown error'}`, 'error');
+            }
+        } catch (error) {
+            console.error('GIF save failed:', error);
+            this.showAutoConnectNotification(`${this.t('gifFailed')}: ${error.message}`, 'error');
+        }
+    }
+
+    quantizeGifFrame(data) {
+        const pixels = new Uint8Array(data.length / 4);
+        for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+            const r = Math.round(data[i] / 51);
+            const g = Math.round(data[i + 1] / 51);
+            const b = Math.round(data[i + 2] / 51);
+            pixels[p] = r * 36 + g * 6 + b;
+        }
+        return pixels;
+    }
+
+    encodeGif(frames) {
+        const width = frames[0].width;
+        const height = frames[0].height;
+        const bytes = [];
+        const writeString = (value) => value.split('').forEach(char => bytes.push(char.charCodeAt(0)));
+        const writeShort = (value) => {
+            bytes.push(value & 0xff, (value >> 8) & 0xff);
+        };
+
+        writeString('GIF89a');
+        writeShort(width);
+        writeShort(height);
+        bytes.push(0xf7, 0, 0);
+
+        for (let r = 0; r < 6; r++) {
+            for (let g = 0; g < 6; g++) {
+                for (let b = 0; b < 6; b++) {
+                    bytes.push(r * 51, g * 51, b * 51);
+                }
+            }
+        }
+        while ((bytes.length - 13) < 768) bytes.push(0, 0, 0);
+
+        writeString('!\xff\x0bNETSCAPE2.0\x03\x01');
+        writeShort(0);
+        bytes.push(0);
+
+        frames.forEach(frame => {
+            writeString('!\xf9\x04');
+            bytes.push(0x04);
+            writeShort(frame.delayCs);
+            bytes.push(0, 0);
+            bytes.push(0x2c);
+            writeShort(0);
+            writeShort(0);
+            writeShort(width);
+            writeShort(height);
+            bytes.push(0);
+            bytes.push(8);
+            this.writeGifImageData(bytes, frame.pixels);
+        });
+
+        bytes.push(0x3b);
+        return new Uint8Array(bytes);
+    }
+
+    writeGifImageData(bytes, pixels) {
+        const clearCode = 256;
+        const endCode = 257;
+        let codeSize = 9;
+        let nextCode = 258;
+        let bitBuffer = 0;
+        let bitLength = 0;
+        const block = [];
+
+        const flushBlock = () => {
+            if (block.length > 0) {
+                bytes.push(block.length, ...block);
+                block.length = 0;
+            }
+        };
+        const writeByte = (value) => {
+            block.push(value & 0xff);
+            if (block.length === 255) flushBlock();
+        };
+        const writeCode = (code) => {
+            bitBuffer |= code << bitLength;
+            bitLength += codeSize;
+            while (bitLength >= 8) {
+                writeByte(bitBuffer & 0xff);
+                bitBuffer >>= 8;
+                bitLength -= 8;
+            }
+        };
+
+        writeCode(clearCode);
+        pixels.forEach(pixel => {
+            writeCode(pixel);
+            nextCode++;
+            if (nextCode === (1 << codeSize) && codeSize < 12) {
+                codeSize++;
+            }
+            if (nextCode >= 4095) {
+                writeCode(clearCode);
+                codeSize = 9;
+                nextCode = 258;
+            }
+        });
+        writeCode(endCode);
+
+        if (bitLength > 0) writeByte(bitBuffer & 0xff);
+        flushBlock();
+        bytes.push(0);
+    }
+
+    async switchRemoteDisplay() {
+        if (!this.hidConnected) {
+            alert(this.t('connectHIDFirst'));
+            return;
+        }
+
+        try {
+            await window.electronAPI.sendKeyboardEvent({ type: 'keydown', key: 'Meta', code: 'MetaLeft' });
+            await new Promise(resolve => setTimeout(resolve, 20));
+            await window.electronAPI.sendKeyboardEvent({ type: 'keydown', key: 'p', code: 'KeyP' });
+            await new Promise(resolve => setTimeout(resolve, 50));
+            await window.electronAPI.sendKeyboardEvent({ type: 'keyup', key: 'p', code: 'KeyP' });
+            await window.electronAPI.sendKeyboardEvent({ type: 'keyup', key: 'Meta', code: 'MetaLeft' });
+            this.showAutoConnectNotification(this.t('switchDisplaySent'), 'success');
+        } catch (error) {
+            console.error('Switch display failed:', error);
+            await window.electronAPI.sendKeyboardEvent({ type: 'reset' });
+        }
+    }
+
     async loadHIDDevices() {
         try {
             const devices = await window.electronAPI.getHIDDevices();
-            this.hidDevicesSelect.innerHTML = '<option value="">Select HID Device</option>';
+            this.hidDevicesSelect.innerHTML = `<option value="">${this.t('selectHIDOption')}</option>`;
 
             let compatibleDevice = null;
 
@@ -1784,78 +2044,6 @@ class KVMClient {
         } catch (error) {
             console.error('Error refreshing HID:', error);
             alert(this.t('refreshHIDError'));
-        }
-    }
-
-    async testMouse() {
-        if (!this.hidConnected) {
-            alert(this.t('connectHIDFirst'));
-            return;
-        }
-
-        try {
-            await window.electronAPI.sendMouseEvent({
-                type: 'mousedown',
-                button: 0
-            });
-            
-            setTimeout(async () => {
-                await window.electronAPI.sendMouseEvent({
-                    type: 'mouseup',
-                    button: 0
-                });
-            }, 100);
-        } catch (error) {
-            console.error('Error testing mouse:', error);
-        }
-    }
-
-    async testKeyboard() {
-        if (!this.hidConnected) {
-            alert(this.t('connectHIDFirst'));
-            return;
-        }
-
-        try {
-            await window.electronAPI.sendKeyboardEvent({
-                type: 'keydown',
-                key: 'a'
-            });
-            
-            setTimeout(async () => {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keyup',
-                    key: 'a'
-                });
-            }, 100);
-        } catch (error) {
-            console.error('Error testing keyboard:', error);
-        }
-    }
-
-    async testFunctionKey(key) {
-        if (!this.hidConnected) {
-            alert(this.t('connectHIDFirst'));
-            return;
-        }
-
-        try {
-            console.log(`Testing function key: ${key}`);
-            await window.electronAPI.sendKeyboardEvent({
-                type: 'keydown',
-                key: key,
-                code: key
-            });
-            
-            setTimeout(async () => {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keyup',
-                    key: key,
-                    code: key
-                });
-            }, 100);
-        } catch (error) {
-            console.error(`Error testing ${key}:`, error);
         }
     }
 
@@ -2162,8 +2350,8 @@ class KVMClient {
         
         // Enable/disable quick control buttons based on HID connection
         this.sendCADBtn.disabled = !this.hidConnected;
-        this.virtualKeyboardBtn.disabled = !this.hidConnected;
-        this.fullscreenKeyboardBtn.disabled = !this.hidConnected;
+        this.switchDisplayBtn.disabled = !this.hidConnected;
+        this.fullscreenSwitchDisplayBtn.disabled = !this.hidConnected;
     }
 
     updateVideoDisplay() {
@@ -2189,11 +2377,16 @@ class KVMClient {
         this.fullscreenScreenshotBtn.disabled = !canCapture;
         this.toggleRecordingBtn.disabled = !canCapture && !this.isRecording;
         this.fullscreenRecordBtn.disabled = !canCapture && !this.isRecording;
+        this.recordGifBtn.disabled = !canCapture && !this.isRecordingGif;
+        this.fullscreenGifBtn.disabled = !canCapture && !this.isRecordingGif;
 
-        const label = this.isRecording ? 'Stop Rec' : 'Record';
-        const compactLabel = this.isRecording ? 'Stop' : 'Rec';
+        const label = this.isRecording ? this.t('btnRecordStop') : this.t('btnRecord');
+        const compactLabel = this.isRecording ? (this.language === 'zh' ? '停止' : 'Stop') : this.t('btnRecord');
+        const gifLabel = this.isRecordingGif ? this.t('btnRecordStop') : this.t('btnGif');
         this.toggleRecordingBtn.textContent = label;
         this.fullscreenRecordBtn.textContent = compactLabel;
+        this.recordGifBtn.textContent = gifLabel;
+        this.fullscreenGifBtn.textContent = this.isRecordingGif ? (this.language === 'zh' ? '停止' : 'Stop') : 'GIF';
     }
 
     toggleMouseMode() {
@@ -2220,7 +2413,9 @@ class KVMClient {
         this.sidebarVisible = !this.sidebarVisible;
         this.infoPanel.classList.toggle('visible', this.sidebarVisible);
         this.sidebarToggleBtn.classList.toggle('active', this.sidebarVisible);
-        this.sidebarToggleBtn.textContent = this.sidebarVisible ? 'Hide Settings' : 'Settings';
+        this.sidebarToggleBtn.textContent = this.sidebarVisible
+            ? (this.language === 'zh' ? '隐藏设置' : 'Hide Settings')
+            : this.t('settings');
     }
 
     handleHeaderAutoHide(event) {
@@ -2441,338 +2636,13 @@ class KVMClient {
         }
     }
 
-    showVirtualKeyboard() {
-        if (document.pointerLockElement) {
-            this.pointerLockPausedForVirtualKeyboard = true;
-            document.exitPointerLock();
-        }
-        document.body.classList.add('virtual-keyboard-open');
-        this.virtualKeyboardModal.style.display = 'flex';
-        // Reset position when opening
-        this.virtualKeyboardContent.style.position = '';
-        this.virtualKeyboardContent.style.left = '';
-        this.virtualKeyboardContent.style.top = '';
-        this.virtualKeyboardContent.style.margin = '';
-        // Initialize display
-        this.updateCombinationDisplay();
-    }
-
-    hideVirtualKeyboard() {
-        this.virtualKeyboardModal.style.display = 'none';
-        document.body.classList.remove('virtual-keyboard-open');
-        // Reset any active modifier states
-        this.resetVirtualKeyboardModifiers();
-        this.resumePointerLockAfterVirtualKeyboard();
-    }
-
-    resumePointerLockAfterVirtualKeyboard() {
-        if (!this.pointerLockPausedForVirtualKeyboard) return;
-        this.pointerLockPausedForVirtualKeyboard = false;
-
-        if (!this.mouseCaptured || !this.hidConnected || (this.mouseMode !== 'relative' && this.videoConnected)) {
-            return;
-        }
-
-        setTimeout(() => {
-            if (!this.mouseCaptured || document.pointerLockElement) return;
-            this.getPointerLockTarget().requestPointerLock().catch(error => {
-                console.error('Pointer lock resume failed:', error);
-            });
-        }, 80);
-    }
-
     isLocalControlEvent(event) {
         const target = event.target;
         if (!(target instanceof Element)) return false;
 
         return !!target.closest(
-            '.virtual-keyboard-modal, .fullscreen-tools, .header, .info-panel, .quit-key-modal'
+            '.fullscreen-tools, .header, .info-panel, .quit-key-modal'
         );
-    }
-
-    setupVirtualKeyboard() {
-        this.activeModifiers = new Set();
-        this.pendingKeys = [];
-        
-        // Make keyboard draggable
-        this.makeKeyboardDraggable();
-        
-        // Add event listeners to all virtual keyboard buttons
-        const keyButtons = this.virtualKeyboardModal.querySelectorAll('.key-btn');
-        
-        keyButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.handleVirtualKey(e.target);
-            });
-        });
-        
-        this.virtualKeyboardModal.addEventListener('click', (e) => {
-            if (e.target.closest('.virtual-keyboard-content')) {
-                e.stopPropagation();
-            }
-        });
-    }
-
-    makeKeyboardDraggable() {
-        let isDragging = false;
-        let dragStartX, dragStartY, initialX, initialY;
-        
-        this.virtualKeyboardHeader.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-            
-            const rect = this.virtualKeyboardContent.getBoundingClientRect();
-            initialX = rect.left;
-            initialY = rect.top;
-            
-            document.addEventListener('mousemove', handleDrag);
-            document.addEventListener('mouseup', handleDragEnd);
-            e.preventDefault();
-        });
-        
-        const handleDrag = (e) => {
-            if (!isDragging) return;
-            
-            const deltaX = e.clientX - dragStartX;
-            const deltaY = e.clientY - dragStartY;
-            
-            const newX = initialX + deltaX;
-            const newY = initialY + deltaY;
-            
-            this.virtualKeyboardContent.style.position = 'fixed';
-            this.virtualKeyboardContent.style.left = `${newX}px`;
-            this.virtualKeyboardContent.style.top = `${newY}px`;
-            this.virtualKeyboardContent.style.margin = '0';
-        };
-        
-        const handleDragEnd = () => {
-            isDragging = false;
-            document.removeEventListener('mousemove', handleDrag);
-            document.removeEventListener('mouseup', handleDragEnd);
-        };
-    }
-
-    async handleVirtualKey(button) {
-        if (!this.hidConnected) {
-            alert(this.t('connectHIDFirst'));
-            return;
-        }
-
-        const key = button.dataset.key;
-        const code = button.dataset.code || key;
-        
-        if (button.classList.contains('modifier-key')) {
-            // Toggle modifier keys
-            this.toggleVirtualModifier(button, key, code);
-        } else {
-            // For regular keys - either send immediately or add to combination
-            if (this.activeModifiers.size === 0) {
-                // No modifiers active - send immediately
-                await this.sendSingleKey(key, code);
-            } else {
-                // Modifiers active - add to combination
-                this.addToCombination(key, code);
-            }
-        }
-    }
-
-    toggleVirtualModifier(button, key, code) {
-        if (this.activeModifiers.has(code)) {
-            // Deactivate modifier
-            this.activeModifiers.delete(code);
-            button.classList.remove('active');
-        } else {
-            // Activate modifier
-            this.activeModifiers.add(code);
-            button.classList.add('active');
-        }
-        this.updateCombinationDisplay();
-    }
-
-    async sendSingleKey(key, code) {
-        try {
-            console.log(`Sending single key: ${key} (${code})`);
-
-            // Send key down
-            await window.electronAPI.sendKeyboardEvent({
-                type: 'keydown',
-                key: key,
-                code: code
-            });
-
-            // Send key up after a short delay
-            setTimeout(async () => {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keyup',
-                    key: key,
-                    code: code
-                });
-            }, 50);
-
-        } catch (error) {
-            console.error('Error sending single key:', error);
-        }
-    }
-
-    addToCombination(key, code) {
-        // Don't add duplicate keys
-        if (!this.pendingKeys.find(k => k.code === code)) {
-            this.pendingKeys.push({ key, code });
-            this.updateCombinationDisplay();
-        }
-    }
-
-    updateCombinationDisplay() {
-        const modifierNames = {
-            'ControlLeft': 'Ctrl',
-            'ControlRight': 'Ctrl',
-            'AltLeft': 'Alt', 
-            'AltRight': 'Alt',
-            'MetaLeft': 'Cmd',
-            'MetaRight': 'Cmd',
-            'ShiftLeft': 'Shift',
-            'ShiftRight': 'Shift',
-            'CapsLock': 'Caps'
-        };
-
-        const parts = [];
-        
-        // Add active modifiers
-        this.activeModifiers.forEach(code => {
-            if (modifierNames[code]) {
-                parts.push(modifierNames[code]);
-            }
-        });
-        
-        // Add pending keys
-        this.pendingKeys.forEach(keyObj => {
-            parts.push(keyObj.key.toUpperCase());
-        });
-
-        if (parts.length === 0) {
-            this.combinationKeys.textContent = 'None';
-            this.sendCombinationBtn.disabled = true;
-        } else {
-            this.combinationKeys.textContent = parts.join(' + ');
-            this.sendCombinationBtn.disabled = false;
-        }
-    }
-
-    async sendCurrentCombination() {
-        if (this.activeModifiers.size === 0 && this.pendingKeys.length === 0) {
-            return;
-        }
-
-        try {
-            console.log('Sending combination:', {
-                modifiers: Array.from(this.activeModifiers),
-                keys: this.pendingKeys
-            });
-
-            // If no regular keys, just send modifiers
-            if (this.pendingKeys.length === 0) {
-                for (const code of this.activeModifiers) {
-                    await window.electronAPI.sendKeyboardEvent({
-                        type: 'keydown',
-                        key: this.getKeyFromCode(code),
-                        code: code
-                    });
-                }
-                
-                setTimeout(async () => {
-                    for (const code of this.activeModifiers) {
-                        await window.electronAPI.sendKeyboardEvent({
-                            type: 'keyup',
-                            key: this.getKeyFromCode(code),
-                            code: code
-                        });
-                    }
-                }, 50);
-                return;
-            }
-
-            // Send combination with modifiers
-            // First, press all modifier keys
-            for (const code of this.activeModifiers) {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keydown',
-                    key: this.getKeyFromCode(code),
-                    code: code
-                });
-                await new Promise(resolve => setTimeout(resolve, 10));
-            }
-
-            // Then press and release each regular key
-            for (const keyObj of this.pendingKeys) {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keydown',
-                    key: keyObj.key,
-                    code: keyObj.code
-                });
-                
-                await new Promise(resolve => setTimeout(resolve, 50));
-                
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keyup',
-                    key: keyObj.key,
-                    code: keyObj.code
-                });
-                
-                await new Promise(resolve => setTimeout(resolve, 10));
-            }
-
-            // Finally, release all modifier keys
-            for (const code of this.activeModifiers) {
-                await window.electronAPI.sendKeyboardEvent({
-                    type: 'keyup',
-                    key: this.getKeyFromCode(code),
-                    code: code
-                });
-                await new Promise(resolve => setTimeout(resolve, 10));
-            }
-
-            // Clear combination and release modifiers after sending
-            this.clearCombination();
-            this.releaseAllModifiers();
-
-        } catch (error) {
-            console.error('Error sending combination:', error);
-        }
-    }
-
-    clearCombination() {
-        this.pendingKeys = [];
-        this.releaseAllModifiers();
-        this.updateCombinationDisplay();
-    }
-
-    releaseAllModifiers() {
-        this.activeModifiers.clear();
-        const modifierButtons = this.virtualKeyboardModal.querySelectorAll('.modifier-key');
-        modifierButtons.forEach(button => button.classList.remove('active'));
-        this.updateCombinationDisplay();
-    }
-
-    getKeyFromCode(code) {
-        // Handle the ShiftRight bug in Keyboard Lock API where event.code is empty
-        let actualCode = code;
-        if (code === '' && this.activeModifiers.has('ShiftRight')) {
-            actualCode = 'ShiftRight';
-        }
-        
-        const codeToKey = {
-            'ControlLeft': 'Control',
-            'ControlRight': 'Control',
-            'AltLeft': 'Alt',
-            'AltRight': 'Alt',
-            'MetaLeft': 'Meta',
-            'MetaRight': 'Meta',
-            'ShiftLeft': 'Shift',
-            'ShiftRight': 'Shift',
-            'CapsLock': 'CapsLock'
-        };
-        return codeToKey[actualCode] || actualCode;
     }
 
     getDisplayKeyFromCode(code, fallbackKey) {
@@ -2824,14 +2694,6 @@ class KVMClient {
         
         // Return the mapped display key or fallback to the original key
         return codeToDisplayKey[code] || fallbackKey;
-    }
-
-    resetVirtualKeyboardModifiers() {
-        this.activeModifiers.clear();
-        this.pendingKeys = [];
-        const modifierButtons = this.virtualKeyboardModal.querySelectorAll('.modifier-key');
-        modifierButtons.forEach(button => button.classList.remove('active'));
-        this.updateCombinationDisplay();
     }
 
     startHIDMonitoring() {
@@ -2951,9 +2813,9 @@ class KVMClient {
 
         // Get current quit key combination
         notification.innerHTML = `
-            <div style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">Control Mode Active</div>
-            <div style="margin-bottom: 8px; font-size: 16px;">Press <kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">Esc</kbd> to exit</div>
-            <div style="font-size: 12px; color: #74d99f; opacity: 0.9;">Keyboard and mouse forwarding active</div>
+            <div style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">${this.t('overlayActive')}</div>
+            <div style="margin-bottom: 8px; font-size: 16px;">${this.t('overlayHint').replace('<kbd>', '<kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">')}</div>
+            <div style="font-size: 12px; color: #74d99f; opacity: 0.9;">${this.t('forwardingActive')}</div>
         `;
 
         notification.style.display = 'block';
@@ -3075,9 +2937,9 @@ class KVMClient {
         const overlayInfo = this.mouseCaptureOverlay.querySelector('.mouse-capture-info');
         if (overlayInfo) {
             overlayInfo.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 6px;">Control Mode Active</div>
-                <div style="margin-bottom: 4px;">Press <kbd>Esc</kbd> to exit</div>
-                <div style="font-size: 11px; opacity: 0.7;">Keyboard and mouse forwarding active</div>
+                <div style="font-weight: 600; margin-bottom: 6px;">${this.t('overlayActive')}</div>
+                <div style="margin-bottom: 4px;">${this.t('overlayHint')}</div>
+                <div style="font-size: 11px; opacity: 0.7;">${this.t('forwardingActive')}</div>
             `;
         }
     }

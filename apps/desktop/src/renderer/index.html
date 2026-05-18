@@ -11,44 +11,45 @@
         <header class="header">
             <div class="title-bar">
                 <h1>OSRBOT Link Lite</h1>
-                <p>Hardware console</p>
+                <p id="productSubtitle" data-i18n="productSubtitle">硬件控制台</p>
             </div>
             <div class="controls">
                 <div class="device-controls">
-                    <div class="section-label">Video</div>
-                    <label data-i18n="deviceLabel">Device</label>
+                    <div id="sectionVideo" class="section-label">视频采集</div>
+                    <label data-i18n="deviceLabel">设备</label>
                     <select id="videoDevices" class="device-select">
-                        <option value="">Select Video Device</option>
+                        <option value="">选择视频设备</option>
                     </select>
-                    <label data-i18n="resolutionLabel">Resolution</label>
+                    <label data-i18n="resolutionLabel">分辨率</label>
                     <select id="resolutionSelect" class="device-select">
-                        <option value="">Select Resolution</option>
+                        <option value="">选择分辨率</option>
                     </select>
                     <label data-i18n="fpsLabel">FPS</label>
                     <select id="fpsSelect" class="device-select">
                         <option value="">Select FPS</option>
                     </select>
-                    <button id="refreshDevices" class="btn btn-secondary" title="Refresh both video and HID devices">Refresh</button>
-                    <button id="startVideo" class="btn btn-primary">Start Video</button>
-                    <button id="stopVideo" class="btn btn-secondary" disabled>Stop Video</button>
+                    <button id="refreshDevices" class="btn btn-secondary" title="刷新视频和 HID 设备">刷新</button>
+                    <button id="startVideo" class="btn btn-primary">开始视频</button>
+                    <button id="stopVideo" class="btn btn-secondary" disabled>停止视频</button>
                 </div>
                 <div class="hid-controls">
-                    <div class="section-label">Input Bridge</div>
+                    <div id="sectionInput" class="section-label">键鼠共享</div>
                     <select id="hidDevices" class="device-select">
-                        <option value="">Select HID Device</option>
+                        <option value="">选择 HID 设备</option>
                     </select>
-                    <button id="connectHID" class="btn btn-primary">Connect HID</button>
-                    <button id="disconnectHID" class="btn btn-secondary" disabled>Disconnect HID</button>
+                    <button id="connectHID" class="btn btn-primary">连接 HID</button>
+                    <button id="disconnectHID" class="btn btn-secondary" disabled>断开 HID</button>
                 </div>
                 <div class="quick-controls">
-                    <div class="section-label">Actions</div>
+                    <div id="sectionActions" class="section-label">快捷操作</div>
                     <button id="sendCAD" class="btn btn-warning" disabled title="Send Ctrl+Alt+Delete">Ctrl+Alt+Del</button>
-                    <button id="virtualKeyboard" class="btn btn-secondary" disabled title="Virtual Keyboard">Keyboard</button>
-                    <button id="captureScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">Screenshot</button>
-                    <button id="toggleRecording" class="btn btn-secondary" disabled title="Record capture-card video">Record</button>
+                    <button id="switchDisplay" class="btn btn-secondary" disabled title="Send Win+P to the controlled device">切换显示</button>
+                    <button id="captureScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
+                    <button id="toggleRecording" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
+                    <button id="recordGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
                     <button id="toggleFullscreen" class="btn btn-secondary" title="Toggle Fullscreen">Fullscreen</button>
                 </div>
-                <button id="sidebarToggle" class="btn sidebar-toggle">Settings</button>
+                <button id="sidebarToggle" class="btn sidebar-toggle">设置</button>
             </div>
         </header>
 
@@ -65,7 +66,7 @@
             <div class="info-panel">
                 <div class="sidebar-header">
                     <button id="closeSidebar" class="btn btn-fold">›</button>
-                    <h2>Settings</h2>
+                    <h2 data-i18n="settings">设置</h2>
                 </div>
                 <div class="status">
                     <div class="status-item">
@@ -120,14 +121,6 @@
                     <p class="mode-description" data-i18n="quitKeyDesc">Press Esc to release control and leave fullscreen.</p>
                 </div>
                 
-                <div class="test-controls">
-                    <h3 data-i18n="testTitle">Test Controls</h3>
-                    <div class="test-buttons">
-                        <button id="testMouse" class="btn btn-test" data-i18n="testMouse">Test Mouse Click</button>
-                        <button id="testKeyboard" class="btn btn-test" data-i18n="testKeyboard">Test Keyboard (A)</button>
-                    </div>
-                </div>
-
                 <div class="custom-resolution-controls">
                     <h3 data-i18n="customResTitle">Custom Resolutions</h3>
                     <div class="custom-res-input">
@@ -140,16 +133,17 @@
         </main>
 
         <div class="fullscreen-tools" id="fullscreenTools" aria-label="Fullscreen actions">
-            <button id="fullscreenKeyboard" class="btn btn-secondary" disabled title="Virtual Keyboard">Keyboard</button>
-            <button id="fullscreenScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">Shot</button>
-            <button id="fullscreenRecord" class="btn btn-secondary" disabled title="Record capture-card video">Rec</button>
+            <button id="fullscreenSwitchDisplay" class="btn btn-secondary" disabled title="Send Win+P to the controlled device">显示</button>
+            <button id="fullscreenScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
+            <button id="fullscreenRecord" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
+            <button id="fullscreenGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
             <button id="fullscreenExit" class="btn btn-secondary" title="Exit fullscreen and control mode">Esc</button>
         </div>
 
         <div class="mouse-capture-overlay" id="mouseCaptureOverlay" style="display: none;">
             <div class="mouse-capture-info">
-                <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="controlModeTitle">Control Mode Active</div>
-                <div style="margin-bottom: 4px;" data-i18n="controlModeHint">Press <kbd>Esc</kbd> to exit</div>
+                <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="overlayActive">控制模式已开启</div>
+                <div style="margin-bottom: 4px;" data-i18n="overlayHint" data-i18n-html="true">按 <kbd>Esc</kbd> 退出</div>
             </div>
         </div>
 
@@ -179,203 +173,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Virtual Keyboard Modal -->
-        <div class="virtual-keyboard-modal" id="virtualKeyboardModal" style="display: none;">
-            <div class="virtual-keyboard-content" id="virtualKeyboardContent">
-                <div class="virtual-keyboard-header" id="virtualKeyboardHeader">
-                    <div class="header-left">
-                        <h3>Virtual Keyboard</h3>
-                    </div>
-                    <div class="header-right">
-                        <div class="combination-info">
-                            <span class="combination-label">Combination:</span>
-                            <span class="combination-keys" id="combinationKeys">None</span>
-                        </div>
-                        <button class="btn btn-primary" id="sendCombination" disabled>Send</button>
-                        <button class="btn btn-secondary" id="clearCombination">Clear</button>
-                        <button id="closeVirtualKeyboard" class="btn btn-secondary">×</button>
-                    </div>
-                </div>
-                
-                <div class="virtual-keyboard">
-                    <!-- Column 1: Main Keyboard Area -->
-                    <div class="keyboard-column main-keyboard">
-                        <!-- Function Keys Row -->
-                        <div class="keyboard-row function-row">
-                            <button class="key-btn function-key" data-key="Escape" data-code="Escape">Esc</button>
-                            <div class="key-spacer"></div>
-                            <button class="key-btn function-key" data-key="F1" data-code="F1">F1</button>
-                            <button class="key-btn function-key" data-key="F2" data-code="F2">F2</button>
-                            <button class="key-btn function-key" data-key="F3" data-code="F3">F3</button>
-                            <button class="key-btn function-key" data-key="F4" data-code="F4">F4</button>
-                            <div class="key-spacer"></div>
-                            <button class="key-btn function-key" data-key="F5" data-code="F5">F5</button>
-                            <button class="key-btn function-key" data-key="F6" data-code="F6">F6</button>
-                            <button class="key-btn function-key" data-key="F7" data-code="F7">F7</button>
-                            <button class="key-btn function-key" data-key="F8" data-code="F8">F8</button>
-                            <div class="key-spacer"></div>
-                            <button class="key-btn function-key" data-key="F9" data-code="F9">F9</button>
-                            <button class="key-btn function-key" data-key="F10" data-code="F10">F10</button>
-                            <button class="key-btn function-key" data-key="F11" data-code="F11">F11</button>
-                            <button class="key-btn function-key" data-key="F12" data-code="F12">F12</button>
-                        </div>
-                        
-                        <!-- Number Row -->
-                        <div class="keyboard-row number-row">
-                            <button class="key-btn" data-key="`" data-code="Backquote">`</button>
-                            <button class="key-btn" data-key="1" data-code="Digit1">1</button>
-                            <button class="key-btn" data-key="2" data-code="Digit2">2</button>
-                            <button class="key-btn" data-key="3" data-code="Digit3">3</button>
-                            <button class="key-btn" data-key="4" data-code="Digit4">4</button>
-                            <button class="key-btn" data-key="5" data-code="Digit5">5</button>
-                            <button class="key-btn" data-key="6" data-code="Digit6">6</button>
-                            <button class="key-btn" data-key="7" data-code="Digit7">7</button>
-                            <button class="key-btn" data-key="8" data-code="Digit8">8</button>
-                            <button class="key-btn" data-key="9" data-code="Digit9">9</button>
-                            <button class="key-btn" data-key="0" data-code="Digit0">0</button>
-                            <button class="key-btn" data-key="-" data-code="Minus">-</button>
-                            <button class="key-btn" data-key="=" data-code="Equal">=</button>
-                            <button class="key-btn backspace-key" data-key="Backspace" data-code="Backspace">Backspace</button>
-                        </div>
-                        
-                        <!-- Top Letter Row -->
-                        <div class="keyboard-row top-letter-row">
-                            <button class="key-btn tab-key" data-key="Tab" data-code="Tab">Tab</button>
-                            <button class="key-btn" data-key="q" data-code="KeyQ">Q</button>
-                            <button class="key-btn" data-key="w" data-code="KeyW">W</button>
-                            <button class="key-btn" data-key="e" data-code="KeyE">E</button>
-                            <button class="key-btn" data-key="r" data-code="KeyR">R</button>
-                            <button class="key-btn" data-key="t" data-code="KeyT">T</button>
-                            <button class="key-btn" data-key="y" data-code="KeyY">Y</button>
-                            <button class="key-btn" data-key="u" data-code="KeyU">U</button>
-                            <button class="key-btn" data-key="i" data-code="KeyI">I</button>
-                            <button class="key-btn" data-key="o" data-code="KeyO">O</button>
-                            <button class="key-btn" data-key="p" data-code="KeyP">P</button>
-                            <button class="key-btn" data-key="[" data-code="BracketLeft">[</button>
-                            <button class="key-btn" data-key="]" data-code="BracketRight">]</button>
-                            <button class="key-btn backslash-key" data-key="\\" data-code="Backslash">\\</button>
-                        </div>
-                        
-                        <!-- Middle Letter Row -->
-                        <div class="keyboard-row middle-letter-row">
-                            <button class="key-btn caps-key modifier-key" data-key="CapsLock" data-code="CapsLock">Caps</button>
-                            <button class="key-btn" data-key="a" data-code="KeyA">A</button>
-                            <button class="key-btn" data-key="s" data-code="KeyS">S</button>
-                            <button class="key-btn" data-key="d" data-code="KeyD">D</button>
-                            <button class="key-btn" data-key="f" data-code="KeyF">F</button>
-                            <button class="key-btn" data-key="g" data-code="KeyG">G</button>
-                            <button class="key-btn" data-key="h" data-code="KeyH">H</button>
-                            <button class="key-btn" data-key="j" data-code="KeyJ">J</button>
-                            <button class="key-btn" data-key="k" data-code="KeyK">K</button>
-                            <button class="key-btn" data-key="l" data-code="KeyL">L</button>
-                            <button class="key-btn" data-key=";" data-code="Semicolon">;</button>
-                            <button class="key-btn" data-key="'" data-code="Quote">'</button>
-                            <button class="key-btn enter-key" data-key="Enter" data-code="Enter">Enter</button>
-                        </div>
-                        
-                        <!-- Bottom Letter Row -->
-                        <div class="keyboard-row bottom-letter-row">
-                            <button class="key-btn shift-key modifier-key" data-key="ShiftLeft" data-code="ShiftLeft">Shift</button>
-                            <button class="key-btn" data-key="z" data-code="KeyZ">Z</button>
-                            <button class="key-btn" data-key="x" data-code="KeyX">X</button>
-                            <button class="key-btn" data-key="c" data-code="KeyC">C</button>
-                            <button class="key-btn" data-key="v" data-code="KeyV">V</button>
-                            <button class="key-btn" data-key="b" data-code="KeyB">B</button>
-                            <button class="key-btn" data-key="n" data-code="KeyN">N</button>
-                            <button class="key-btn" data-key="m" data-code="KeyM">M</button>
-                            <button class="key-btn" data-key="," data-code="Comma">,</button>
-                            <button class="key-btn" data-key="." data-code="Period">.</button>
-                            <button class="key-btn" data-key="/" data-code="Slash">/</button>
-                            <button class="key-btn shift-key modifier-key" data-key="ShiftRight" data-code="ShiftRight">Shift</button>
-                        </div>
-                        
-                        <!-- Bottom Row -->
-                        <div class="keyboard-row bottom-row">
-                            <button class="key-btn ctrl-key modifier-key" data-key="ControlLeft" data-code="ControlLeft">Ctrl</button>
-                            <button class="key-btn win-key modifier-key" data-key="MetaLeft" data-code="MetaLeft">⌘</button>
-                            <button class="key-btn alt-key modifier-key" data-key="AltLeft" data-code="AltLeft">Alt</button>
-                            <button class="key-btn space-key" data-key=" " data-code="Space">Space</button>
-                            <button class="key-btn alt-key modifier-key" data-key="AltRight" data-code="AltRight">Alt</button>
-                            <button class="key-btn win-key modifier-key" data-key="MetaRight" data-code="MetaRight">⌘</button>
-                            <button class="key-btn menu-key modifier-key" data-key="ContextMenu" data-code="ContextMenu">Menu</button>
-                            <button class="key-btn ctrl-key modifier-key" data-key="ControlRight" data-code="ControlRight">Ctrl</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Column 2: Navigation and System Keys -->
-                    <div class="keyboard-column nav-keyboard">
-                        <!-- System Keys Row -->
-                        <div class="keyboard-row system-row">
-                            <button class="key-btn function-key" data-key="PrintScreen" data-code="PrintScreen">PrtSc</button>
-                            <button class="key-btn function-key" data-key="ScrollLock" data-code="ScrollLock">ScrLk</button>
-                            <button class="key-btn function-key" data-key="Pause" data-code="Pause">Pause</button>
-                        </div>
-                        
-                        <!-- Navigation Keys Row 1 -->
-                        <div class="keyboard-row nav-row-1">
-                            <button class="key-btn nav-key" data-key="Insert" data-code="Insert">Insert</button>
-                            <button class="key-btn nav-key" data-key="Home" data-code="Home">Home</button>
-                            <button class="key-btn nav-key" data-key="PageUp" data-code="PageUp">PgUp</button>
-                        </div>
-                        
-                        <!-- Navigation Keys Row 2 -->
-                        <div class="keyboard-row nav-row-2">
-                            <button class="key-btn nav-key" data-key="Delete" data-code="Delete">Delete</button>
-                            <button class="key-btn nav-key" data-key="End" data-code="End">End</button>
-                            <button class="key-btn nav-key" data-key="PageDown" data-code="PageDown">PgDn</button>
-                        </div>
-                        
-                        <!-- Arrow Keys Section -->
-                        <div class="arrow-keys-spacer"></div>
-                        <div class="arrow-keys-cluster">
-                            <div class="arrow-row-1">
-                                <button class="key-btn arrow-key" data-key="ArrowUp" data-code="ArrowUp">↑</button>
-                            </div>
-                            <div class="arrow-row-2">
-                                <button class="key-btn arrow-key" data-key="ArrowLeft" data-code="ArrowLeft">←</button>
-                                <button class="key-btn arrow-key" data-key="ArrowDown" data-code="ArrowDown">↓</button>
-                                <button class="key-btn arrow-key" data-key="ArrowRight" data-code="ArrowRight">→</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Column 3: Numeric Keypad -->
-                    <div class="keyboard-column numpad-keyboard">
-                        <!-- Numeric Keypad Section -->
-                        <div class="numpad-section">
-                            <div class="numpad-row numpad-row-1">
-                                <button class="key-btn numpad-key" data-key="NumLock" data-code="NumLock">Num</button>
-                                <button class="key-btn numpad-key" data-key="/" data-code="NumpadDivide">/</button>
-                                <button class="key-btn numpad-key" data-key="*" data-code="NumpadMultiply">*</button>
-                                <button class="key-btn numpad-key" data-key="-" data-code="NumpadSubtract">-</button>
-                            </div>
-                            <div class="numpad-row numpad-row-2">
-                                <button class="key-btn numpad-key" data-key="7" data-code="Numpad7">7</button>
-                                <button class="key-btn numpad-key" data-key="8" data-code="Numpad8">8</button>
-                                <button class="key-btn numpad-key" data-key="9" data-code="Numpad9">9</button>
-                                <button class="key-btn numpad-key numpad-tall" data-key="+" data-code="NumpadAdd">+</button>
-                            </div>
-                            <div class="numpad-row numpad-row-3">
-                                <button class="key-btn numpad-key" data-key="4" data-code="Numpad4">4</button>
-                                <button class="key-btn numpad-key" data-key="5" data-code="Numpad5">5</button>
-                                <button class="key-btn numpad-key" data-key="6" data-code="Numpad6">6</button>
-                            </div>
-                            <div class="numpad-row numpad-row-4">
-                                <button class="key-btn numpad-key" data-key="1" data-code="Numpad1">1</button>
-                                <button class="key-btn numpad-key" data-key="2" data-code="Numpad2">2</button>
-                                <button class="key-btn numpad-key" data-key="3" data-code="Numpad3">3</button>
-                                <button class="key-btn numpad-key numpad-tall numpad-enter" data-key="Enter" data-code="NumpadEnter">Enter</button>
-                            </div>
-                            <div class="numpad-row numpad-row-5">
-                                <button class="key-btn numpad-key numpad-zero" data-key="0" data-code="Numpad0">0</button>
-                                <button class="key-btn numpad-key" data-key="." data-code="NumpadDecimal">.</button>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
 
     <script src="app.js"></script>
 </body>
