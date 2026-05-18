@@ -140,6 +140,7 @@ class KVMClient {
         this.reverseScroll = false; // Natural scrolling direction
         this.isFullscreen = false; // Track fullscreen state
         this.nativeInputAvailable = false;
+        this.pointerLockPausedForVirtualKeyboard = false;
         this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' }; // Esc exits control mode
 
         // Compatible KVM device list for auto-detection
@@ -218,6 +219,9 @@ class KVMClient {
         this.sendCADBtn = document.getElementById('sendCAD');
         this.virtualKeyboardBtn = document.getElementById('virtualKeyboard');
         this.toggleFullscreenBtn = document.getElementById('toggleFullscreen');
+        this.fullscreenTools = document.getElementById('fullscreenTools');
+        this.fullscreenKeyboardBtn = document.getElementById('fullscreenKeyboard');
+        this.fullscreenExitBtn = document.getElementById('fullscreenExit');
         this.languageSelect = document.getElementById('languageSelect');
         
         // Virtual keyboard elements
@@ -585,6 +589,14 @@ class KVMClient {
         this.sendCADBtn.addEventListener('click', () => this.sendCtrlAltDelete());
         this.virtualKeyboardBtn.addEventListener('click', () => this.showVirtualKeyboard());
         this.toggleFullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+        this.fullscreenKeyboardBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showVirtualKeyboard();
+        });
+        this.fullscreenExitBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.exitControlAndFullscreen();
+        });
         this.closeVirtualKeyboardBtn.addEventListener('click', () => this.hideVirtualKeyboard());
         this.sendCombinationBtn.addEventListener('click', () => this.sendCurrentCombination());
         this.clearCombinationBtn.addEventListener('click', () => this.clearCombination());
@@ -617,6 +629,9 @@ class KVMClient {
         // Handle pointer lock changes
         document.addEventListener('pointerlockchange', () => {
             console.log('Pointer lock changed:', document.pointerLockElement);
+            if (this.pointerLockPausedForVirtualKeyboard) {
+                return;
+            }
             if (!document.pointerLockElement && this.mouseCaptured && this.mouseMode === 'relative') {
                 // Pointer lock was lost, release capture with key reset
                 this.releaseMouseCaptureWithKeyReset();
@@ -640,7 +655,7 @@ class KVMClient {
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected && !this.isLocalControlEvent(e)) {
                 this.handleMouseMove(e);
             }
         });
@@ -661,7 +676,7 @@ class KVMClient {
         });
 
         document.addEventListener('mousedown', (e) => {
-            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected && !this.isLocalControlEvent(e)) {
                 this.handleMouseEvent(e);
                 e.preventDefault();
             }
@@ -675,7 +690,7 @@ class KVMClient {
         });
 
         document.addEventListener('mouseup', (e) => {
-            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected && !this.isLocalControlEvent(e)) {
                 this.handleMouseEvent(e);
                 e.preventDefault();
             }
@@ -690,7 +705,7 @@ class KVMClient {
         });
 
         document.addEventListener('wheel', (e) => {
-            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected && !this.isLocalControlEvent(e)) {
                 this.handleMouseWheel(e);
                 e.preventDefault();
             }
@@ -1993,6 +2008,7 @@ class KVMClient {
         // Enable/disable quick control buttons based on HID connection
         this.sendCADBtn.disabled = !this.hidConnected;
         this.virtualKeyboardBtn.disabled = !this.hidConnected;
+        this.fullscreenKeyboardBtn.disabled = !this.hidConnected;
     }
 
     updateVideoDisplay() {
@@ -2257,6 +2273,11 @@ class KVMClient {
     }
 
     showVirtualKeyboard() {
+        if (document.pointerLockElement) {
+            this.pointerLockPausedForVirtualKeyboard = true;
+            document.exitPointerLock();
+        }
+        document.body.classList.add('virtual-keyboard-open');
         this.virtualKeyboardModal.style.display = 'flex';
         // Reset position when opening
         this.virtualKeyboardContent.style.position = '';
@@ -2269,8 +2290,35 @@ class KVMClient {
 
     hideVirtualKeyboard() {
         this.virtualKeyboardModal.style.display = 'none';
+        document.body.classList.remove('virtual-keyboard-open');
         // Reset any active modifier states
         this.resetVirtualKeyboardModifiers();
+        this.resumePointerLockAfterVirtualKeyboard();
+    }
+
+    resumePointerLockAfterVirtualKeyboard() {
+        if (!this.pointerLockPausedForVirtualKeyboard) return;
+        this.pointerLockPausedForVirtualKeyboard = false;
+
+        if (!this.mouseCaptured || !this.hidConnected || (this.mouseMode !== 'relative' && this.videoConnected)) {
+            return;
+        }
+
+        setTimeout(() => {
+            if (!this.mouseCaptured || document.pointerLockElement) return;
+            this.getPointerLockTarget().requestPointerLock().catch(error => {
+                console.error('Pointer lock resume failed:', error);
+            });
+        }, 80);
+    }
+
+    isLocalControlEvent(event) {
+        const target = event.target;
+        if (!(target instanceof Element)) return false;
+
+        return !!target.closest(
+            '.virtual-keyboard-modal, .fullscreen-tools, .header, .info-panel, .quit-key-modal'
+        );
     }
 
     setupVirtualKeyboard() {
