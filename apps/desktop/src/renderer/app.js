@@ -56,7 +56,10 @@ class KVMClient {
                 refreshHIDError: 'Error refreshing HID connection',
                 connectHIDFirst: 'Please connect HID device first',
                 connectHIDFirstMouse: 'Please connect HID device first for mouse/keyboard control',
-                startVideoFirst: 'Please start video stream first',
+                startVideoFirst: 'Video is optional. Connect HID to use input bridge mode.',
+                inputBridgeReadyTitle: 'Input Bridge Ready',
+                inputBridgeReadyBody: 'Connect OSRBOT KVM, then click this area to share keyboard and mouse without a capture card.',
+                inputBridgeReadySub: 'Video preview is optional when the controlled device already has a screen.',
                 fallbackResolution: 'Resolution {from} failed ({error}). Falling back to {to}.',
                 negotiatedResolution: 'Requested {from}, device provided {to}. Using {to}.'
             },
@@ -115,7 +118,10 @@ class KVMClient {
                 refreshHIDError: '刷新 HID 连接出错',
                 connectHIDFirst: '请先连接 HID 设备',
                 connectHIDFirstMouse: '请先连接 HID 设备以控制鼠标/键盘',
-                startVideoFirst: '请先开启视频流',
+                startVideoFirst: '视频是可选的，连接 HID 后即可使用纯键鼠共享模式。',
+                inputBridgeReadyTitle: '共享器就绪',
+                inputBridgeReadyBody: '连接 OSRBOT KVM 后，点击此区域即可在无采集卡时共享键盘鼠标。',
+                inputBridgeReadySub: '当被控端本身有屏幕时，视频预览不是必需项。',
                 fallbackResolution: '分辨率 {from} 失败（{error}），切换到 {to}。',
                 negotiatedResolution: '请求 {from}，设备返回 {to}，已使用 {to}。'
             }
@@ -597,6 +603,13 @@ class KVMClient {
             }
             // Note: Mouse clicks when captured are handled by mousedown/mouseup events
         });
+
+        this.videoPlaceholder.addEventListener('click', (e) => {
+            if (!this.mouseCaptured) {
+                this.toggleMouseCapture();
+                e.preventDefault();
+            }
+        });
         
         document.addEventListener('keydown', (e) => this.handleDocumentKey(e, true), true);
         document.addEventListener('keyup', (e) => this.handleDocumentKey(e, false), true);
@@ -625,6 +638,12 @@ class KVMClient {
                 this.handleMouseMove(e);
             }
         });
+
+        document.addEventListener('mousemove', (e) => {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+                this.handleMouseMove(e);
+            }
+        });
         
         // Mouse capture overlay events (backup for relative mode)
         this.mouseCaptureOverlay.addEventListener('mousemove', (e) => {
@@ -640,9 +659,23 @@ class KVMClient {
                 e.preventDefault();
             }
         });
+
+        document.addEventListener('mousedown', (e) => {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+                this.handleMouseEvent(e);
+                e.preventDefault();
+            }
+        });
         
         this.videoElement.addEventListener('mouseup', (e) => {
             if (this.mouseCaptured && this.hidConnected) {
+                this.handleMouseEvent(e);
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
                 this.handleMouseEvent(e);
                 e.preventDefault();
             }
@@ -655,6 +688,13 @@ class KVMClient {
                 e.preventDefault();
             }
         });
+
+        document.addEventListener('wheel', (e) => {
+            if (this.mouseCaptured && this.hidConnected && !this.videoConnected) {
+                this.handleMouseWheel(e);
+                e.preventDefault();
+            }
+        }, { passive: false });
         
         // Context menu prevention
         this.videoElement.addEventListener('contextmenu', (e) => {
@@ -1682,11 +1722,6 @@ class KVMClient {
             return;
         }
 
-        if (!this.videoConnected) {
-            alert(this.t('startVideoFirst'));
-            return;
-        }
-
         if (this.mouseCaptured) {
             await this.releaseMouseCapture();
         } else {
@@ -1762,7 +1797,7 @@ class KVMClient {
     async handleMouseMove(event) {
         if (!this.hidConnected) return;
 
-        if (this.mouseMode === 'relative') {
+        if (this.mouseMode === 'relative' || !this.videoConnected) {
             const deltaX = event.movementX;
             const deltaY = event.movementY;
 
@@ -1780,7 +1815,7 @@ class KVMClient {
             }
         } else if (this.mouseMode === 'absolute') {
             // Send absolute position for absolute mode
-            const videoRect = this.videoElement.getBoundingClientRect();
+            const videoRect = this.getControlSurfaceRect();
             
             // Calculate relative position within the video element
             const relativeX = event.clientX - videoRect.left;
@@ -1817,7 +1852,7 @@ class KVMClient {
         if (!this.hidConnected || this.mouseMode !== 'absolute') return;
 
         // For absolute mode, use video element bounds, not overlay
-        const videoRect = this.videoElement.getBoundingClientRect();
+        const videoRect = this.getControlSurfaceRect();
         
         // Calculate relative position within the video element
         const relativeX = event.clientX - videoRect.left;
@@ -1857,7 +1892,7 @@ class KVMClient {
         try {
             // In relative mode, only send button press/release without position
             // In absolute mode, include the click position
-            if (this.mouseMode === 'relative') {
+            if (this.mouseMode === 'relative' || !this.videoConnected) {
                 // Relative mode: Send only button state, no position
                 await window.electronAPI.sendMouseEvent({
                     type: event.type === 'mousedown' ? 'mousedown' : 'mouseup',
@@ -1867,7 +1902,7 @@ class KVMClient {
                 });
             } else {
                 // Absolute mode: Calculate and send current mouse position
-                const videoRect = this.videoElement.getBoundingClientRect();
+                const videoRect = this.getControlSurfaceRect();
                 const relativeX = event.clientX - videoRect.left;
                 const relativeY = event.clientY - videoRect.top;
                 const clampedX = Math.max(0, Math.min(relativeX, videoRect.width));
@@ -1897,9 +1932,9 @@ class KVMClient {
             // Apply scroll direction preference
             const scrollMultiplier = this.reverseScroll ? -1 : 1;
 
-            if (this.mouseMode === 'absolute') {
+            if (this.mouseMode === 'absolute' && this.videoConnected) {
                 // Absolute mode: Include current mouse position with wheel event
-                const videoRect = this.videoElement.getBoundingClientRect();
+                const videoRect = this.getControlSurfaceRect();
                 const relativeX = event.clientX - videoRect.left;
                 const relativeY = event.clientY - videoRect.top;
                 const clampedX = Math.max(0, Math.min(relativeX, videoRect.width));
@@ -1951,6 +1986,14 @@ class KVMClient {
         }
     }
 
+    getControlSurfaceRect() {
+        if (this.videoConnected && this.videoElement.style.display !== 'none') {
+            return this.videoElement.getBoundingClientRect();
+        }
+
+        return document.querySelector('.video-container').getBoundingClientRect();
+    }
+
 
     updateVideoStatus() {
         this.videoStatus.textContent = this.videoConnected ? this.t('videoConnected') : this.t('videoDisconnected');
@@ -1977,7 +2020,13 @@ class KVMClient {
         } else {
             this.videoElement.style.display = 'none';
             this.videoPlaceholder.style.display = 'flex';
+            this.videoPlaceholder.innerHTML = `
+                <h2>${this.t('inputBridgeReadyTitle')}</h2>
+                <p>${this.t('inputBridgeReadyBody')}</p>
+                <p class="video-placeholder-sub">${this.t('inputBridgeReadySub')}</p>
+            `;
         }
+        this.updateMouseModeDisplay();
     }
 
     toggleMouseMode() {
@@ -1989,7 +2038,9 @@ class KVMClient {
     updateMouseModeDisplay() {
         if (this.mouseMode === 'absolute') {
             this.mouseModeLabel.textContent = this.t('mouseModeAbsolute');
-            this.mouseModeDescription.textContent = this.t('mouseModeDescAbs');
+            this.mouseModeDescription.textContent = this.videoConnected
+                ? this.t('mouseModeDescAbs')
+                : this.t('startVideoFirst');
             this.mouseModeToggle.checked = false;
         } else {
             this.mouseModeLabel.textContent = this.t('mouseModeRelative');
@@ -2092,7 +2143,15 @@ class KVMClient {
             
             // Request pointer lock for relative mode
             console.log('Requesting pointer lock for relative mode');
-            this.videoElement.requestPointerLock().then(() => {
+            this.getPointerLockTarget().requestPointerLock().then(() => {
+                console.log('Pointer lock request succeeded');
+            }).catch(error => {
+                console.error('Pointer lock request failed:', error);
+            });
+        } else if (!this.videoConnected) {
+            document.body.style.cursor = 'none';
+            console.log('Requesting pointer lock for input bridge mode');
+            this.getPointerLockTarget().requestPointerLock().then(() => {
                 console.log('Pointer lock request succeeded');
             }).catch(error => {
                 console.error('Pointer lock request failed:', error);
@@ -2101,6 +2160,10 @@ class KVMClient {
             // Absolute mode: keep cursor visible
             document.body.style.cursor = 'default';
         }
+    }
+
+    getPointerLockTarget() {
+        return this.videoConnected ? this.videoElement : document.querySelector('.video-container');
     }
 
     toggleScrollDirection() {
