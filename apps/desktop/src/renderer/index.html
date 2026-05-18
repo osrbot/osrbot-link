@@ -11,18 +11,20 @@
         <header class="header">
             <div class="title-bar">
                 <h1>OSRBOT Link Lite</h1>
+                <p>Hardware console</p>
             </div>
             <div class="controls">
                 <div class="device-controls">
-                    <label data-i18n="deviceLabel">Device:</label>
+                    <div class="section-label">Video</div>
+                    <label data-i18n="deviceLabel">Device</label>
                     <select id="videoDevices" class="device-select">
                         <option value="">Select Video Device</option>
                     </select>
-                    <label data-i18n="resolutionLabel">Resolution:</label>
+                    <label data-i18n="resolutionLabel">Resolution</label>
                     <select id="resolutionSelect" class="device-select">
                         <option value="">Select Resolution</option>
                     </select>
-                    <label data-i18n="fpsLabel">FPS:</label>
+                    <label data-i18n="fpsLabel">FPS</label>
                     <select id="fpsSelect" class="device-select">
                         <option value="">Select FPS</option>
                     </select>
@@ -31,6 +33,7 @@
                     <button id="stopVideo" class="btn btn-secondary" disabled>Stop Video</button>
                 </div>
                 <div class="hid-controls">
+                    <div class="section-label">Input Bridge</div>
                     <select id="hidDevices" class="device-select">
                         <option value="">Select HID Device</option>
                     </select>
@@ -38,9 +41,10 @@
                     <button id="disconnectHID" class="btn btn-secondary" disabled>Disconnect HID</button>
                 </div>
                 <div class="quick-controls">
+                    <div class="section-label">Actions</div>
                     <button id="sendCAD" class="btn btn-warning" disabled title="Send Ctrl+Alt+Delete">Ctrl+Alt+Del</button>
-                    <button id="virtualKeyboard" class="btn btn-secondary" disabled title="Virtual Keyboard">⌨️</button>
-                    <button id="toggleFullscreen" class="btn btn-secondary" title="Toggle Fullscreen">⛶</button>
+                    <button id="virtualKeyboard" class="btn btn-secondary" disabled title="Virtual Keyboard">Keyboard</button>
+                    <button id="toggleFullscreen" class="btn btn-secondary" title="Toggle Fullscreen">Fullscreen</button>
                 </div>
                 <button id="sidebarToggle" class="btn sidebar-toggle">Settings</button>
             </div>
@@ -104,12 +108,12 @@
                 </div>
                 
                 <div class="quit-key-controls">
-                    <h3 data-i18n="quitKeyTitle">Quit Key Combination</h3>
+                    <h3 data-i18n="quitKeyTitle">Exit Control Mode</h3>
                     <div class="quit-key-setting">
-                        <span class="quit-key-display" id="quitKeyDisplay">Ctrl + Alt</span>
-                        <button id="changeQuitKey" class="btn btn-secondary" data-i18n="changeBtn">Change</button>
+                        <span class="quit-key-display" id="quitKeyDisplay">Esc</span>
+                        <button id="changeQuitKey" class="btn btn-secondary" data-i18n="changeBtn" disabled>Fixed</button>
                     </div>
-                    <p class="mode-description" data-i18n="quitKeyDesc">Key combination to exit control mode</p>
+                    <p class="mode-description" data-i18n="quitKeyDesc">Press Esc to release control and leave fullscreen.</p>
                 </div>
                 
                 <div class="test-controls">
@@ -133,16 +137,16 @@
 
         <div class="mouse-capture-overlay" id="mouseCaptureOverlay" style="display: none;">
             <div class="mouse-capture-info">
-                <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="controlModeTitle">🎮 Control Mode Active</div>
-                <div style="margin-bottom: 4px;" data-i18n="controlModeHint">Press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> to exit</div>
+                <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="controlModeTitle">Control Mode Active</div>
+                <div style="margin-bottom: 4px;" data-i18n="controlModeHint">Press <kbd>Esc</kbd> to exit</div>
             </div>
         </div>
 
         <!-- Quit Key Change Modal -->
         <div class="quit-key-modal" id="quitKeyModal" style="display: none;">
             <div class="quit-key-content">
-                <h3>Change Quit Key Combination</h3>
-                <p>Press the key combination you want to use to exit control mode:</p>
+                <h3>Exit Control Mode</h3>
+                <p>Esc is fixed as the control-mode and fullscreen exit key for this test build.</p>
                 
                 <div class="key-capture-area" id="keyCaptureArea">
                     <div class="captured-keys" id="capturedKeys">Press keys...</div>

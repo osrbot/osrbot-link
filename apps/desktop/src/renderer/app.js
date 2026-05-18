@@ -19,9 +19,9 @@ class KVMClient {
                 scrollTraditional: 'Traditional',
                 scrollDescNatural: 'Natural scrolling (like macOS/mobile)',
                 scrollDescTraditional: 'Traditional scrolling (like Windows)',
-                quitKeyTitle: 'Quit Key Combination',
-                quitKeyDesc: 'Key combination to exit control mode',
-                changeBtn: 'Change',
+                quitKeyTitle: 'Exit Control Mode',
+                quitKeyDesc: 'Press Esc to release control and leave fullscreen.',
+                changeBtn: 'Fixed',
                 testTitle: 'Test Controls',
                 testMouse: 'Test Mouse Click',
                 testKeyboard: 'Test Keyboard (A)',
@@ -42,8 +42,8 @@ class KVMClient {
                 videoConnected: 'Connected',
                 hidDisconnected: 'Disconnected',
                 hidConnected: 'Connected',
-                overlayActive: '🎮 Control Mode Active',
-                overlayHint: 'Press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> to exit',
+                overlayActive: 'Control Mode Active',
+                overlayHint: 'Press <kbd>Esc</kbd> to exit',
                 noValidRes: 'No valid resolutions found. Use formats like 1920x1200 or 2560*1440, separated by commas.',
                 noWebRTC: 'Browser does not support WebRTC',
                 cameraPermission: 'Camera permission is required for video streaming',
@@ -78,9 +78,9 @@ class KVMClient {
                 scrollTraditional: '传统',
                 scrollDescNatural: '自然滚动（macOS/移动端样式）',
                 scrollDescTraditional: '传统滚动（Windows 样式）',
-                quitKeyTitle: '退出快捷键',
-                quitKeyDesc: '用于退出控制模式的组合键',
-                changeBtn: '修改',
+                quitKeyTitle: '退出控制模式',
+                quitKeyDesc: '按 Esc 释放控制并退出全屏。',
+                changeBtn: '固定',
                 testTitle: '测试',
                 testMouse: '测试鼠标点击',
                 testKeyboard: '测试键盘 (A)',
@@ -101,8 +101,8 @@ class KVMClient {
                 videoConnected: '已连接',
                 hidDisconnected: '未连接',
                 hidConnected: '已连接',
-                overlayActive: '🎮 控制模式已开启',
-                overlayHint: '按 <kbd>Ctrl</kbd> + <kbd>Alt</kbd> 退出',
+                overlayActive: '控制模式已开启',
+                overlayHint: '按 <kbd>Esc</kbd> 退出',
                 noValidRes: '未找到有效分辨率。格式示例：1920x1200 或 2560*1440，使用逗号分隔。',
                 noWebRTC: '浏览器不支持 WebRTC',
                 cameraPermission: '需要相机权限才能开启视频流',
@@ -134,7 +134,7 @@ class KVMClient {
         this.reverseScroll = false; // Natural scrolling direction
         this.isFullscreen = false; // Track fullscreen state
         this.nativeInputAvailable = false;
-        this.quitKeyCombo = { ctrlKey: true, altKey: true, shiftKey: false, metaKey: false, key: null, code: null }; // Default quit combination
+        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' }; // Esc exits control mode
 
         // Compatible KVM device list for auto-detection
         // Add new compatible devices here with their VID/PID and description
@@ -323,6 +323,8 @@ class KVMClient {
                     console.error('Error parsing quit key combo:', error);
                 }
             }
+            this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' };
+            localStorage.setItem('kvmQuitKeyCombo', JSON.stringify(this.quitKeyCombo));
             
             console.log('Loaded settings:', { 
                 mouseMode: this.mouseMode, 
@@ -2705,18 +2707,10 @@ class KVMClient {
         }
 
         // Get current quit key combination
-        const parts = [];
-        if (this.quitKeyCombo.ctrlKey) parts.push('Ctrl');
-        if (this.quitKeyCombo.altKey) parts.push('Alt');
-        if (this.quitKeyCombo.shiftKey) parts.push('Shift');
-        if (this.quitKeyCombo.metaKey) parts.push('Meta');
-        if (this.quitKeyCombo.key) parts.push(this.quitKeyCombo.key.toUpperCase());
-
-        // Set the content with HTML for styled keys
         notification.innerHTML = `
-            <div style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">🎮 Control Mode Active</div>
-            <div style="margin-bottom: 8px; font-size: 16px;">Press ${parts.map(key => `<kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">${key}</kbd>`).join(' + ')} to exit</div>
-            <div style="font-size: 12px; color: #4CAF50; opacity: 0.9;">✅ Keyboard capture active</div>
+            <div style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">Control Mode Active</div>
+            <div style="margin-bottom: 8px; font-size: 16px;">Press <kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">Esc</kbd> to exit</div>
+            <div style="font-size: 12px; color: #74d99f; opacity: 0.9;">Keyboard and mouse forwarding active</div>
         `;
 
         notification.style.display = 'block';
@@ -2790,14 +2784,7 @@ class KVMClient {
     }
 
     updateQuitKeyDisplay() {
-        const parts = [];
-        if (this.quitKeyCombo.ctrlKey) parts.push('Ctrl');
-        if (this.quitKeyCombo.altKey) parts.push('Alt');
-        if (this.quitKeyCombo.shiftKey) parts.push('Shift');
-        if (this.quitKeyCombo.metaKey) parts.push('Meta');
-        if (this.quitKeyCombo.key) parts.push(this.quitKeyCombo.key.toUpperCase());
-        
-        this.quitKeyDisplay.textContent = parts.join(' + ') || 'None';
+        this.quitKeyDisplay.textContent = 'Esc';
         
         // Update the control mode notification
         this.updateControlModeNotification();
@@ -2805,22 +2792,13 @@ class KVMClient {
 
     updateControlModeNotification() {
         // Update the overlay message with current quit key combination
-        const parts = [];
-        if (this.quitKeyCombo.ctrlKey) parts.push('Ctrl');
-        if (this.quitKeyCombo.altKey) parts.push('Alt');
-        if (this.quitKeyCombo.shiftKey) parts.push('Shift');
-        if (this.quitKeyCombo.metaKey) parts.push('Meta');
-        if (this.quitKeyCombo.key) parts.push(this.quitKeyCombo.key.toUpperCase());
-        
-        const quitKeyText = parts.join(' + ') || 'None';
-        
         // Update the overlay in the mouse capture overlay
         const overlayInfo = this.mouseCaptureOverlay.querySelector('.mouse-capture-info');
         if (overlayInfo) {
             overlayInfo.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 6px;">🎮 Control Mode Active</div>
-                <div style="margin-bottom: 4px;">Press ${parts.map(key => `<kbd>${key}</kbd>`).join(' + ')} to exit</div>
-                <div style="font-size: 11px; opacity: 0.7;">F3/F11 keys via test buttons</div>
+                <div style="font-weight: 600; margin-bottom: 6px;">Control Mode Active</div>
+                <div style="margin-bottom: 4px;">Press <kbd>Esc</kbd> to exit</div>
+                <div style="font-size: 11px; opacity: 0.7;">Keyboard and mouse forwarding active</div>
             `;
         }
     }
@@ -2907,7 +2885,7 @@ class KVMClient {
     }
 
     resetQuitKeyToDefault() {
-        this.quitKeyCombo = { ctrlKey: true, altKey: true, shiftKey: false, metaKey: false, key: null, code: null };
+        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' };
         this.updateQuitKeyDisplay();
         this.saveSettings();
         this.hideQuitKeyModal();
