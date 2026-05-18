@@ -141,6 +141,9 @@ class KVMClient {
         this.isFullscreen = false; // Track fullscreen state
         this.nativeInputAvailable = false;
         this.pointerLockPausedForVirtualKeyboard = false;
+        this.mediaRecorder = null;
+        this.recordedChunks = [];
+        this.isRecording = false;
         this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' }; // Esc exits control mode
 
         // Compatible KVM device list for auto-detection
@@ -218,9 +221,13 @@ class KVMClient {
         // Quick control buttons
         this.sendCADBtn = document.getElementById('sendCAD');
         this.virtualKeyboardBtn = document.getElementById('virtualKeyboard');
+        this.captureScreenshotBtn = document.getElementById('captureScreenshot');
+        this.toggleRecordingBtn = document.getElementById('toggleRecording');
         this.toggleFullscreenBtn = document.getElementById('toggleFullscreen');
         this.fullscreenTools = document.getElementById('fullscreenTools');
         this.fullscreenKeyboardBtn = document.getElementById('fullscreenKeyboard');
+        this.fullscreenScreenshotBtn = document.getElementById('fullscreenScreenshot');
+        this.fullscreenRecordBtn = document.getElementById('fullscreenRecord');
         this.fullscreenExitBtn = document.getElementById('fullscreenExit');
         this.languageSelect = document.getElementById('languageSelect');
         
@@ -588,10 +595,20 @@ class KVMClient {
         // Quick control buttons
         this.sendCADBtn.addEventListener('click', () => this.sendCtrlAltDelete());
         this.virtualKeyboardBtn.addEventListener('click', () => this.showVirtualKeyboard());
+        this.captureScreenshotBtn.addEventListener('click', () => this.captureScreenshot());
+        this.toggleRecordingBtn.addEventListener('click', () => this.toggleRecording());
         this.toggleFullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
         this.fullscreenKeyboardBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.showVirtualKeyboard();
+        });
+        this.fullscreenScreenshotBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.captureScreenshot();
+        });
+        this.fullscreenRecordBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleRecording();
         });
         this.fullscreenExitBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1431,6 +1448,7 @@ class KVMClient {
             
             this.startVideoBtn.disabled = true;
             this.stopVideoBtn.disabled = false;
+            this.updateCaptureControls();
 
             console.log(`Video started: ${actualResolution || `${width}x${height}`} @ ${actualFrameRate || fps}fps`);
         } catch (error) {
@@ -1469,6 +1487,10 @@ class KVMClient {
     }
 
     async stopVideo() {
+        if (this.isRecording) {
+            this.stopVideoRecording();
+        }
+
         if (this.currentStream) {
             this.currentStream.getTracks().forEach(track => track.stop());
             this.currentStream = null;
@@ -1481,10 +1503,142 @@ class KVMClient {
         
         this.startVideoBtn.disabled = false;
         this.stopVideoBtn.disabled = true;
+        this.updateCaptureControls();
 
         if (this.mouseCaptured) {
             this.releaseMouseCapture();
         }
+    }
+
+    async captureScreenshot() {
+        if (!this.videoConnected || !this.videoElement.videoWidth || !this.videoElement.videoHeight) {
+            alert('Start video before taking a screenshot.');
+            return;
+        }
+
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = this.videoElement.videoWidth;
+            canvas.height = this.videoElement.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
+
+            const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+            if (!blob) throw new Error('Could not encode PNG');
+
+            const result = await window.electronAPI.saveCaptureFile({
+                defaultName: `osrbot-screenshot-${this.getCaptureTimestamp()}.png`,
+                filters: [{ name: 'PNG Image', extensions: ['png'] }],
+                data: await blob.arrayBuffer()
+            });
+
+            if (result?.success) {
+                this.showAutoConnectNotification(`Screenshot saved: ${result.filePath}`, 'success');
+            } else if (!result?.canceled) {
+                this.showAutoConnectNotification(`Screenshot failed: ${result?.error || 'unknown error'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Screenshot failed:', error);
+            this.showAutoConnectNotification(`Screenshot failed: ${error.message}`, 'error');
+        }
+    }
+
+    toggleRecording() {
+        if (this.isRecording) {
+            this.stopVideoRecording();
+        } else {
+            this.startVideoRecording();
+        }
+    }
+
+    startVideoRecording() {
+        if (!this.videoConnected || !this.videoElement.srcObject) {
+            alert('Start video before recording.');
+            return;
+        }
+
+        const streamFactory = this.videoElement.captureStream || this.videoElement.mozCaptureStream;
+        if (!streamFactory) {
+            this.showAutoConnectNotification('Recording is not supported by this runtime.', 'error');
+            return;
+        }
+
+        try {
+            const stream = streamFactory.call(this.videoElement);
+            const mimeType = this.getSupportedRecordingMimeType();
+            this.recordedChunks = [];
+            this.mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+
+            this.mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    this.recordedChunks.push(event.data);
+                }
+            };
+
+            this.mediaRecorder.onstop = () => this.saveRecording();
+            this.mediaRecorder.start(1000);
+            this.isRecording = true;
+            this.updateCaptureControls();
+            this.showAutoConnectNotification('Recording started.', 'info');
+        } catch (error) {
+            console.error('Recording failed to start:', error);
+            this.showAutoConnectNotification(`Recording failed: ${error.message}`, 'error');
+        }
+    }
+
+    stopVideoRecording() {
+        if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') {
+            this.isRecording = false;
+            this.updateCaptureControls();
+            return;
+        }
+
+        this.mediaRecorder.stop();
+        this.isRecording = false;
+        this.updateCaptureControls();
+    }
+
+    async saveRecording() {
+        try {
+            if (this.recordedChunks.length === 0) {
+                this.showAutoConnectNotification('Recording stopped with no video data.', 'error');
+                return;
+            }
+
+            const type = this.mediaRecorder?.mimeType || 'video/webm';
+            const blob = new Blob(this.recordedChunks, { type });
+            const result = await window.electronAPI.saveCaptureFile({
+                defaultName: `osrbot-recording-${this.getCaptureTimestamp()}.webm`,
+                filters: [{ name: 'WebM Video', extensions: ['webm'] }],
+                data: await blob.arrayBuffer()
+            });
+
+            this.recordedChunks = [];
+            this.mediaRecorder = null;
+
+            if (result?.success) {
+                this.showAutoConnectNotification(`Recording saved: ${result.filePath}`, 'success');
+            } else if (!result?.canceled) {
+                this.showAutoConnectNotification(`Recording failed: ${result?.error || 'unknown error'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Recording save failed:', error);
+            this.showAutoConnectNotification(`Recording failed: ${error.message}`, 'error');
+        }
+    }
+
+    getSupportedRecordingMimeType() {
+        const types = [
+            'video/webm;codecs=vp9',
+            'video/webm;codecs=vp8',
+            'video/webm'
+        ];
+
+        return types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+    }
+
+    getCaptureTimestamp() {
+        return new Date().toISOString().replace(/[:.]/g, '-');
     }
 
     async loadHIDDevices() {
@@ -1995,6 +2149,7 @@ class KVMClient {
     updateVideoStatus() {
         this.videoStatus.textContent = this.videoConnected ? this.t('videoConnected') : this.t('videoDisconnected');
         this.videoStatus.setAttribute('data-status', this.videoConnected ? 'connected' : 'disconnected');
+        this.updateCaptureControls();
     }
 
     updateHIDStatus() {
@@ -2025,6 +2180,20 @@ class KVMClient {
             `;
         }
         this.updateMouseModeDisplay();
+        this.updateCaptureControls();
+    }
+
+    updateCaptureControls() {
+        const canCapture = this.videoConnected && !!this.videoElement.srcObject;
+        this.captureScreenshotBtn.disabled = !canCapture;
+        this.fullscreenScreenshotBtn.disabled = !canCapture;
+        this.toggleRecordingBtn.disabled = !canCapture && !this.isRecording;
+        this.fullscreenRecordBtn.disabled = !canCapture && !this.isRecording;
+
+        const label = this.isRecording ? 'Stop Rec' : 'Record';
+        const compactLabel = this.isRecording ? 'Stop' : 'Rec';
+        this.toggleRecordingBtn.textContent = label;
+        this.fullscreenRecordBtn.textContent = compactLabel;
     }
 
     toggleMouseMode() {
@@ -2337,10 +2506,9 @@ class KVMClient {
             });
         });
         
-        // Close modal when clicking outside
         this.virtualKeyboardModal.addEventListener('click', (e) => {
-            if (e.target === this.virtualKeyboardModal) {
-                this.hideVirtualKeyboard();
+            if (e.target.closest('.virtual-keyboard-content')) {
+                e.stopPropagation();
             }
         });
     }

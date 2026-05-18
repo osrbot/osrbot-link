@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HIDManager = require('./hid-manager');
@@ -358,6 +358,25 @@ ipcMain.handle('send-mouse-event', async (event, data) => {
 
 ipcMain.handle('send-keyboard-event', async (event, data) => {
   return hidManager.sendKeyboardEvent(data);
+});
+
+ipcMain.handle('save-capture-file', async (_event, payload) => {
+  try {
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      defaultPath: path.join(app.getPath('pictures'), payload.defaultName),
+      filters: payload.filters || []
+    });
+
+    if (canceled || !filePath) {
+      return { success: false, canceled: true };
+    }
+
+    fs.writeFileSync(filePath, Buffer.from(payload.data));
+    return { success: true, filePath };
+  } catch (error) {
+    console.error('Failed to save capture file:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 ipcMain.handle('get-stream-url', async () => {

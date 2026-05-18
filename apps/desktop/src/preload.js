@@ -14,5 +14,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Window controls
   toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen'),
   exitFullscreen: () => ipcRenderer.invoke('exit-fullscreen'),
-  setControlMode: (inControlMode) => ipcRenderer.invoke('set-control-mode', inControlMode)
+  setControlMode: (inControlMode) => ipcRenderer.invoke('set-control-mode', inControlMode),
+
+  // Local capture files
+  saveCaptureFile: (payload) => ipcRenderer.invoke('save-capture-file', payload)
 });
