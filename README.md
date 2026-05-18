@@ -29,3 +29,32 @@ npm test
 ```
 
 The current test baseline covers the OSRBOT HID protocol encoder, including keyboard reports, absolute mouse reports, relative mouse reports, USB switch commands, and hidapi write-buffer rotation.
+
+## macOS Hardware Checks
+
+With the OSRBOT device and capture card connected to the macOS host:
+
+```bash
+npm install
+npm run hardware:usb
+npm run hardware:hid:list
+npm run hardware:hid:probe
+```
+
+If the HID probe fails in a restricted shell but succeeds when run from a normal terminal or approved Codex command, the hardware is visible and the remaining issue is local process permission.
+
+Safe write test:
+
+```bash
+npm run hardware:hid:reset
+```
+
+This sends neutral reports only: keyboard released, absolute mouse neutral, and relative mouse neutral.
+
+Optional firmware feature check:
+
+```bash
+npm run hardware:hid:usb-switch-status
+```
+
+Some firmware builds may not respond to the `0x6F` USB switch status query even though normal keyboard/mouse HID writes work.

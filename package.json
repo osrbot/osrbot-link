@@ -6,7 +6,15 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "test:hid": "node --test packages/hid/*.test.js"
+    "test:hid": "node --test packages/hid/*.test.js",
+    "hardware:usb": "system_profiler SPUSBDataType || ioreg -p IOUSB -l -w 0",
+    "hardware:hid:list": "node scripts/hardware/hid-list.js",
+    "hardware:hid:probe": "node scripts/hardware/hid-probe.js",
+    "hardware:hid:reset": "node scripts/hardware/hid-probe.js --reset",
+    "hardware:hid:usb-switch-status": "node scripts/hardware/hid-probe.js --usb-switch-status"
+  },
+  "dependencies": {
+    "node-hid": "^3.3.0"
   },
   "engines": {
     "node": ">=20"
