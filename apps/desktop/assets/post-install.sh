@@ -36,21 +36,20 @@ if [ ! -f "$RULES_SOURCE" ]; then
     echo "Trying alternative locations..."
     
     # Try to find the rules file in common locations
-    if [ -f "/opt/KVM Client/resources/99-hidraw-permissions.rules" ]; then
-        RULES_SOURCE="/opt/KVM Client/resources/99-hidraw-permissions.rules"
-    elif [ -f "/usr/share/kvm-client/99-hidraw-permissions.rules" ]; then
-        RULES_SOURCE="/usr/share/kvm-client/99-hidraw-permissions.rules"
+    if [ -f "/opt/osrbot-link/resources/99-hidraw-permissions.rules" ]; then
+        RULES_SOURCE="/opt/osrbot-link/resources/99-hidraw-permissions.rules"
+    elif [ -f "/opt/OSRBOT Link/resources/99-hidraw-permissions.rules" ]; then
+        RULES_SOURCE="/opt/OSRBOT Link/resources/99-hidraw-permissions.rules"
+    elif [ -f "/usr/share/osrbot-link/99-hidraw-permissions.rules" ]; then
+        RULES_SOURCE="/usr/share/osrbot-link/99-hidraw-permissions.rules"
     else
         echo "ERROR: Could not find udev rules file."
         echo "Please manually create the rules file with the following content:"
-        cat << 'EOF'
-# udev rules for HID device access
-SUBSYSTEM=="usb", MODE="0666", GROUP="plugdev"
-SUBSYSTEM=="hidraw", MODE="0666", GROUP="plugdev"
-KERNEL=="hidraw*", MODE="0666", GROUP="plugdev"
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="*", MODE="0666", GROUP="plugdev"
-SUBSYSTEM=="usb", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", MODE="0666", GROUP="plugdev"
-ACTION=="add", KERNEL=="hidraw*", MODE="0666", GROUP="plugdev"
+cat << 'EOF'
+# OSRBOT keyboard/mouse sharing device
+# VID: 413d, PID: 2107
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="413d", ATTRS{idProduct}=="2107", MODE="0666", GROUP="plugdev", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTR{idVendor}=="413d", ATTR{idProduct}=="2107", MODE="0666", GROUP="plugdev", TAG+="uaccess"
 EOF
         exit 1
     fi
@@ -105,17 +104,21 @@ if ! groups "$ACTUAL_USER" | grep -q "plugdev"; then
     echo "Please log out and log back in for group changes to take effect."
 fi
 
-# Set permissions on existing hidraw devices
-echo "Setting permissions on existing HID devices..."
+# Set permissions on existing OSRBOT hidraw devices
+echo "Setting permissions on existing OSRBOT HID devices..."
 for device in /dev/hidraw*; do
     if [ -e "$device" ]; then
-        if [ "$EUID" -eq 0 ]; then
-            chmod 666 "$device"
-            chgrp plugdev "$device"
-        else
-            if command -v sudo >/dev/null 2>&1; then
-                sudo chmod 666 "$device"
-                sudo chgrp plugdev "$device"
+        hid_name="$(basename "$device")"
+        sys_path="$(readlink -f "/sys/class/hidraw/$hid_name/device" 2>/dev/null || true)"
+        if echo "$sys_path" | grep -qi "0003:413D:2107"; then
+            if [ "$EUID" -eq 0 ]; then
+                chmod 666 "$device"
+                chgrp plugdev "$device"
+            else
+                if command -v sudo >/dev/null 2>&1; then
+                    sudo chmod 666 "$device"
+                    sudo chgrp plugdev "$device"
+                fi
             fi
         fi
     fi

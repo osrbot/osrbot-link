@@ -117,6 +117,61 @@ body.workspace-fullscreen .fullscreen-tools {
     background: #171a20;
 }
 
+.hid-message {
+    display: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #39414d;
+    background: #20252d;
+    color: #d8dee9;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    user-select: text;
+}
+
+.hid-message.visible {
+    display: block;
+}
+
+.hid-message.error {
+    border-color: #7f2f3a;
+    background: #2a171b;
+    color: #ffd7dd;
+}
+
+.hid-message.success {
+    border-color: #2f7f52;
+    background: #14261d;
+    color: #d7ffe6;
+}
+
+.hid-message.info {
+    border-color: #315f86;
+    background: #142232;
+    color: #d8edff;
+}
+
+.hid-permission-btn {
+    display: none;
+}
+
+.capture-info {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #303844;
+    background: #10141a;
+    color: #aeb8c8;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.capture-info.active {
+    border-color: #2f7f52;
+    background: #122018;
+    color: #d7ffe6;
+}
+
 .device-controls label {
     font-size: 12px;
     font-weight: 500;
@@ -713,6 +768,197 @@ input:checked + .toggle-slider:before {
 
 .language-controls {
     margin-top: 12px;
+}
+
+.theme-controls {
+    padding-bottom: 24px;
+    border-bottom: 1px solid #2f343d;
+    margin-bottom: 24px;
+}
+
+.theme-controls h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+body[data-theme="bright"] {
+    background: #eef6fb;
+    color: #17202c;
+}
+
+body[data-theme="bright"] .header {
+    background: linear-gradient(180deg, #f8fcff 0%, #edf7fb 100%);
+    border-right-color: #c7dbe7;
+    box-shadow: 16px 0 34px rgba(36, 78, 112, 0.08);
+}
+
+body[data-theme="bright"] .title-bar {
+    border-bottom-color: #cfe0ea;
+}
+
+body[data-theme="bright"] .title-bar h1,
+body[data-theme="bright"] .sidebar-header h2,
+body[data-theme="bright"] .language-controls h3,
+body[data-theme="bright"] .theme-controls h3,
+body[data-theme="bright"] .quit-key-controls h3,
+body[data-theme="bright"] .custom-resolution-controls h3,
+body[data-theme="bright"] .mouse-mode-controls h3,
+body[data-theme="bright"] .scroll-controls h3,
+body[data-theme="bright"] .mode-label {
+    color: #162130;
+}
+
+body[data-theme="bright"] .title-bar p,
+body[data-theme="bright"] .mode-description {
+    color: #5d6f82;
+}
+
+body[data-theme="bright"] .device-controls,
+body[data-theme="bright"] .hid-controls,
+body[data-theme="bright"] .quick-controls {
+    background: #ffffff;
+    border-color: #d6e5ee;
+    box-shadow: 0 10px 24px rgba(45, 96, 130, 0.08);
+}
+
+body[data-theme="bright"] .section-label {
+    color: #0c9b78;
+}
+
+body[data-theme="bright"] .device-controls label {
+    color: #405366;
+}
+
+body[data-theme="bright"] .device-select,
+body[data-theme="bright"] #customResInput {
+    background-color: #f7fbfd;
+    border-color: #c9dce8;
+    color: #17202c;
+}
+
+body[data-theme="bright"] .device-select:focus,
+body[data-theme="bright"] #customResInput:focus {
+    border-color: #18b989;
+    box-shadow: 0 0 0 2px rgba(24, 185, 137, 0.18);
+    outline: none;
+}
+
+body[data-theme="bright"] .btn-primary {
+    background-color: #18b989;
+    color: #052016;
+}
+
+body[data-theme="bright"] .btn-primary:hover:not(:disabled) {
+    background-color: #1fd09b;
+}
+
+body[data-theme="bright"] .btn-secondary {
+    background-color: #dcebf4;
+    color: #17202c;
+}
+
+body[data-theme="bright"] .btn-secondary:hover:not(:disabled) {
+    background-color: #c9e0ee;
+}
+
+body[data-theme="bright"] .btn-warning {
+    background-color: #ffd36a;
+    color: #2b2108;
+}
+
+body[data-theme="bright"] .capture-info {
+    background: #f7fbfd;
+    border-color: #c9dce8;
+    color: #52677b;
+}
+
+body[data-theme="bright"] .capture-info.active {
+    background: #e7fff5;
+    border-color: #73d8b1;
+    color: #116642;
+}
+
+body[data-theme="bright"] .hid-message {
+    background: #f8fbfe;
+    border-color: #c9dce8;
+    color: #243246;
+}
+
+body[data-theme="bright"] .hid-message.info {
+    background: #e9f6ff;
+    border-color: #83bfe6;
+    color: #163c58;
+}
+
+body[data-theme="bright"] .hid-message.success {
+    background: #e7fff5;
+    border-color: #73d8b1;
+    color: #116642;
+}
+
+body[data-theme="bright"] .hid-message.error {
+    background: #fff0f3;
+    border-color: #ee9aaa;
+    color: #7d1e32;
+}
+
+body[data-theme="bright"] .video-container {
+    background: radial-gradient(circle at 50% 45%, #f7fbff 0%, #e6f0f7 54%, #d7e5ee 100%);
+}
+
+body[data-theme="bright"] .video-placeholder {
+    color: #51677a;
+    background: rgba(255, 255, 255, 0.82);
+    border-color: #b8d2df;
+    box-shadow: 0 18px 46px rgba(50, 97, 128, 0.12);
+}
+
+body[data-theme="bright"] .video-placeholder h2 {
+    color: #182334;
+}
+
+body[data-theme="bright"] .video-placeholder-sub {
+    color: #0c9b78;
+}
+
+body[data-theme="bright"] .info-panel {
+    background-color: rgba(248, 252, 255, 0.98);
+    border-left-color: #c7dbe7;
+    box-shadow: -16px 0 34px rgba(36, 78, 112, 0.08);
+}
+
+body[data-theme="bright"] .sidebar-header,
+body[data-theme="bright"] .language-controls,
+body[data-theme="bright"] .theme-controls,
+body[data-theme="bright"] .quit-key-controls,
+body[data-theme="bright"] .custom-resolution-controls,
+body[data-theme="bright"] .mouse-mode-controls,
+body[data-theme="bright"] .scroll-controls {
+    border-bottom-color: #d4e3ec;
+}
+
+body[data-theme="bright"] .status-label {
+    color: #405366;
+}
+
+body[data-theme="bright"] .sidebar-toggle {
+    background-color: #cdeef0;
+    color: #102a3a;
+}
+
+body[data-theme="bright"] .sidebar-toggle:hover:not(:disabled) {
+    background-color: #b6e4e8;
+}
+
+body[data-theme="bright"] .toggle-slider {
+    background-color: #b8c9d5;
+}
+
+body[data-theme="bright"] .fullscreen-tools {
+    background: rgba(248, 252, 255, 0.88);
+    border-color: rgba(106, 138, 158, 0.28);
+    box-shadow: 0 12px 34px rgba(50, 97, 128, 0.18);
 }
 
 @media (max-width: 768px) {

@@ -1,12 +1,21 @@
 const { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const { execFile } = require('child_process');
 const HIDManager = require('./hid-manager');
 
 let rdevGrabber = null;
 let rdevRunning = false;
 let isInControlMode = false;
 let isWindowFocused = false;
+const OSRBOT_PROVENANCE = Object.freeze({
+  product: 'OSRBOT Link',
+  owner: 'OSRBOT',
+  hardwareContributor: 'Maxwell',
+  hardwareId: 'USB\\VID_413D&PID_2107',
+  marker: 'OSRBOT-LINK::413D:2107'
+});
 
 function loadRdevGrabber() {
   const basePath = path.join(__dirname, '..', 'native', 'rdev-grabber');
@@ -44,6 +53,60 @@ function loadRdevGrabber() {
     lastError ? `Error: ${lastError.message}` : ''
   );
   return null;
+}
+
+function getBundledResourcePath(fileName) {
+  const candidates = [
+    process.resourcesPath ? path.join(process.resourcesPath, fileName) : null,
+    path.join(__dirname, '..', 'assets', fileName),
+    path.join(__dirname, '..', fileName)
+  ].filter(Boolean);
+
+  return candidates.find(candidate => fs.existsSync(candidate)) || null;
+}
+
+function copyLinuxPermissionFiles() {
+  const rulesSource = getBundledResourcePath('99-hidraw-permissions.rules');
+  const scriptSource = getBundledResourcePath('post-install.sh');
+  if (!rulesSource || !scriptSource) {
+    throw new Error('Linux HID permission helper files are missing from the application bundle.');
+  }
+
+  const tempDir = path.join(os.tmpdir(), 'osrbot-link-permissions');
+  fs.mkdirSync(tempDir, { recursive: true });
+
+  const rulesTarget = path.join(tempDir, '99-hidraw-permissions.rules');
+  const scriptTarget = path.join(tempDir, 'post-install.sh');
+  fs.copyFileSync(rulesSource, rulesTarget);
+  fs.copyFileSync(scriptSource, scriptTarget);
+  fs.chmodSync(scriptTarget, 0o755);
+  return scriptTarget;
+}
+
+function runFile(command, args, options = {}) {
+  return new Promise((resolve) => {
+    execFile(command, args, options, (error, stdout, stderr) => {
+      resolve({
+        success: !error,
+        error: error ? error.message : null,
+        stdout: stdout || '',
+        stderr: stderr || ''
+      });
+    });
+  });
+}
+
+function linuxPermissionManualCommand() {
+  return [
+    'sudo tee /etc/udev/rules.d/99-osrbot-link.rules >/dev/null <<EOF',
+    '# OSRBOT keyboard/mouse sharing device',
+    'SUBSYSTEM=="hidraw", ATTRS{idVendor}=="413d", ATTRS{idProduct}=="2107", MODE="0666", GROUP="plugdev", TAG+="uaccess"',
+    'SUBSYSTEM=="usb", ATTR{idVendor}=="413d", ATTR{idProduct}=="2107", MODE="0666", GROUP="plugdev", TAG+="uaccess"',
+    'EOF',
+    'sudo udevadm control --reload-rules',
+    'sudo udevadm trigger',
+    'sudo usermod -a -G plugdev "$USER"'
+  ].join('\n');
 }
 
 // Start/stop rdev grab based on focus + control state
@@ -158,7 +221,7 @@ function checkMacOSPermissions() {
     console.warn('');
     console.warn('To enable keyboard capture on macOS:');
     console.warn('1. Open System Settings → Privacy & Security → Accessibility');
-    console.warn('2. Add "OSRBOT Link Lite" or "Electron" to the list');
+    console.warn('2. Add "OSRBOT Link" or "Electron" to the list');
     console.warn('3. Restart the application');
     console.warn('');
     console.warn('Alternatively, the app will prompt you when you try to use keyboard capture.');
@@ -177,6 +240,11 @@ function checkMacOSPermissions() {
 
 // Disable network services and SSL connections at startup (guarded for safety)
 if (app && app.commandLine) {
+  if (process.platform === 'linux') {
+    app.commandLine.appendSwitch('no-sandbox');
+    app.commandLine.appendSwitch('disable-setuid-sandbox');
+  }
+
   app.commandLine.appendSwitch('--disable-features', 'CertificateTransparencyComponentUpdater');
   app.commandLine.appendSwitch('--disable-background-networking');
   app.commandLine.appendSwitch('--disable-background-timer-throttling');
@@ -208,8 +276,10 @@ function createWindow() {
       experimentalFeatures: false
     },
     titleBarStyle: process.platform === 'darwin' ? 'default' : 'default',
-    title: 'OSRBOT Link Lite',
+    title: 'OSRBOT Link',
     show: false,
+    icon: path.join(__dirname, '..', 'icon.png'),
+    autoHideMenuBar: process.platform !== 'darwin',
     // Try to prevent macOS from handling function keys
     alwaysOnTop: false,
   skipTaskbar: false
@@ -238,10 +308,16 @@ function createWindow() {
     updateGrabState();
   });
 
+  if (process.platform !== 'darwin') {
+    mainWindow.setMenuBarVisibility(false);
+    mainWindow.removeMenu();
+    return;
+  }
+
   // Create menu
   const template = [
     {
-      label: 'OSRBOT Link Lite',
+      label: 'OSRBOT Link',
       submenu: [
         { role: 'about' },
         { type: 'separator' },
@@ -270,7 +346,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   // Set app user model ID for Windows
-  app.setAppUserModelId('com.osrbot.link-lite');
+  app.setAppUserModelId('com.osrbot.link');
 
   // Check macOS permissions on startup
   checkMacOSPermissions();
@@ -344,12 +420,59 @@ ipcMain.handle('get-hid-devices', async () => {
   return hidManager.getDevices();
 });
 
+ipcMain.handle('get-all-hid-devices', async () => {
+  return hidManager.getAllDevices();
+});
+
+ipcMain.handle('get-hid-enumeration-error', async () => {
+  return hidManager.getLastEnumerationError();
+});
+
 ipcMain.handle('connect-hid-device', async (event, devicePath) => {
   return hidManager.connect(devicePath);
 });
 
 ipcMain.handle('disconnect-hid-device', async () => {
   return hidManager.disconnect();
+});
+
+ipcMain.handle('install-linux-hid-permissions', async () => {
+  if (process.platform !== 'linux') {
+    return { success: false, error: 'Linux HID permission setup is only available on Linux.' };
+  }
+
+  try {
+    const scriptPath = copyLinuxPermissionFiles();
+    const manualCommand = linuxPermissionManualCommand();
+
+    if (fs.existsSync('/usr/bin/pkexec')) {
+      const result = await runFile('/usr/bin/pkexec', ['bash', scriptPath], { timeout: 120000 });
+      if (result.success) {
+        return {
+          success: true,
+          message: 'Linux HID permissions installed. Unplug and replug the OSRBOT sharing device. If it still fails, log out and back in once.'
+        };
+      }
+
+      return {
+        success: false,
+        error: result.stderr || result.error || 'Permission helper was canceled or failed.',
+        manualCommand
+      };
+    }
+
+    return {
+      success: false,
+      error: 'pkexec is not available on this Ubuntu system.',
+      manualCommand
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+      manualCommand: linuxPermissionManualCommand()
+    };
+  }
 });
 
 ipcMain.handle('send-mouse-event', async (event, data) => {
@@ -365,7 +488,8 @@ ipcMain.handle('get-build-info', async () => {
     version: app.getVersion(),
     buildTimestamp: process.env.BUILD_DATE || process.env.BUILD_TIMESTAMP || null,
     platform: process.platform,
-    arch: process.arch
+    arch: process.arch,
+    provenance: OSRBOT_PROVENANCE.marker
   };
 });
 

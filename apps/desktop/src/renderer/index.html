@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSRBOT Link Lite</title>
+    <title>OSRBOT Link</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="bright">
     <div class="container">
         <header class="header">
             <div class="title-bar">
-                <h1>OSRBOT Link Lite</h1>
-                <p id="buildInfo">v0.2</p>
+                <h1 id="panelTitle">控制台</h1>
+                <p id="buildInfo">v0.3</p>
             </div>
             <div class="controls">
                 <div class="device-controls">
@@ -31,6 +31,7 @@
                     <button id="refreshDevices" class="btn btn-secondary" title="刷新视频和 HID 设备">刷新</button>
                     <button id="startVideo" class="btn btn-primary">开始视频</button>
                     <button id="stopVideo" class="btn btn-secondary" disabled>停止视频</button>
+                    <div id="actualCaptureInfo" class="capture-info" aria-live="polite">实际采集：未连接</div>
                 </div>
                 <div class="hid-controls">
                     <div id="sectionInput" class="section-label">键鼠共享</div>
@@ -38,7 +39,10 @@
                         <option value="">选择 HID 设备</option>
                     </select>
                     <button id="connectHID" class="btn btn-primary">连接 HID</button>
+                    <button id="showHIDDiagnostics" class="btn btn-secondary">显示全部 HID</button>
                     <button id="disconnectHID" class="btn btn-secondary" disabled>断开 HID</button>
+                    <button id="fixHIDPermissions" class="btn btn-warning hid-permission-btn" style="display: none;">修复 Linux 权限</button>
+                    <div id="hidMessage" class="hid-message" aria-live="polite"></div>
                 </div>
                 <div class="quick-controls">
                     <div id="sectionActions" class="section-label">快捷操作</div>
@@ -87,6 +91,15 @@
                     </select>
                     <p class="mode-description" data-i18n="languageHint">Auto-detected by system language; you can override here.</p>
                 </div>
+
+                <div class="theme-controls">
+                    <h3 data-i18n="themeTitle">Skin</h3>
+                    <select id="themeSelect" class="device-select">
+                        <option value="bright" data-i18n="themeBright">Bright</option>
+                        <option value="dark" data-i18n="themeDark">Dark</option>
+                    </select>
+                    <p class="mode-description" data-i18n="themeHint">Choose a brighter daily skin or the original dark skin.</p>
+                </div>
                 
                 <div class="mouse-mode-controls">
                     <h3 data-i18n="mouseModeTitle">Mouse Mode</h3>
@@ -115,10 +128,10 @@
                 <div class="quit-key-controls">
                     <h3 data-i18n="quitKeyTitle">Exit Control Mode</h3>
                     <div class="quit-key-setting">
-                        <span class="quit-key-display" id="quitKeyDisplay">Esc</span>
+                        <span class="quit-key-display" id="quitKeyDisplay">Shift+Esc</span>
                         <button id="changeQuitKey" class="btn btn-secondary" data-i18n="changeBtn" disabled>Fixed</button>
                     </div>
-                    <p class="mode-description" data-i18n="quitKeyDesc">Press Esc to release control and leave fullscreen.</p>
+                    <p class="mode-description" data-i18n="quitKeyDesc">Press Shift+Esc to release control and leave fullscreen.</p>
                 </div>
                 
                 <div class="custom-resolution-controls">
@@ -137,13 +150,13 @@
             <button id="fullscreenScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
             <button id="fullscreenRecord" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
             <button id="fullscreenGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
-            <button id="fullscreenExit" class="btn btn-secondary" title="Exit fullscreen and control mode">Esc</button>
+            <button id="fullscreenExit" class="btn btn-secondary" title="Exit fullscreen and control mode">Shift+Esc</button>
         </div>
 
         <div class="mouse-capture-overlay" id="mouseCaptureOverlay" style="display: none;">
             <div class="mouse-capture-info">
                 <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="overlayActive">控制模式已开启</div>
-                <div style="margin-bottom: 4px;" data-i18n="overlayHint" data-i18n-html="true">按 <kbd>Esc</kbd> 退出</div>
+                <div style="margin-bottom: 4px;" data-i18n="overlayHint" data-i18n-html="true">按 <kbd>Shift+Esc</kbd> 退出</div>
             </div>
         </div>
 
@@ -151,7 +164,7 @@
         <div class="quit-key-modal" id="quitKeyModal" style="display: none;">
             <div class="quit-key-content">
                 <h3>Exit Control Mode</h3>
-                <p>Esc is fixed as the control-mode and fullscreen exit key for this test build.</p>
+                <p>Shift+Esc is fixed as the control-mode and fullscreen exit key for this build.</p>
                 
                 <div class="key-capture-area" id="keyCaptureArea">
                     <div class="captured-keys" id="capturedKeys">Press keys...</div>

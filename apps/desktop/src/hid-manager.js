@@ -7,6 +7,7 @@ class HIDManager {
     this.vendorId = 0x413D;
     this.productId = 0x2107;
     this.usagePage = 0xFF00;
+    this.lastEnumerationError = null;
     
     // Track current modifier and key states
     this.modifierState = 0;
@@ -18,44 +19,119 @@ class HIDManager {
     this.currentButtonState = 0; // Track currently pressed mouse buttons
   }
 
+  normalizeNumber(value) {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      return Number.parseInt(value, value.startsWith('0x') || value.startsWith('0X') ? 16 : 10);
+    }
+    return 0;
+  }
+
+  devicePathString(device) {
+    if (!device || device.path == null) return '';
+    if (Buffer.isBuffer(device.path)) return device.path.toString('utf8');
+    return String(device.path);
+  }
+
+  normalizeDevice(device) {
+    const vendorId = this.normalizeNumber(device.vendorId ?? device.vendor_id);
+    const productId = this.normalizeNumber(device.productId ?? device.product_id);
+    const usagePage = this.normalizeNumber(device.usagePage ?? device.usage_page);
+    return {
+      ...device,
+      path: this.devicePathString(device),
+      vendorId,
+      productId,
+      usagePage
+    };
+  }
+
+  pathMatchesTarget(device) {
+    const pathText = this.devicePathString(device).toLowerCase();
+    return pathText.includes('vid_413d') && pathText.includes('pid_2107');
+  }
+
+  isTargetDevice(device) {
+    const normalized = this.normalizeDevice(device);
+    return (normalized.vendorId === this.vendorId && normalized.productId === this.productId) ||
+      this.pathMatchesTarget(normalized);
+  }
+
+  isControlInterface(device) {
+    const normalized = this.normalizeDevice(device);
+    return this.isTargetDevice(normalized) &&
+      (normalized.usagePage === this.usagePage || normalized.usagePage === 0);
+  }
+
+  sortTargetDevices(devices) {
+    return devices
+      .map((device, index) => ({ device, index }))
+      .sort((a, b) => {
+        const aControl = this.isControlInterface(a.device) ? 1 : 0;
+        const bControl = this.isControlInterface(b.device) ? 1 : 0;
+        if (aControl !== bControl) return bControl - aControl;
+
+        // Keep behavior close to OSRBOT's original Windows client: prefer the
+        // later matching HID path when Windows exposes several HID entries.
+        return b.index - a.index;
+      })
+      .map(({ device }) => device);
+  }
+
   getDevices() {
     try {
-      const devices = HID.devices();
-      console.log('All HID devices:', devices.map(d => ({
-        path: d.path,
-        vendorId: d.vendorId,
-        productId: d.productId,
-        usagePage: d.usagePage,
-        product: d.product
-      })));
+      const devices = this.getAllDevices();
       
-      // First try with specific filters
-      let filteredDevices = devices.filter(device => 
-        device.vendorId === this.vendorId && 
-        device.productId === this.productId &&
-        device.usagePage === this.usagePage
-      );
+      // OSRBOT's Windows client opens the HID path matching VID/PID and
+      // vendor usage page 0xff00. Windows may show it under Human Interface
+      // Devices, often alongside other HID interfaces, so keep all VID/PID
+      // matches visible but prefer the control interface.
+      let filteredDevices = this.sortTargetDevices(devices.filter(device => this.isControlInterface(device)));
       
       // If no devices found with usage page filter, try without it
       if (filteredDevices.length === 0) {
-        filteredDevices = devices.filter(device => 
-          device.vendorId === this.vendorId && 
-          device.productId === this.productId
-        );
+        filteredDevices = this.sortTargetDevices(devices.filter(device => this.isTargetDevice(device)));
         console.log('Fallback: devices without usagePage filter:', filteredDevices);
       }
       
       // Also include any OSRBOT devices for debugging
-      const osrbotDevices = devices.filter(device => 
-        device.product && device.product.includes('OSRBOT')
+      const osrbotDevices = devices.filter(device =>
+        (device.product && device.product.includes('OSRBOT')) || this.pathMatchesTarget(device)
       );
       console.log('OSRBOT devices found:', osrbotDevices);
       
       return filteredDevices;
     } catch (error) {
       console.error('Error getting HID devices:', error);
+      this.lastEnumerationError = error && error.message ? error.message : String(error);
       return [];
     }
+  }
+
+  getAllDevices() {
+    try {
+      const devices = HID.devices().map(device => this.normalizeDevice(device));
+      this.lastEnumerationError = null;
+      console.log('All HID devices:', devices.map(d => ({
+        path: d.path,
+        vendorId: d.vendorId,
+        productId: d.productId,
+        usagePage: d.usagePage,
+        usage: d.usage,
+        interface: d.interface,
+        manufacturer: d.manufacturer,
+        product: d.product
+      })));
+      return devices;
+    } catch (error) {
+      console.error('Error getting all HID devices:', error);
+      this.lastEnumerationError = error && error.message ? error.message : String(error);
+      return [];
+    }
+  }
+
+  getLastEnumerationError() {
+    return this.lastEnumerationError;
   }
 
   async connect(devicePath) {
@@ -84,17 +160,13 @@ class HIDManager {
         console.log('Trying alternative connection method...');
         try {
           // Try opening with just vendor/product ID instead of path
-          const devices = HID.devices();
-          const targetDevice = devices.find(d => 
-            d.vendorId === this.vendorId && 
-            d.productId === this.productId &&
-            d.usagePage === this.usagePage
-          );
+          const devices = this.getDevices();
+          const targetDevice = devices.find(d => d.path && d.path !== devicePath);
           
           if (targetDevice) {
-            this.device = new HID.HID(this.vendorId, this.productId);
+            this.device = new HID.HID(targetDevice.path);
             this.connected = true;
-            console.log('Connected using vendor/product ID method');
+            console.log('Connected using fallback HID path:', targetDevice.path);
             return { success: true };
           }
         } catch (altError) {
@@ -102,8 +174,30 @@ class HIDManager {
         }
       }
       
-      return { success: false, error: `${error.message}. Make sure Electron has Input Monitoring permissions in System Preferences > Security & Privacy > Privacy > Input Monitoring` };
+      return this.formatConnectError(error);
     }
+  }
+
+  formatConnectError(error) {
+    const message = error && error.message ? error.message : String(error);
+    if (process.platform === 'linux' && /cannot open device|permission|access/i.test(message)) {
+      return {
+        success: false,
+        error: `${message}. Linux HID permission is missing. Install the OSRBOT udev rule, then unplug and replug the sharing device.`,
+        code: 'LINUX_HID_PERMISSION',
+        canFixPermissions: true
+      };
+    }
+
+    if (process.platform === 'darwin') {
+      return {
+        success: false,
+        error: `${message}. Make sure OSRBOT Link Lite has Accessibility/Input Monitoring permissions in System Settings > Privacy & Security.`,
+        code: 'MACOS_INPUT_PERMISSION'
+      };
+    }
+
+    return { success: false, error: message };
   }
 
   disconnect() {

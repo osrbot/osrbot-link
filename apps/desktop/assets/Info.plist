@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDisplayName</key>
-    <string>OSRBOT Link Lite</string>
+    <string>OSRBOT Link</string>
     <key>CFBundleExecutable</key>
-    <string>OSRBOT Link Lite</string>
+    <string>OSRBOT Link</string>
     <key>CFBundleIdentifier</key>
     <string>com.osrbot.kvm-client</string>
     <key>CFBundleName</key>
-    <string>OSRBOT Link Lite</string>
+    <string>OSRBOT Link</string>
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
     <key>CFBundleShortVersionString</key>
@@ -27,19 +27,19 @@
 
     <!-- Accessibility API - Required for keyboard/mouse capture -->
     <key>NSAccessibilityUsageDescription</key>
-    <string>OSRBOT Link Lite needs accessibility access to capture and forward keyboard and mouse events to the controlled device.</string>
+    <string>OSRBOT Link needs accessibility access to capture and forward keyboard and mouse events to the controlled device.</string>
 
     <!-- Input Monitoring - Required for keyboard event capture on macOS 10.15+ -->
     <key>NSInputMonitoringUsageDescription</key>
-    <string>OSRBOT Link Lite monitors keyboard input to forward keystrokes to the remote device you are controlling.</string>
+    <string>OSRBOT Link monitors keyboard input to forward keystrokes to the remote device you are controlling.</string>
 
     <!-- Screen Recording - May be needed for video capture -->
     <key>NSScreenCaptureDescription</key>
-    <string>OSRBOT Link Lite captures video from external devices for remote control.</string>
+    <string>OSRBOT Link captures video from external devices for remote control.</string>
 
     <!-- USB Device Access -->
     <key>NSUSBDeviceUsageDescription</key>
-    <string>OSRBOT Link Lite needs USB access to communicate with HID devices for keyboard and mouse control.</string>
+    <string>OSRBOT Link needs USB access to communicate with HID devices for keyboard and mouse control.</string>
 
     <!-- High Resolution Capable -->
     <key>NSHighResolutionCapable</key>

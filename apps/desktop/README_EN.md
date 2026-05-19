@@ -1,23 +1,33 @@
-# OSRBOT Link Lite Desktop
+# OSRBOT Link Desktop
 
-Desktop client for OSRBOT keyboard/mouse sharing hardware.
+OSRBOT Link Desktop is the desktop client for OSRBOT Link. It works with OSRBOT Keyboard/Mouse Sharing Hardware 2.0 to forward keyboard and mouse input from the host computer to a target device, with optional USB capture-card video preview.
+
+The client can be used as a standalone keyboard/mouse sharing tool when the target device already has its own display, or together with a USB capture card when video preview is needed on the host computer.
 
 ## Features
 
-- HID keyboard and mouse forwarding.
+- HID keyboard and mouse sharing.
 - Optional USB capture-card video preview.
-- Input-only mode without a capture card.
-- Screenshot, compressed WebM recording, and GIF recording.
-- Chinese/English UI.
+- Standalone input-sharing mode without a capture card.
 - Custom capture resolutions.
+- Manual display switching for the target device.
+- Screenshot, video recording, and GIF recording.
+- OSRBOT Link provenance watermark on exported captures.
+- Bright and dark skins.
+- Chinese and English UI.
 
-## Packaging
+## Platforms
 
-```bash
-npm install
-npm run dist:mac
-npm run dist:win
-npm run dist:linux
-```
+- macOS
+- Windows
+- Ubuntu Linux
 
-The mainline client uses Electron 28 and targets macOS, Windows 10/11, and Ubuntu Linux. Windows 7 requires a separate legacy build.
+## Contributors
+
+- [sunmaxwll](https://github.com/sunmaxwll)
+- [dajianli](https://github.com/dajianli)
+- [kitso666](https://github.com/kitso666)
+
+## Thanks
+
+Thanks to [MotorBottle](https://github.com/MotorBottle) and [Jackadminx/KVM-Card-Mini](https://github.com/Jackadminx/KVM-Card-Mini) for their valuable work and design references.

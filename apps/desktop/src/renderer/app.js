@@ -1,7 +1,15 @@
 class KVMClient {
     constructor() {
+        this.PROVENANCE = Object.freeze({
+            product: 'OSRBOT Link',
+            contributor: 'Maxwell',
+            hardware: 'OSRBOT Keyboard/Mouse Sharing Hardware 2.0',
+            marker: 'OSRBOT-LINK::413D:2107'
+        });
+
         this.I18N = {
             en: {
+                panelTitle: 'Control Panel',
                 labelVideo: 'Video:',
                 labelHID: 'HID:',
                 deviceLabel: 'Device:',
@@ -9,6 +17,10 @@ class KVMClient {
                 fpsLabel: 'FPS:',
                 languageTitle: 'Language',
                 languageHint: 'Auto-detected by system language; you can override here.',
+                themeTitle: 'Skin',
+                themeBright: 'Bright',
+                themeDark: 'Dark',
+                themeHint: 'Choose a brighter daily skin or the original dark skin.',
                 mouseModeTitle: 'Mouse Mode',
                 mouseModeAbsolute: 'Absolute',
                 mouseModeRelative: 'Relative',
@@ -20,7 +32,7 @@ class KVMClient {
                 scrollDescNatural: 'Natural scrolling (like macOS/mobile)',
                 scrollDescTraditional: 'Traditional scrolling (like Windows)',
                 quitKeyTitle: 'Exit Control Mode',
-                quitKeyDesc: 'Press Esc to release control and leave fullscreen.',
+                quitKeyDesc: 'Press Shift+Esc to release control and leave fullscreen.',
                 changeBtn: 'Fixed',
                 customResTitle: 'Custom Resolutions',
                 customResDesc: 'Append to the resolution menu (no guarantee device supports them).',
@@ -31,6 +43,7 @@ class KVMClient {
                 btnStopVideo: 'Stop Video',
                 btnRefresh: 'Refresh',
                 btnConnectHID: 'Connect HID',
+                btnShowHIDDiagnostics: 'Show All HID',
                 btnDisconnectHID: 'Disconnect HID',
                 btnCtrlAltDel: 'Ctrl+Alt+Del',
                 btnFullscreen: 'Fullscreen',
@@ -39,7 +52,7 @@ class KVMClient {
                 hidDisconnected: 'Disconnected',
                 hidConnected: 'Connected',
                 overlayActive: 'Control Mode Active',
-                overlayHint: 'Press <kbd>Esc</kbd> to exit',
+                overlayHint: 'Press <kbd>Shift+Esc</kbd> to exit',
                 forwardingActive: 'Keyboard and mouse forwarding active',
                 noValidRes: 'No valid resolutions found. Use formats like 1920x1200 or 2560*1440, separated by commas.',
                 noWebRTC: 'Browser does not support WebRTC',
@@ -77,8 +90,15 @@ class KVMClient {
                 selectVideoDevice: 'Please select a video device',
                 failedStartVideo: 'Failed to start video stream',
                 selectHIDDevice: 'Please select a HID device',
+                noCompatibleHID: 'No OSRBOT HID device matched. On Windows, click "Show All HID" and send the visible VID/PID/path if the device is still missing.',
+                hidDiagnosticsLoaded: 'All HID devices are shown for diagnostics. Select the OSRBOT device if visible, then click Connect HID.',
                 connectHIDFailed: 'Failed to connect HID device',
                 connectHIDError: 'Error connecting HID device',
+                linuxHIDPermissionHint: 'Linux HID permission is missing. Click "Fix Linux Permissions", enter the system password, then unplug and replug the OSRBOT sharing device.',
+                fixLinuxPermissions: 'Fix Linux Permissions',
+                fixingLinuxPermissions: 'Installing Linux HID permissions...',
+                linuxPermissionsFixed: 'Linux HID permissions installed. Unplug and replug the sharing device, then connect HID again.',
+                linuxPermissionsManual: 'Automatic permission setup failed. Run these commands in Terminal, then unplug and replug the device:',
                 refreshHIDError: 'Error refreshing HID connection',
                 connectHIDFirst: 'Please connect HID device first',
                 connectHIDFirstMouse: 'Please connect HID device first for mouse/keyboard control',
@@ -87,9 +107,13 @@ class KVMClient {
                 inputBridgeReadyBody: 'Connect OSRBOT KVM, then click this area to share keyboard and mouse without a capture card.',
                 inputBridgeReadySub: 'Video preview is optional when the controlled device already has a screen.',
                 fallbackResolution: 'Resolution {from} failed ({error}). Falling back to {to}.',
-                negotiatedResolution: 'Requested {from}, device provided {to}. Using {to}.'
+                negotiatedResolution: 'Requested {from}, device provided {to}. Using {to}.',
+                actualCaptureDisconnected: 'Actual capture: disconnected',
+                actualCaptureInfo: 'Actual capture: {resolution} @ {fps}fps',
+                actualCaptureInfoNoFps: 'Actual capture: {resolution}'
             },
             zh: {
+                panelTitle: '控制台',
                 labelVideo: '视频：',
                 labelHID: 'HID：',
                 deviceLabel: '设备：',
@@ -97,6 +121,10 @@ class KVMClient {
                 fpsLabel: 'FPS：',
                 languageTitle: '语言',
                 languageHint: '默认根据系统语言，可在此手动切换。',
+                themeTitle: '皮肤',
+                themeBright: '明亮',
+                themeDark: '深色',
+                themeHint: '日常使用推荐明亮皮肤，深色皮肤仍可切换。',
                 mouseModeTitle: '鼠标模式',
                 mouseModeAbsolute: '绝对',
                 mouseModeRelative: '相对',
@@ -108,7 +136,7 @@ class KVMClient {
                 scrollDescNatural: '自然滚动（macOS/移动端样式）',
                 scrollDescTraditional: '传统滚动（Windows 样式）',
                 quitKeyTitle: '退出控制模式',
-                quitKeyDesc: '按 Esc 释放控制并退出全屏。',
+                quitKeyDesc: '按 Shift+Esc 释放控制并退出全屏。',
                 changeBtn: '固定',
                 customResTitle: '自定义分辨率',
                 customResDesc: '添加到分辨率列表（设备是否支持不保证）。',
@@ -119,6 +147,7 @@ class KVMClient {
                 btnStopVideo: '停止视频',
                 btnRefresh: '刷新',
                 btnConnectHID: '连接 HID',
+                btnShowHIDDiagnostics: '显示全部 HID',
                 btnDisconnectHID: '断开 HID',
                 btnCtrlAltDel: 'Ctrl+Alt+Del',
                 btnFullscreen: '全屏',
@@ -127,7 +156,7 @@ class KVMClient {
                 hidDisconnected: '未连接',
                 hidConnected: '已连接',
                 overlayActive: '控制模式已开启',
-                overlayHint: '按 <kbd>Esc</kbd> 退出',
+                overlayHint: '按 <kbd>Shift+Esc</kbd> 退出',
                 forwardingActive: '键盘和鼠标正在转发',
                 noValidRes: '未找到有效分辨率。格式示例：1920x1200 或 2560*1440，使用逗号分隔。',
                 noWebRTC: '浏览器不支持 WebRTC',
@@ -165,8 +194,15 @@ class KVMClient {
                 selectVideoDevice: '请选择视频设备',
                 failedStartVideo: '启动视频流失败',
                 selectHIDDevice: '请选择 HID 设备',
+                noCompatibleHID: '未匹配到 OSRBOT HID 设备。Windows 下可点击“显示全部 HID”，如果仍看不到设备，请把显示的 VID/PID/path 发回来。',
+                hidDiagnosticsLoaded: '已显示全部 HID 诊断列表。若能看到 OSRBOT 设备，请选择后点击连接 HID。',
                 connectHIDFailed: '连接 HID 设备失败',
                 connectHIDError: '连接 HID 设备出错',
+                linuxHIDPermissionHint: 'Linux HID 权限不足。点击“修复 Linux 权限”，输入系统密码后，拔插一次 OSRBOT 共享器。',
+                fixLinuxPermissions: '修复 Linux 权限',
+                fixingLinuxPermissions: '正在安装 Linux HID 权限...',
+                linuxPermissionsFixed: 'Linux HID 权限已安装。请拔插一次共享器，然后重新连接 HID。',
+                linuxPermissionsManual: '自动修复权限失败。请在终端执行以下命令，然后拔插一次设备：',
                 refreshHIDError: '刷新 HID 连接出错',
                 connectHIDFirst: '请先连接 HID 设备',
                 connectHIDFirstMouse: '请先连接 HID 设备以控制鼠标/键盘',
@@ -175,7 +211,10 @@ class KVMClient {
                 inputBridgeReadyBody: '连接 OSRBOT KVM 后，点击此区域即可在无采集卡时共享键盘鼠标。',
                 inputBridgeReadySub: '当被控端本身有屏幕时，视频预览不是必需项。',
                 fallbackResolution: '分辨率 {from} 失败（{error}），切换到 {to}。',
-                negotiatedResolution: '请求 {from}，设备返回 {to}，已使用 {to}。'
+                negotiatedResolution: '请求 {from}，设备返回 {to}，已使用 {to}。',
+                actualCaptureDisconnected: '实际采集：未连接',
+                actualCaptureInfo: '实际采集：{resolution} @ {fps}fps',
+                actualCaptureInfoNoFps: '实际采集：{resolution}'
             }
         };
 
@@ -194,11 +233,15 @@ class KVMClient {
         this.nativeInputAvailable = false;
         this.mediaRecorder = null;
         this.recordedChunks = [];
+        this.recordingCanvas = null;
+        this.recordingContext = null;
+        this.recordingAnimationId = null;
+        this.recordingStream = null;
         this.isRecording = false;
         this.isRecordingGif = false;
         this.gifFrames = [];
         this.gifTimer = null;
-        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' }; // Esc exits control mode
+        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: true, metaKey: false, key: 'Escape', code: 'Escape' }; // Shift+Esc exits control mode
 
         // Compatible KVM device list for auto-detection
         // Add new compatible devices here with their VID/PID and description
@@ -270,8 +313,12 @@ class KVMClient {
         this.refreshDevicesBtn = document.getElementById('refreshDevices');
         this.startVideoBtn = document.getElementById('startVideo');
         this.stopVideoBtn = document.getElementById('stopVideo');
+        this.actualCaptureInfo = document.getElementById('actualCaptureInfo');
         this.connectHIDBtn = document.getElementById('connectHID');
+        this.showHIDDiagnosticsBtn = document.getElementById('showHIDDiagnostics');
         this.disconnectHIDBtn = document.getElementById('disconnectHID');
+        this.fixHIDPermissionsBtn = document.getElementById('fixHIDPermissions');
+        this.hidMessage = document.getElementById('hidMessage');
         this.customResInput = document.getElementById('customResInput');
         this.addCustomResBtn = document.getElementById('addCustomRes');
         
@@ -289,6 +336,7 @@ class KVMClient {
         this.fullscreenGifBtn = document.getElementById('fullscreenGif');
         this.fullscreenExitBtn = document.getElementById('fullscreenExit');
         this.languageSelect = document.getElementById('languageSelect');
+        this.themeSelect = document.getElementById('themeSelect');
         
         // Mouse mode controls
         this.mouseModeToggle = document.getElementById('mouseModeToggle');
@@ -335,8 +383,12 @@ class KVMClient {
             if (savedLang && this.I18N[savedLang]) {
                 this.language = savedLang;
             } else {
-                this.language = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+                this.language = 'zh';
             }
+
+            const savedTheme = localStorage.getItem('kvmTheme');
+            this.theme = savedTheme === 'dark' ? 'dark' : 'bright';
+            this.applyTheme();
 
             // Load mouse mode preference
             const savedMouseMode = localStorage.getItem('kvmMouseMode');
@@ -390,7 +442,7 @@ class KVMClient {
                     console.error('Error parsing quit key combo:', error);
                 }
             }
-            this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' };
+            this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: true, metaKey: false, key: 'Escape', code: 'Escape' };
             localStorage.setItem('kvmQuitKeyCombo', JSON.stringify(this.quitKeyCombo));
             
             console.log('Loaded settings:', { 
@@ -415,7 +467,10 @@ class KVMClient {
             if (this.language) {
                 localStorage.setItem('kvmLanguage', this.language);
             }
-            console.log('Saved settings:', { mouseMode: this.mouseMode, reverseScroll: this.reverseScroll, quitKeyCombo: this.quitKeyCombo });
+            if (this.theme) {
+                localStorage.setItem('kvmTheme', this.theme);
+            }
+            console.log('Saved settings:', { mouseMode: this.mouseMode, reverseScroll: this.reverseScroll, theme: this.theme, quitKeyCombo: this.quitKeyCombo });
         } catch (error) {
             console.error('Error saving settings:', error);
         }
@@ -515,6 +570,19 @@ class KVMClient {
         this.updateScrollDirectionDisplay();
     }
 
+    setTheme(theme) {
+        this.theme = theme === 'dark' ? 'dark' : 'bright';
+        localStorage.setItem('kvmTheme', this.theme);
+        this.applyTheme();
+    }
+
+    applyTheme() {
+        document.body.dataset.theme = this.theme === 'dark' ? 'dark' : 'bright';
+        if (this.themeSelect) {
+            this.themeSelect.value = this.theme;
+        }
+    }
+
     t(key, params = {}) {
         const dict = this.I18N[this.language] || this.I18N.en;
         let str = dict[key] || this.I18N.en[key] || key;
@@ -528,13 +596,16 @@ class KVMClient {
         const dict = this.I18N[this.language] || this.I18N.en;
         const mapIds = [
             { id: 'sectionVideo', key: 'sectionVideo' },
+            { id: 'panelTitle', key: 'panelTitle' },
             { id: 'sectionInput', key: 'sectionInput' },
             { id: 'sectionActions', key: 'sectionActions' },
             { id: 'startVideo', key: 'btnStartVideo' },
             { id: 'stopVideo', key: 'btnStopVideo' },
             { id: 'refreshDevices', key: 'btnRefresh' },
             { id: 'connectHID', key: 'btnConnectHID' },
+            { id: 'showHIDDiagnostics', key: 'btnShowHIDDiagnostics' },
             { id: 'disconnectHID', key: 'btnDisconnectHID' },
+            { id: 'fixHIDPermissions', key: 'fixLinuxPermissions' },
             { id: 'sendCAD', key: 'btnCtrlAltDel' },
             { id: 'switchDisplay', key: 'btnSwitchDisplay' },
             { id: 'captureScreenshot', key: 'btnScreenshot' },
@@ -550,11 +621,12 @@ class KVMClient {
             { id: 'scrollDirectionDescription', key: this.reverseScroll ? 'scrollDescTraditional' : 'scrollDescNatural' },
             { id: 'scrollDirectionLabel', key: this.reverseScroll ? 'scrollTraditional' : 'scrollNatural' },
             { id: 'videoStatus', key: this.videoConnected ? 'videoConnected' : 'videoDisconnected' },
-            { id: 'hidStatus', key: this.hidConnected ? 'hidConnected' : 'hidDisconnected' }
+            { id: 'hidStatus', key: this.hidConnected ? 'hidConnected' : 'hidDisconnected' },
+            { id: 'actualCaptureInfo', key: this.videoConnected ? null : 'actualCaptureDisconnected' }
         ];
         mapIds.forEach(({ id, key }) => {
             const el = document.getElementById(id);
-            if (el && dict[key]) el.textContent = dict[key];
+            if (el && key && dict[key]) el.textContent = dict[key];
         });
 
         // data-i18n elements
@@ -599,6 +671,10 @@ class KVMClient {
         if (this.languageSelect) {
             this.languageSelect.value = this.language;
         }
+        if (this.themeSelect) {
+            this.themeSelect.value = this.theme;
+        }
+        this.applyTheme();
         this.applyTranslations();
         this.loadBuildInfo();
         
@@ -642,7 +718,13 @@ class KVMClient {
         
         // HID controls
         this.connectHIDBtn.addEventListener('click', () => this.connectHID());
+        if (this.showHIDDiagnosticsBtn) {
+            this.showHIDDiagnosticsBtn.addEventListener('click', () => this.loadAllHIDDevicesForDiagnostics());
+        }
         this.disconnectHIDBtn.addEventListener('click', () => this.disconnectHID());
+        if (this.fixHIDPermissionsBtn) {
+            this.fixHIDPermissionsBtn.addEventListener('click', () => this.installLinuxHIDPermissions());
+        }
         
         // Mouse mode toggle
         this.mouseModeToggle.addEventListener('change', () => this.toggleMouseMode());
@@ -657,6 +739,9 @@ class KVMClient {
 
         if (this.languageSelect) {
             this.languageSelect.addEventListener('change', (e) => this.setLanguage(e.target.value));
+        }
+        if (this.themeSelect) {
+            this.themeSelect.addEventListener('change', (e) => this.setTheme(e.target.value));
         }
         
         // Quick control buttons
@@ -920,7 +1005,7 @@ class KVMClient {
             return;
         }
 
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && this.isQuitKeyCombo(event)) {
             if (this.mouseCaptured || this.isFullscreen) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -1365,10 +1450,11 @@ class KVMClient {
                 }
             }
             
-            // Auto-select highest available FPS when no saved preference
+            // Clarity-first default: many capture cards heavily compress high-FPS
+            // 1080p modes, so prefer 30fps, then 60fps, before higher rates.
             if (!fpsSelected) {
-                const highest = Math.max(...availableFPS);
-                this.fpsSelect.value = highest.toString();
+                const preferred = [30, 60, 24, 15, 90, 120].find(fps => availableFPS.includes(fps));
+                this.fpsSelect.value = (preferred || Math.max(...availableFPS)).toString();
             }
 
             // Auto-start if this is initial setup
@@ -1469,6 +1555,7 @@ class KVMClient {
             const actualHeight = settings.height;
             const actualFrameRate = settings.frameRate ? Math.round(settings.frameRate) : null;
             const actualResolution = (actualWidth && actualHeight) ? `${actualWidth}x${actualHeight}` : null;
+            this.updateActualCaptureInfo(actualResolution, actualFrameRate);
 
             if (actualResolution && this.resolutionSelect.value !== actualResolution) {
                 let opt = this.resolutionSelect.querySelector(`option[value="${actualResolution}"]`);
@@ -1566,6 +1653,7 @@ class KVMClient {
         this.videoConnected = false;
         this.updateVideoStatus();
         this.updateVideoDisplay();
+        this.updateActualCaptureInfo(null, null);
         
         this.startVideoBtn.disabled = false;
         this.stopVideoBtn.disabled = true;
@@ -1587,7 +1675,7 @@ class KVMClient {
             canvas.width = this.videoElement.videoWidth;
             canvas.height = this.videoElement.videoHeight;
             const context = canvas.getContext('2d');
-            context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
+            this.drawCaptureFrame(context, canvas.width, canvas.height);
 
             const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
             if (!blob) throw new Error('Could not encode PNG');
@@ -1630,7 +1718,7 @@ class KVMClient {
         }
 
         try {
-            const stream = streamFactory.call(this.videoElement);
+            const stream = this.createWatermarkedRecordingStream(streamFactory);
             const mimeType = this.getSupportedRecordingMimeType();
             this.recordedChunks = [];
             const options = mimeType ? { mimeType, videoBitsPerSecond: 2500000 } : { videoBitsPerSecond: 2500000 };
@@ -1642,7 +1730,10 @@ class KVMClient {
                 }
             };
 
-            this.mediaRecorder.onstop = () => this.saveRecording();
+            this.mediaRecorder.onstop = () => {
+                this.cleanupRecordingCanvas();
+                this.saveRecording();
+            };
             this.mediaRecorder.start(1000);
             this.isRecording = true;
             this.updateCaptureControls();
@@ -1650,7 +1741,45 @@ class KVMClient {
         } catch (error) {
             console.error('Recording failed to start:', error);
             this.showAutoConnectNotification(`${this.t('recordingFailed')}: ${error.message}`, 'error');
+            this.cleanupRecordingCanvas();
         }
+    }
+
+    createWatermarkedRecordingStream(streamFactory) {
+        if (this.videoElement.captureStream && HTMLCanvasElement.prototype.captureStream) {
+            const canvas = document.createElement('canvas');
+            canvas.width = this.videoElement.videoWidth || 1280;
+            canvas.height = this.videoElement.videoHeight || 720;
+            const context = canvas.getContext('2d');
+            this.recordingCanvas = canvas;
+            this.recordingContext = context;
+
+            const draw = () => {
+                if (!this.recordingCanvas) return;
+                this.drawCaptureFrame(context, canvas.width, canvas.height);
+                this.recordingAnimationId = requestAnimationFrame(draw);
+            };
+
+            draw();
+            const fps = Number.parseInt(this.fpsSelect?.value || '30', 10);
+            this.recordingStream = canvas.captureStream(Number.isFinite(fps) ? Math.min(Math.max(fps, 10), 60) : 30);
+            return this.recordingStream;
+        }
+
+        return streamFactory.call(this.videoElement);
+    }
+
+    cleanupRecordingCanvas() {
+        if (this.recordingAnimationId) {
+            cancelAnimationFrame(this.recordingAnimationId);
+            this.recordingAnimationId = null;
+        }
+        if (this.recordingStream) {
+            this.recordingStream.getTracks().forEach(track => track.stop());
+            this.recordingStream = null;
+        }
+        this.recordingCanvas = null;
+        this.recordingContext = null;
     }
 
     stopVideoRecording() {
@@ -1663,6 +1792,21 @@ class KVMClient {
         this.mediaRecorder.stop();
         this.isRecording = false;
         this.updateCaptureControls();
+    }
+
+    updateActualCaptureInfo(resolution, fps) {
+        if (!this.actualCaptureInfo) return;
+
+        if (!resolution) {
+            this.actualCaptureInfo.textContent = this.t('actualCaptureDisconnected');
+            this.actualCaptureInfo.classList.remove('active');
+            return;
+        }
+
+        this.actualCaptureInfo.textContent = fps
+            ? this.t('actualCaptureInfo', { resolution, fps })
+            : this.t('actualCaptureInfoNoFps', { resolution });
+        this.actualCaptureInfo.classList.add('active');
     }
 
     async saveRecording() {
@@ -1741,7 +1885,7 @@ class KVMClient {
                 return;
             }
 
-            context.drawImage(this.videoElement, 0, 0, width, height);
+            this.drawCaptureFrame(context, width, height);
             const image = context.getImageData(0, 0, width, height);
             this.gifFrames.push({
                 width,
@@ -1798,6 +1942,83 @@ class KVMClient {
             pixels[p] = r * 36 + g * 6 + b;
         }
         return pixels;
+    }
+
+    drawCaptureFrame(context, width, height) {
+        context.drawImage(this.videoElement, 0, 0, width, height);
+        this.drawCaptureWatermark(context, width, height);
+        this.drawProvenancePixels(context, width, height);
+    }
+
+    drawCaptureWatermark(context, width, height) {
+        const scale = Math.max(0.65, Math.min(1.45, width / 1920));
+        const padding = Math.round(18 * scale);
+        const gap = Math.round(7 * scale);
+        const titleFont = Math.max(13, Math.round(18 * scale));
+        const subFont = Math.max(9, Math.round(11 * scale));
+        const title = this.PROVENANCE.product;
+        const subtitle = '© OSRBOT / Maxwell';
+
+        context.save();
+        context.textBaseline = 'top';
+        context.font = `700 ${titleFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+        const titleWidth = context.measureText(title).width;
+        context.font = `500 ${subFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+        const subWidth = context.measureText(subtitle).width;
+
+        const boxWidth = Math.ceil(Math.max(titleWidth, subWidth) + padding * 2);
+        const boxHeight = Math.ceil(titleFont + subFont + gap + padding * 1.55);
+        const x = Math.max(padding, width - boxWidth - padding);
+        const y = Math.max(padding, height - boxHeight - padding);
+        const radius = Math.round(9 * scale);
+
+        context.globalAlpha = 0.72;
+        context.fillStyle = 'rgba(6, 12, 18, 0.78)';
+        this.roundRect(context, x, y, boxWidth, boxHeight, radius);
+        context.fill();
+
+        context.globalAlpha = 0.95;
+        context.fillStyle = '#ffffff';
+        context.font = `700 ${titleFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+        context.fillText(title, x + padding, y + Math.round(padding * 0.75));
+
+        context.globalAlpha = 0.72;
+        context.fillStyle = '#bdefff';
+        context.font = `500 ${subFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+        context.fillText(subtitle, x + padding, y + Math.round(padding * 0.75) + titleFont + gap);
+
+        context.globalAlpha = 0.18;
+        context.fillStyle = '#ffffff';
+        context.font = `500 ${Math.max(7, Math.round(8 * scale))}px monospace`;
+        context.fillText(this.PROVENANCE.marker, padding, height - padding - Math.max(8, Math.round(9 * scale)));
+        context.restore();
+    }
+
+    drawProvenancePixels(context, width, height) {
+        const marker = [0x4f, 0x53, 0x52, 0x42, 0x4f, 0x54, 0x4c, 0x4b];
+        const size = Math.min(marker.length, Math.max(0, Math.floor(width / 10)));
+        if (height < 4 || width < marker.length + 2) return;
+
+        const image = context.getImageData(1, height - 2, marker.length, 1);
+        for (let i = 0; i < size; i++) {
+            const offset = i * 4;
+            image.data[offset] = marker[i];
+            image.data[offset + 1] = 0x2a;
+            image.data[offset + 2] = 0x7d;
+            image.data[offset + 3] = 0xff;
+        }
+        context.putImageData(image, 1, height - 2);
+    }
+
+    roundRect(context, x, y, width, height, radius) {
+        const r = Math.min(radius, width / 2, height / 2);
+        context.beginPath();
+        context.moveTo(x + r, y);
+        context.arcTo(x + width, y, x + width, y + height, r);
+        context.arcTo(x + width, y + height, x, y + height, r);
+        context.arcTo(x, y + height, x, y, r);
+        context.arcTo(x, y, x + width, y, r);
+        context.closePath();
     }
 
     encodeGif(frames) {
@@ -1919,21 +2140,14 @@ class KVMClient {
         try {
             const devices = await window.electronAPI.getHIDDevices();
             this.hidDevicesSelect.innerHTML = `<option value="">${this.t('selectHIDOption')}</option>`;
+            this.populateHIDOptions(devices);
 
             let compatibleDevice = null;
-
             devices.forEach(device => {
-                const option = document.createElement('option');
-                option.value = device.path;
-                // Show device info with VID/PID for better identification
-                const vidPid = `VID:0x${(device.vendorId || 0).toString(16).padStart(4, '0')} PID:0x${(device.productId || 0).toString(16).padStart(4, '0')}`;
-                option.textContent = `${device.product || 'Unknown Device'} (${vidPid})`;
-                this.hidDevicesSelect.appendChild(option);
-
                 // Check if device matches any in the compatible devices list
                 const matchingConfig = this.COMPATIBLE_DEVICES.find(config =>
-                    config.vendorId === device.vendorId &&
-                    config.productId === device.productId
+                    config.vendorId === this.normalizeNumber(device.vendorId) &&
+                    config.productId === this.normalizeNumber(device.productId)
                 );
 
                 if (matchingConfig && !compatibleDevice) {
@@ -1945,6 +2159,12 @@ class KVMClient {
                     });
                 }
             });
+
+            if (devices.length === 0 && !this.hidConnected) {
+                const enumerationError = await this.getHIDEnumerationError();
+                const errorHint = enumerationError ? `\n\nHID enumeration error: ${enumerationError}` : '';
+                this.showHIDMessage(`${this.t('noCompatibleHID')}${errorHint}`, enumerationError ? 'error' : 'info');
+            }
 
             // Auto-connect to compatible KVM device if found and not already connected
             if (compatibleDevice && !this.hidConnected) {
@@ -1970,28 +2190,180 @@ class KVMClient {
         }
     }
 
+    populateHIDOptions(devices, diagnostic = false) {
+        const orderedDevices = diagnostic ? this.sortHIDDevicesForDisplay(devices) : devices;
+        orderedDevices.forEach((device, index) => {
+            const vendorId = this.normalizeNumber(device.vendorId);
+            const productId = this.normalizeNumber(device.productId);
+            const usagePage = this.normalizeNumber(device.usagePage);
+            const option = document.createElement('option');
+            option.value = device.path;
+
+            const vidPid = `VID:0x${(vendorId || 0).toString(16).padStart(4, '0')} PID:0x${(productId || 0).toString(16).padStart(4, '0')}`;
+            const usage = `UP:0x${(usagePage || 0).toString(16)}`;
+            const iface = device.interface !== undefined ? `IF:${device.interface}` : '';
+            const name = device.product || device.manufacturer || 'Unknown HID';
+            const pathText = String(device.path || '');
+            const compatibleTag = this.isCompatibleHIDDevice(device) ? 'OSRBOT' : 'HID';
+
+            option.textContent = diagnostic
+                ? `${index + 1}. ${compatibleTag} - ${name} (${vidPid} ${usage} ${iface})`
+                : `${name} (${vidPid})`;
+            option.title = this.formatHIDDiagnosticLine(device, index);
+            this.hidDevicesSelect.appendChild(option);
+        });
+    }
+
+    sortHIDDevicesForDisplay(devices) {
+        return [...devices].sort((a, b) => {
+            const aCompatible = this.isCompatibleHIDDevice(a) ? 1 : 0;
+            const bCompatible = this.isCompatibleHIDDevice(b) ? 1 : 0;
+            if (aCompatible !== bCompatible) return bCompatible - aCompatible;
+
+            const aName = `${a.product || ''} ${a.manufacturer || ''}`.trim();
+            const bName = `${b.product || ''} ${b.manufacturer || ''}`.trim();
+            return aName.localeCompare(bName);
+        });
+    }
+
+    isCompatibleHIDDevice(device) {
+        const vendorId = this.normalizeNumber(device.vendorId);
+        const productId = this.normalizeNumber(device.productId);
+        return this.COMPATIBLE_DEVICES.some(config =>
+            config.vendorId === vendorId && config.productId === productId
+        );
+    }
+
+    formatHIDDiagnosticLine(device, index) {
+        const vendorId = this.normalizeNumber(device.vendorId);
+        const productId = this.normalizeNumber(device.productId);
+        const usagePage = this.normalizeNumber(device.usagePage);
+        const name = device.product || device.manufacturer || 'Unknown HID';
+        const iface = device.interface !== undefined ? `IF:${device.interface}` : 'IF:n/a';
+        const pathText = String(device.path || '');
+        return `${index + 1}. ${name} VID:0x${(vendorId || 0).toString(16).padStart(4, '0')} PID:0x${(productId || 0).toString(16).padStart(4, '0')} UP:0x${(usagePage || 0).toString(16)} ${iface}\n   ${pathText}`;
+    }
+
+    buildHIDDiagnosticSummary(devices) {
+        const orderedDevices = this.sortHIDDevicesForDisplay(devices);
+        const osrbotDevices = orderedDevices.filter(device => this.isCompatibleHIDDevice(device));
+        const lines = [
+            `${orderedDevices.length} HID device(s).`,
+            `${osrbotDevices.length} OSRBOT candidate(s).`
+        ];
+
+        if (osrbotDevices.length > 0) {
+            lines.push('', 'OSRBOT:');
+            osrbotDevices.forEach((device, index) => {
+                lines.push(this.formatHIDDiagnosticLine(device, index));
+            });
+        }
+
+        return lines.join('\n');
+    }
+
+    async loadAllHIDDevicesForDiagnostics() {
+        try {
+            const devices = await window.electronAPI.getAllHIDDevices();
+            this.hidDevicesSelect.innerHTML = `<option value="">${this.t('selectHIDOption')}</option>`;
+            this.populateHIDOptions(devices, true);
+            const enumerationError = await this.getHIDEnumerationError();
+            const errorHint = enumerationError ? `\n\nHID enumeration error: ${enumerationError}` : '';
+            this.showHIDMessage(`${this.t('hidDiagnosticsLoaded')}\n\n${this.buildHIDDiagnosticSummary(devices)}${errorHint}`, enumerationError ? 'error' : 'info');
+        } catch (error) {
+            console.error('Error loading all HID devices:', error);
+            this.showHIDMessage(this.t('refreshHIDError'), 'error');
+        }
+    }
+
+    async getHIDEnumerationError() {
+        if (!window.electronAPI.getHIDEnumerationError) return '';
+        try {
+            return await window.electronAPI.getHIDEnumerationError();
+        } catch (error) {
+            console.error('Error reading HID enumeration error:', error);
+            return '';
+        }
+    }
+
+    normalizeNumber(value) {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+            return Number.parseInt(value, value.startsWith('0x') || value.startsWith('0X') ? 16 : 10);
+        }
+        return 0;
+    }
+
     async connectHID() {
         const devicePath = this.hidDevicesSelect.value;
         if (!devicePath) {
-            alert(this.t('selectHIDDevice'));
+            this.showHIDMessage(this.t('selectHIDDevice'), 'info');
             return;
         }
 
         try {
+            this.showHIDMessage('', 'info');
             const result = await window.electronAPI.connectHIDDevice(devicePath);
             if (result.success) {
                 this.hidConnected = true;
                 this.manualHIDDisconnect = false; // Clear manual disconnect flag on successful connection
                 this.updateHIDStatus();
+                this.showHIDMessage('', 'info');
                 
                 // Stop monitoring when successfully connected
                 this.stopHIDMonitoring();
             } else {
-                alert(`${this.t('connectHIDFailed')}: ${result.error}`);
+                const permissionHint = result.canFixPermissions ? `\n\n${this.t('linuxHIDPermissionHint')}` : '';
+                this.showHIDMessage(`${this.t('connectHIDFailed')}: ${result.error}${permissionHint}`, 'error', {
+                    showPermissionFix: !!result.canFixPermissions
+                });
             }
         } catch (error) {
             console.error('Error connecting HID:', error);
-            alert(this.t('connectHIDError'));
+            this.showHIDMessage(this.t('connectHIDError'), 'error');
+        }
+    }
+
+    showHIDMessage(message, type = 'info', options = {}) {
+        if (!this.hidMessage) return;
+
+        this.hidMessage.textContent = message || '';
+        this.hidMessage.className = `hid-message ${message ? 'visible' : ''} ${type}`;
+
+        if (this.fixHIDPermissionsBtn) {
+            this.fixHIDPermissionsBtn.style.display = options.showPermissionFix ? 'block' : 'none';
+            this.fixHIDPermissionsBtn.disabled = false;
+            this.fixHIDPermissionsBtn.textContent = this.t('fixLinuxPermissions');
+        }
+    }
+
+    async installLinuxHIDPermissions() {
+        if (!window.electronAPI.installLinuxHIDPermissions || !this.fixHIDPermissionsBtn) {
+            return;
+        }
+
+        this.fixHIDPermissionsBtn.disabled = true;
+        this.fixHIDPermissionsBtn.textContent = this.t('fixingLinuxPermissions');
+        this.showHIDMessage(this.t('fixingLinuxPermissions'), 'info', { showPermissionFix: true });
+
+        try {
+            const result = await window.electronAPI.installLinuxHIDPermissions();
+            if (result.success) {
+                this.showHIDMessage(this.t('linuxPermissionsFixed'), 'success');
+                return;
+            }
+
+            const manual = result.manualCommand ? `\n\n${result.manualCommand}` : '';
+            this.showHIDMessage(`${this.t('linuxPermissionsManual')}\n${result.error || ''}${manual}`, 'error', {
+                showPermissionFix: true
+            });
+        } catch (error) {
+            this.showHIDMessage(`${this.t('linuxPermissionsManual')}\n${error.message}`, 'error', {
+                showPermissionFix: true
+            });
+        } finally {
+            this.fixHIDPermissionsBtn.disabled = false;
+            this.fixHIDPermissionsBtn.textContent = this.t('fixLinuxPermissions');
         }
     }
 
@@ -2939,7 +3311,7 @@ class KVMClient {
     }
 
     updateQuitKeyDisplay() {
-        this.quitKeyDisplay.textContent = 'Esc';
+        this.quitKeyDisplay.textContent = 'Shift+Esc';
         
         // Update the control mode notification
         this.updateControlModeNotification();
@@ -3040,7 +3412,7 @@ class KVMClient {
     }
 
     resetQuitKeyToDefault() {
-        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, key: 'Escape', code: 'Escape' };
+        this.quitKeyCombo = { ctrlKey: false, altKey: false, shiftKey: true, metaKey: false, key: 'Escape', code: 'Escape' };
         this.updateQuitKeyDisplay();
         this.saveSettings();
         this.hideQuitKeyModal();

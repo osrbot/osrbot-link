@@ -1,7 +1,7 @@
 {
-  "name": "osrbot-link-lite-desktop",
-  "version": "0.2.0",
-  "description": "OSRBOT Link Lite desktop client",
+  "name": "osrbot-link-desktop",
+  "version": "0.3.0",
+  "description": "OSRBOT Link desktop client",
   "main": "src/main.js",
   "author": {
     "name": "OSRBOT"
@@ -32,15 +32,18 @@
     "socket.io": "^4.7.4",
     "ws": "^8.16.0"
   },
-  "build": {
-    "appId": "com.osrbot.link-lite",
-    "productName": "OSRBOT Link Lite",
-    "directories": {
-      "output": "dist"
-    },
+    "build": {
+      "appId": "com.osrbot.link",
+      "productName": "OSRBOT Link",
+      "afterPack": "scripts/after-pack.js",
+      "directories": {
+        "output": "dist"
+      },
     "files": [
       "src/**/*",
+      "icon.png",
       "node_modules/**/*",
+      "!node_modules/node-hid/build/**/*",
       "native/rdev-grabber/index.js",
       "native/rdev-grabber/index.d.ts",
       "native/rdev-grabber/package.json",
@@ -49,7 +52,9 @@
       "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
     ],
     "asarUnpack": [
-      "native/rdev-grabber/*.node"
+      "native/rdev-grabber/*.node",
+      "node_modules/node-hid/**/*.node",
+      "node_modules/node-hid/prebuilds/**/*"
     ],
     "extraResources": [
       {
@@ -66,7 +71,7 @@
       }
     ],
     "mac": {
-      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-mac-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-mac-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
       "target": [
@@ -86,7 +91,7 @@
       "extendInfo": "assets/Info.plist"
     },
     "dmg": {
-      "title": "OSRBOT Link Lite",
+      "title": "OSRBOT Link",
       "contents": [
         {
           "x": 130,
@@ -101,7 +106,7 @@
       ]
     },
     "win": {
-      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-win-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-win-${arch}.${ext}",
       "icon": "icon.ico",
       "target": [
         {
@@ -123,15 +128,19 @@
       "allowToChangeInstallationDirectory": true
     },
     "portable": {
-      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-win-${arch}-portable.${ext}"
+      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-win-${arch}-portable.${ext}"
     },
     "linux": {
-      "artifactName": "OSRBOT-Link-Lite-v0.2-${env.BUILD_DATE}-ubuntu-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-ubuntu-${arch}.${ext}",
       "icon": "build/icons",
       "category": "Utility",
+      "executableArgs": [
+        "--no-sandbox"
+      ],
       "desktop": {
-        "Name": "OSRBOT Link Lite",
+        "Name": "OSRBOT Link",
         "Comment": "OSRBOT USB KVM Control Software",
+        "Icon": "osrbot-link-desktop",
         "Type": "Application",
         "Categories": "Utility;System;",
         "StartupNotify": "true"
@@ -142,13 +151,12 @@
           "arch": [
             "x64"
           ]
-        },
-        {
-          "target": "deb",
-          "arch": [
-            "x64"
-          ]
         }
+      ]
+    },
+    "appImage": {
+      "executableArgs": [
+        "--no-sandbox"
       ]
     },
     "deb": {
@@ -159,7 +167,7 @@
       ],
       "afterInstall": "assets/post-install.sh",
       "maintainer": "OSRBOT",
-      "synopsis": "OSRBOT Link Lite client for USB HID devices"
+      "synopsis": "OSRBOT Link client for USB HID devices"
     }
   }
 }

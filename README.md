@@ -1,180 +1,68 @@
-# OSRBOT Link Lite
+# OSRBOT Link
 
-OSRBOT Link Lite 是 OSRBOT 键盘鼠标共享器 2.0 的跨平台客户端，面向本地硬件调试、嵌入式设备维护、工控主机、机器人主机、NUC/SBC 等场景。
+OSRBOT Link 是面向 OSRBOT 键盘鼠标共享器 2.0 的跨平台桌面客户端。它用于在主控电脑上连接 OSRBOT 共享器硬件，并将键盘、鼠标输入转发到被控端设备，同时可选接入 USB 采集卡进行画面预览。
 
-客户端分为两条独立链路：
+这个项目面向机器人调试、嵌入式设备维护、无头主机管理、多设备桌面控制等场景。用户可以在一台主控电脑上完成键盘、鼠标和可选视频画面的集中控制，减少频繁切换外设和显示器带来的成本。
 
-- 键盘鼠标：通过 OSRBOT HID 共享器转发，支持不接采集卡单独使用。
-- 视频画面：通过 USB 采集卡预览，适合被控端没有独立屏幕或需要录屏/截图时使用。
+## 使用场景
 
-## 当前版本
+### 键鼠共享
 
-- 客户端版本：`0.2.0`
-- 当前分支：`lite`
-- 构建产物会带版本号和构建日期，例如：
+当被控端设备本身已经连接显示器，或用户可以直接看到被控端屏幕时，只需要连接 OSRBOT 键盘鼠标共享器，即可使用 OSRBOT Link 转发主控端键盘和鼠标输入。
 
-```text
-OSRBOT-Link-Lite-v0.2-20260518-mac-arm64.dmg
-OSRBOT-Link-Lite-v0.2-20260518-win-x64.exe
-OSRBOT-Link-Lite-v0.2-20260518-ubuntu-x86_64.AppImage
-```
+### 视频预览与控制
 
-## 平台支持
+当主控端需要查看被控端画面时，可以同时接入 USB 采集卡。OSRBOT Link 会在客户端内显示采集画面，并将鼠标、键盘操作转发到共享器硬件，实现更完整的 KVM 控制体验。
 
-主线新版客户端基于 Electron 28：
+### 多屏目标设备
 
-- macOS：生成 Apple Silicon arm64 和 Intel x64 两个 DMG。
-- Windows：主线目标为 Windows 10/11，默认生成 x64；ia32 需要在 Windows/CI 环境单独尝试 `npm run dist:win:ia32`。
-- Linux：主线目标为 Ubuntu x64，提供 AppImage 和 deb。
+当被控端拥有多个显示器时，客户端提供显示切换快捷操作，方便用户在不同桌面输出之间切换。
 
-当前验证状态：
+## 主要功能
 
-- macOS：已在真实硬件上验证采集卡、键鼠共享、截图/录屏等核心功能。
-- Windows：安装包可生成，但 HID 共享器识别仍需继续适配。共享器在 Windows 设备管理器中会出现在“人体学输入设备”下，后续需要参考 OSRBOT 旧 Windows 客户端的 HID 打开方式。
-- Linux：安装包可生成，但 HID/udev 权限和设备识别仍需在 Ubuntu 真机上继续验证。
-
-Windows 7 说明：
-
-- 当前 Electron 28 主线不支持 Windows 7。
-- Electron 官方从 Electron 23 起停止 Windows 7/8/8.1 支持，最后支持 Windows 7 的主版本是 Electron 22。
-- 如果必须支持 Windows 7，建议单独维护 `legacy-win7` 分支或 legacy 构建，固定 Electron 22 或改用 Qt/C++ 等传统桌面技术栈。
-
-参考：
-
-- Electron Windows 7/8/8.1 deprecation notice: https://www.electronjs.org/blog/windows-7-to-8-1-deprecation-notice
-- Electron 22 release notes: https://www.electronjs.org/blog/electron-22-0
-
-## 当前功能
-
-- 自动发现 OSRBOT HID 共享器。
-- 自动发现 USB 视频采集设备。
-- 支持有采集卡视频预览，也支持无采集卡纯键鼠共享。
-- 支持绝对鼠标和相对鼠标模式。
-- 支持键盘/鼠标转发，Esc 退出控制模式和全屏。
-- 支持 Ctrl+Alt+Del。
-- 支持发送 Win+P 作为被控端显示/投影模式切换快捷键。
-- 支持截图保存 PNG。
-- 支持压缩录屏保存 WebM。
-- 支持短时录制 GIF。
-- 支持中文/英文 UI。
+- 键盘和鼠标输入转发。
+- 支持绝对鼠标、相对鼠标和滚轮操作。
+- 支持 USB 采集卡视频预览。
+- 支持无采集卡的纯键鼠共享模式。
 - 支持自定义采集分辨率。
+- 支持手动切换被控端显示输出。
+- 支持截图、录屏和 GIF 录制。
+- 截图、录屏和 GIF 输出带 OSRBOT Link 溯源水印。
+- 支持明亮/深色皮肤切换。
+- 支持中文和英文界面。
 
-## 分辨率说明
+## 硬件
 
-分辨率列表来自三部分：
+OSRBOT Link 配套 OSRBOT 键盘鼠标共享器 2.0 使用。硬件参数、连接方式和使用注意事项，请以 OSRBOT 官方产品说明书为准。
 
-- 内置常见分辨率列表。
-- 用户在设置中输入的自定义分辨率。
-- 采集卡实际返回的分辨率，运行时会临时加入列表。
+如需购买 OSRBOT 键盘鼠标共享器硬件，请联系 OSRBOT。
 
-自定义格式示例：
+## 系统支持
 
-```text
-1920x1200,2560x1440,3840x2160
-```
+OSRBOT Link 面向常见桌面平台提供客户端：
 
-注意：加入列表不代表采集卡一定支持。启动视频时如果请求失败，客户端会自动尝试其他可用分辨率。
+- macOS
+- Windows
+- Ubuntu Linux
 
-## 多屏被控端说明
+不同系统对 HID 设备、输入监听、视频采集和应用权限的要求不同。首次使用时，可能需要根据系统提示授予输入监听、辅助功能、摄像头或 HID 设备访问权限。
 
-当前客户端无法直接枚举被控端的多个显示器，因为被控端没有安装 agent，OSRBOT 硬件只负责 HID 输入和采集卡画面。当前的“切换显示”按钮会发送 Windows 的 `Win+P` 快捷键，用于切换复制/扩展/仅第二屏等投影模式。
+## 技术栈
 
-如果后续需要精准选择被控端的某一个屏幕，需要增加其中一种能力：
+- Electron
+- HTML / CSS / JavaScript
+- Chromium MediaDevices API
+- node-hid / HIDAPI
+- Rust N-API 原生模块
 
-- 被控端安装轻量 agent，回传显示器拓扑。
-- 固件/硬件层提供可查询的显示切换协议。
-- 让用户通过被控端系统设置或快捷键先切到采集卡所在屏幕。
+## Contributors
 
-## 本地测试
+- [sunmaxwll](https://github.com/sunmaxwll)
+- [dajianli](https://github.com/dajianli)
+- [kitso666](https://github.com/kitso666)
 
-根目录协议测试：
+## Thanks
 
-```bash
-npm test
-```
+感谢 [MotorBottle](https://github.com/MotorBottle) 在相关客户端设计方向上的探索与参考。
 
-macOS 硬件检查：
-
-```bash
-npm run hardware:usb
-npm run hardware:hid:list
-npm run hardware:hid:probe
-npm run hardware:hid:reset
-```
-
-`hid:reset` 只发送安全的释放/复位报文，不会移动鼠标到危险位置。
-
-## 打包
-
-进入桌面客户端目录：
-
-```bash
-cd apps/desktop
-npm install
-```
-
-macOS Apple Silicon：
-
-```bash
-npm run dist:mac
-```
-
-Windows x64：
-
-```bash
-npm run dist:win
-```
-
-Linux Ubuntu x64：
-
-```bash
-npm run dist:linux
-```
-
-全部平台：
-
-```bash
-npm run dist:all
-```
-
-注意：
-
-- macOS 当前未配置 Developer ID 签名和 notarization，公开分发前需要补齐。
-- Windows 公开分发前需要代码签名，避免安全软件误报。
-- Linux deb 安装包包含 udev 权限规则安装脚本，用户可能需要重新插拔设备或重启 udev。
-- 跨平台打包最好在对应系统或 CI runner 上完成；macOS 本机打 Windows/Linux 包可能受 Wine、Linux 打包工具和原生依赖限制。
-
-## GitHub 推送
-
-目标仓库：
-
-```text
-https://github.com/osrbot/osrbot-link
-```
-
-建议推送分支：
-
-```text
-lite
-```
-
-推送前确认：
-
-```bash
-git status
-git log --oneline -5
-```
-
-推送：
-
-```bash
-git push origin lite
-```
-
-## 技术方向
-
-详细技术方向、两个历史客户端分析、HID 协议整理、Win7 legacy 判断见：
-
-```text
-docs/technical-direction.md
-```
+感谢 [Jackadminx/KVM-Card-Mini](https://github.com/Jackadminx/KVM-Card-Mini) 原始项目在 KVM 方向上的开源工作。
