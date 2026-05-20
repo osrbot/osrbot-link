@@ -153,6 +153,26 @@ function updateGrabState() {
           hidConnected: hidManager?.connected
         });
 
+        const isShiftEsc =
+          payload.eventType === 'down' &&
+          payload.shiftKey &&
+          !payload.ctrlKey &&
+          !payload.altKey &&
+          !payload.metaKey &&
+          (payload.code === 'Escape' || payload.key === 'Escape' || payload.key === 'Esc');
+        const isRightCtrl =
+          payload.eventType === 'down' &&
+          (payload.code === 'ControlRight' || payload.key === 'ControlRight');
+        const isLocalExitKey = isShiftEsc || isRightCtrl;
+
+        if (isLocalExitKey) {
+          console.log('Local exit key detected in main process, not forwarding to HID');
+          if (mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.send('global-key-pressed', payload);
+          }
+          return;
+        }
+
         // In control mode: send directly to HID
         if (isInControlMode && hidManager && hidManager.connected) {
           console.log('→ Sending to HID:', payload.key, payload.code);

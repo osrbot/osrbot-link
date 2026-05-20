@@ -44,7 +44,8 @@ class KVMClient {
                 scrollDescNatural: 'Natural scrolling (like macOS/mobile)',
                 scrollDescTraditional: 'Traditional scrolling (like Windows)',
                 quitKeyTitle: 'Exit Control Mode',
-                quitKeyDesc: 'Shift+Esc exits fullscreen and control mode. Right Ctrl exits control mode only.',
+                quitKeyDesc: 'Shift+Esc exits fullscreen and control mode.',
+                quitKeyDescOther: 'Right Ctrl exits control mode. Shift+Esc exits fullscreen and control mode.',
                 changeBtn: 'Fixed',
                 customResTitle: 'Custom Resolutions',
                 customResDesc: 'Append to the resolution menu (no guarantee device supports them).',
@@ -64,7 +65,8 @@ class KVMClient {
                 hidDisconnected: 'Disconnected',
                 hidConnected: 'Connected',
                 overlayActive: 'Control Mode Active',
-                overlayHint: 'Press <kbd>Shift+Esc</kbd> or tap <kbd>Right Ctrl</kbd> to exit',
+                overlayHint: 'Press <kbd>Shift+Esc</kbd> to exit',
+                overlayHintOther: 'Press <kbd>Right Ctrl</kbd> to exit control mode, or <kbd>Shift+Esc</kbd> to exit fullscreen and control.',
                 forwardingActive: 'Keyboard and mouse forwarding active',
                 noValidRes: 'No valid resolutions found. Use formats like 1920x1200 or 2560*1440, separated by commas.',
                 noWebRTC: 'Browser does not support WebRTC',
@@ -76,7 +78,8 @@ class KVMClient {
                 btnRecordStop: 'Stop Rec',
                 btnGif: 'GIF',
                 btnSwitchDisplay: 'Switch Display',
-                btnExitControl: 'Exit',
+                switchDisplayHint: 'Mainly for Windows target devices.',
+                btnExitFullscreen: 'Exit Fullscreen',
                 btnPasteCommand: 'Paste',
                 pasteTitle: 'Paste Command',
                 pasteDesc: 'Only ASCII terminal commands are supported in this build.',
@@ -99,7 +102,7 @@ class KVMClient {
                 unsupportedHIDDevice: 'Only OSRBOT HID devices are supported in this build.',
                 fullscreenToolsHint: 'Show toolbar',
                 fullscreenGuideTitle: 'Toolbar',
-                fullscreenGuide: 'Click Show toolbar to open controls · Shift+Esc exits fullscreen and control · Right Ctrl exits control only',
+                fullscreenGuide: 'Shift+Esc exits fullscreen and control mode. Click Show toolbar to open controls.',
                 btnHideTools: 'Hide',
                 captureNeedVideo: 'Start video before taking a screenshot.',
                 recordNeedVideo: 'Start video before recording.',
@@ -187,7 +190,8 @@ class KVMClient {
                 scrollDescNatural: '自然滚动（macOS/移动端样式）',
                 scrollDescTraditional: '传统滚动（Windows 样式）',
                 quitKeyTitle: '退出控制模式',
-                quitKeyDesc: 'Shift+Esc 退出全屏和控制模式；右 Ctrl 只退出控制模式。',
+                quitKeyDesc: 'Shift+Esc 退出全屏和控制模式。',
+                quitKeyDescOther: '右 Ctrl 退出控制模式；Shift+Esc 退出全屏和控制模式。',
                 changeBtn: '固定',
                 customResTitle: '自定义分辨率',
                 customResDesc: '添加到分辨率列表（设备是否支持不保证）。',
@@ -207,7 +211,8 @@ class KVMClient {
                 hidDisconnected: '未连接',
                 hidConnected: '已连接',
                 overlayActive: '控制模式已开启',
-                overlayHint: '按 <kbd>Shift+Esc</kbd> 或点按 <kbd>右 Ctrl</kbd> 退出',
+                overlayHint: '按 <kbd>Shift+Esc</kbd> 退出',
+                overlayHintOther: '按 <kbd>右 Ctrl</kbd> 退出控制模式，或按 <kbd>Shift+Esc</kbd> 退出全屏和控制。',
                 forwardingActive: '键盘和鼠标正在转发',
                 noValidRes: '未找到有效分辨率。格式示例：1920x1200 或 2560*1440，使用逗号分隔。',
                 noWebRTC: '浏览器不支持 WebRTC',
@@ -219,7 +224,8 @@ class KVMClient {
                 btnRecordStop: '停止录屏',
                 btnGif: '录制 GIF',
                 btnSwitchDisplay: '切换显示',
-                btnExitControl: '退出',
+                switchDisplayHint: '主要适用于 Windows 被控端。',
+                btnExitFullscreen: '退出全屏',
                 btnPasteCommand: '粘贴命令',
                 pasteTitle: '粘贴命令',
                 pasteDesc: '当前版本只支持英文、数字和常见符号，适合终端命令。',
@@ -242,7 +248,7 @@ class KVMClient {
                 unsupportedHIDDevice: '当前版本只支持 OSRBOT HID 设备。',
                 fullscreenToolsHint: '显示工具栏',
                 fullscreenGuideTitle: '工具栏',
-                fullscreenGuide: '点击“显示工具栏”打开控制按钮 · Shift+Esc 退出全屏和控制 · 右 Ctrl 只退出控制',
+                fullscreenGuide: 'Shift+Esc 退出全屏和控制模式；点击“显示工具栏”打开工具栏。',
                 btnHideTools: '隐藏',
                 captureNeedVideo: '请先启动视频采集后再截图。',
                 recordNeedVideo: '请先启动视频采集后再录屏。',
@@ -326,6 +332,7 @@ class KVMClient {
         this.pasteAbortRequested = false;
         this.pasteSending = false;
         this.toolsManuallyHidden = false;
+        this.fullscreenGuideShown = false;
 
         // Compatible KVM device list for auto-detection
         // Add new compatible devices here with their VID/PID and description
@@ -416,7 +423,6 @@ class KVMClient {
         this.toggleFullscreenBtn = document.getElementById('toggleFullscreen');
         this.fullscreenTools = document.getElementById('fullscreenTools');
         this.fullscreenHideToolsBtn = document.getElementById('fullscreenHideTools');
-        this.fullscreenExitControlBtn = document.getElementById('fullscreenExitControl');
         this.fullscreenDisplayModeBtn = document.getElementById('fullscreenDisplayMode');
         this.fullscreenTargetModeBtn = document.getElementById('fullscreenTargetMode');
         this.fullscreenPasteCommandBtn = document.getElementById('fullscreenPasteCommand');
@@ -774,7 +780,7 @@ class KVMClient {
             { id: 'toggleRecording', key: this.isRecording ? 'btnRecordStop' : 'btnRecord' },
             { id: 'recordGif', key: this.isRecordingGif ? 'btnRecordStop' : 'btnGif' },
             { id: 'fullscreenHideTools', key: 'btnHideTools' },
-            { id: 'fullscreenExitControl', key: 'btnExitControl' },
+            { id: 'fullscreenExit', key: 'btnExitFullscreen' },
             { id: 'fullscreenSwitchDisplay', key: 'btnSwitchDisplay' },
             { id: 'fullscreenScreenshot', key: 'btnScreenshot' },
             { id: 'fullscreenGif', key: this.isRecordingGif ? 'btnRecordStop' : 'btnGif' },
@@ -807,6 +813,17 @@ class KVMClient {
             }
         });
 
+        const quitKeyDesc = document.getElementById('quitKeyDesc');
+        if (quitKeyDesc) {
+            quitKeyDesc.textContent = this.getQuitKeyDescription();
+        }
+        document.querySelectorAll('[data-i18n="overlayHint"]').forEach(el => {
+            el.innerHTML = this.getControlOverlayHint();
+        });
+        [this.switchDisplayBtn, this.fullscreenSwitchDisplayBtn].forEach(btn => {
+            if (btn) btn.title = this.t('switchDisplayHint');
+        });
+
         // Custom res placeholder
         if (this.customResInput) {
             this.customResInput.placeholder = '1920x1200,2560x1440';
@@ -816,6 +833,18 @@ class KVMClient {
         this.updateTargetModeDisplay();
         this.updateDisplayModeDisplay();
         this.updateFullscreenModeButtons();
+    }
+
+    isMacPlatform() {
+        return /Mac/i.test(navigator.platform || navigator.userAgent || '');
+    }
+
+    getQuitKeyDescription() {
+        return this.isMacPlatform() ? this.t('quitKeyDesc') : this.t('quitKeyDescOther');
+    }
+
+    getControlOverlayHint() {
+        return this.isMacPlatform() ? this.t('overlayHint') : this.t('overlayHintOther');
     }
 
     capitalizeMode(mode) {
@@ -884,7 +913,9 @@ class KVMClient {
 
     bindEvents() {
         // Video controls
-        this.refreshDevicesBtn.addEventListener('click', () => this.refreshAllDevices());
+        if (this.refreshDevicesBtn) {
+            this.refreshDevicesBtn.addEventListener('click', () => this.refreshAllDevices());
+        }
         this.startVideoBtn.addEventListener('click', () => this.startVideo());
         this.stopVideoBtn.addEventListener('click', () => this.stopVideo());
         
@@ -913,7 +944,6 @@ class KVMClient {
                 this.restoreLockedVideoSelection();
                 return;
             }
-            this.startVideo();
             this.saveVideoPreferences();
         });
         
@@ -972,10 +1002,6 @@ class KVMClient {
         this.fullscreenHideToolsBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.hideFullscreenTools(true);
-        });
-        this.fullscreenExitControlBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.exitControlAndFullscreen();
         });
         this.fullscreenDisplayModeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1240,6 +1266,15 @@ class KVMClient {
                         shiftKey: !!(data.shiftKey ?? data.shift),
                     };
 
+                    if (this.isQuitKeyCombo(syntheticEvent)) {
+                        const now = Date.now();
+                        if (now - this.lastQuitKeyTime < this.quitKeyDebounceMs) return;
+                        this.lastQuitKeyTime = now;
+                        console.log('Shift+Esc local exit matched. Exiting control mode and fullscreen');
+                        this.exitControlAndFullscreen();
+                        return;
+                    }
+
                     if (this.isLocalExitKey(syntheticEvent)) {
                         const now = Date.now();
                         if (now - this.lastQuitKeyTime < this.quitKeyDebounceMs) return;
@@ -1429,37 +1464,8 @@ class KVMClient {
         // Refresh device list
         await this.refreshVideoDevices();
         
-        // If video was connected, try to reconnect with same settings
         if (wasVideoConnected) {
-            // Small delay to ensure device enumeration is complete
-            setTimeout(async () => {
-                try {
-                    // Try to restore previous settings
-                    if (currentDeviceId && this.videoDevicesSelect.querySelector(`option[value="${currentDeviceId}"]`)) {
-                        this.videoDevicesSelect.value = currentDeviceId;
-                    }
-                    
-                    // Rebuild resolution/FPS options
-                    await this.buildResolutionFPS();
-                    
-                    // Try to restore previous settings
-                    if (currentResolution && this.resolutionSelect.querySelector(`option[value="${currentResolution}"]`)) {
-                        this.resolutionSelect.value = currentResolution;
-                        await this.buildFPS();
-                    }
-                    if (currentFPS && this.fpsSelect.querySelector(`option[value="${currentFPS}"]`)) {
-                        this.fpsSelect.value = currentFPS;
-                    }
-                    
-                    // Restart video stream
-                    if (this.videoDevicesSelect.value && this.resolutionSelect.value && this.fpsSelect.value) {
-                        await this.startVideo();
-                        console.log('Video stream reconnected after refresh');
-                    }
-                } catch (error) {
-                    console.error('Error reconnecting video after refresh:', error);
-                }
-            }, 500); // 500ms delay
+            this.showAutoConnectNotification(this.t('selectVideoDevice'), 'info');
         }
     }
 
@@ -1482,36 +1488,10 @@ class KVMClient {
                 return;
             }
 
-            // Try to restore saved device preference first
-            let deviceSelected = false;
-            if (this.savedVideoPreferences?.deviceId) {
-                // First try to find by exact deviceId
-                const savedDevice = videoDevices.find(device => device.deviceId === this.savedVideoPreferences.deviceId);
-                if (savedDevice) {
-                    this.videoDevicesSelect.value = savedDevice.deviceId;
-                    deviceSelected = true;
-                    console.log('Restored saved video device by ID:', savedDevice.label);
-                } else if (this.savedVideoPreferences.deviceLabel) {
-                    // If deviceId not found, try to find by label (device may have been reconnected)
-                    const deviceByLabel = videoDevices.find(device => 
-                        device.label === this.savedVideoPreferences.deviceLabel
-                    );
-                    if (deviceByLabel) {
-                        this.videoDevicesSelect.value = deviceByLabel.deviceId;
-                        deviceSelected = true;
-                        console.log('Restored saved video device by label:', deviceByLabel.label);
-                    }
-                }
-            }
-            
-            // Auto-select first device if none selected and no saved preference
-            if (!deviceSelected && !this.videoDevicesSelect.value && videoDevices.length > 0) {
-                this.videoDevicesSelect.selectedIndex = 1; // Skip the "Select..." option
-            }
-            
-            if (this.videoDevicesSelect.value) {
-                await this.buildResolutionFPS();
-            }
+            this.videoDevicesSelect.value = '';
+            this.resolutionSelect.innerHTML = `<option value="">${this.t('selectResolutionOption')}</option>`;
+            this.fpsSelect.innerHTML = '<option value="">Select FPS</option>';
+            this.updateDeviceSelectionLocks();
         } catch (error) {
             console.error('Error refreshing video devices:', error);
         }
@@ -1536,58 +1516,8 @@ class KVMClient {
         // Refresh device list
         await this.refreshVideoDevices();
         
-        // If video was connected, try to reconnect
         if (wasVideoConnected) {
-            // Small delay to ensure device enumeration is complete
-            setTimeout(async () => {
-                try {
-                    // Try to find the same device by label/description
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                    
-                    let targetDevice = null;
-                    
-                    // First try to find by deviceId (same device)
-                    targetDevice = videoDevices.find(device => device.deviceId === currentDeviceId);
-                    
-                    // If not found by ID, try to find by label (device unplugged/replugged)
-                    if (!targetDevice && videoDevices.length > 0) {
-                        // Use first available device as fallback
-                        targetDevice = videoDevices[0];
-                        console.log('Original device not found, using first available device');
-                    }
-                    
-                    if (targetDevice) {
-                        // Select the device
-                        this.videoDevicesSelect.value = targetDevice.deviceId;
-                        
-                        // Rebuild resolution/FPS options
-                        await this.buildResolutionFPS();
-                        
-                        // Try to restore previous settings
-                        if (currentResolution && this.resolutionSelect.querySelector(`option[value="${currentResolution}"]`)) {
-                            this.resolutionSelect.value = currentResolution;
-                        }
-                        if (currentFPS && this.fpsSelect.querySelector(`option[value="${currentFPS}"]`)) {
-                            this.fpsSelect.value = currentFPS;
-                        }
-                        
-                        // Restart video stream
-                        await this.startVideo();
-                        console.log('Video stream automatically reconnected after device change');
-                    } else {
-                        console.warn('No video devices available after device change');
-                        this.updateVideoStatus();
-                        this.startVideoBtn.disabled = false;
-                        this.stopVideoBtn.disabled = true;
-                    }
-                } catch (error) {
-                    console.error('Error reconnecting video after device change:', error);
-                    this.updateVideoStatus();
-                    this.startVideoBtn.disabled = false;
-                    this.stopVideoBtn.disabled = true;
-                }
-            }, 1000); // 1 second delay
+            this.showAutoConnectNotification(this.t('selectVideoDevice'), 'info');
         }
     }
 
@@ -1756,10 +1686,6 @@ class KVMClient {
                 this.fpsSelect.value = (preferred || Math.max(...availableFPS)).toString();
             }
 
-            // Auto-start if this is initial setup
-            if (this.fpsSelect.value && !this.videoConnected) {
-                setTimeout(() => this.startVideo(), 100);
-            }
         } catch (error) {
             console.error('Error building FPS list:', error);
             // Fallback to a basic FPS list
@@ -2440,49 +2366,12 @@ class KVMClient {
             const devices = await window.electronAPI.getHIDDevices();
             this.hidDevicesSelect.innerHTML = `<option value="">${this.t('selectHIDOption')}</option>`;
             this.populateHIDOptions(devices);
-
-            let compatibleDevice = null;
-            devices.forEach(device => {
-                // Check if device matches any in the compatible devices list
-                const matchingConfig = this.COMPATIBLE_DEVICES.find(config =>
-                    config.vendorId === this.normalizeNumber(device.vendorId) &&
-                    config.productId === this.normalizeNumber(device.productId)
-                );
-
-                if (matchingConfig && !compatibleDevice) {
-                    compatibleDevice = device;
-                    console.log('Compatible KVM device found:', {
-                        product: device.product || 'Unknown',
-                        description: matchingConfig.description,
-                        device: device
-                    });
-                }
-            });
+            this.updateHIDStatus();
 
             if (devices.length === 0 && !this.hidConnected) {
                 const enumerationError = await this.getHIDEnumerationError();
                 const errorHint = enumerationError ? `\n\nHID enumeration error: ${enumerationError}` : '';
                 this.showHIDMessage(`${this.t('noCompatibleHID')}${errorHint}`, enumerationError ? 'error' : 'info');
-            }
-
-            // Auto-connect to compatible KVM device if found and not already connected
-            if (compatibleDevice && !this.hidConnected) {
-                const deviceName = compatibleDevice.product || 'KVM Device';
-                console.log(`Compatible KVM device found (${deviceName}), auto-connecting...`, compatibleDevice);
-                this.hidDevicesSelect.value = compatibleDevice.path;
-
-                // Show user feedback about auto-connection attempt
-                this.showAutoConnectNotification(`${deviceName} detected, connecting...`);
-
-                try {
-                    await this.connectHID();
-                    if (this.hidConnected) {
-                        this.showAutoConnectNotification(`✅ ${deviceName} connected successfully!`, 'success');
-                    }
-                } catch (error) {
-                    console.error('Auto-connect failed:', error);
-                    this.showAutoConnectNotification(`❌ ${deviceName} connection failed`, 'error');
-                }
             }
         } catch (error) {
             console.error('Error loading HID devices:', error);
@@ -2571,6 +2460,11 @@ class KVMClient {
     }
 
     async loadAllHIDDevicesForDiagnostics() {
+        if (this.hidConnected) {
+            this.showHIDMessage(this.t('disconnectHIDBeforeChanging'), 'info');
+            return;
+        }
+
         try {
             const devices = await window.electronAPI.getAllHIDDevices();
             this.hidDevicesSelect.innerHTML = `<option value="">${this.t('selectHIDOption')}</option>`;
@@ -2702,9 +2596,6 @@ class KVMClient {
 
     async refreshHID() {
         try {
-            // Store current device selection
-            const currentDevicePath = this.hidDevicesSelect.value;
-            
             // Full disconnect first
             if (this.hidConnected) {
                 console.log('Refreshing HID: Disconnecting current device...');
@@ -2726,18 +2617,7 @@ class KVMClient {
             // Refresh device list
             console.log('Refreshing HID: Loading device list...');
             await this.loadHIDDevices();
-            
-            // Try to reconnect to the same device if it's still available
-            if (currentDevicePath && this.hidDevicesSelect.querySelector(`option[value="${currentDevicePath}"]`)) {
-                console.log('Refreshing HID: Reconnecting to previous device...');
-                this.hidDevicesSelect.value = currentDevicePath;
-                await this.connectHID();
-                
-            } else {
-                // Start monitoring for auto-connection when device not found
-                this.startHIDMonitoring();
-                console.log('Refreshing HID: Device list refreshed, monitoring restarted');
-            }
+            console.log('Refreshing HID: Device list refreshed. Waiting for manual selection.');
             
             // Force UI update to ensure button states are correct
             this.updateHIDStatus();
@@ -3315,6 +3195,9 @@ class KVMClient {
         this.connectHIDBtn.disabled = this.hidConnected;
         this.disconnectHIDBtn.disabled = !this.hidConnected;
         this.hidDevicesSelect.disabled = this.hidConnected;
+        if (this.showHIDDiagnosticsBtn) {
+            this.showHIDDiagnosticsBtn.disabled = this.hidConnected;
+        }
         
         // Enable/disable quick control buttons based on HID connection
         this.sendCADBtn.disabled = !this.hidConnected;
@@ -3330,6 +3213,9 @@ class KVMClient {
         this.resolutionSelect.disabled = videoLocked;
         this.fpsSelect.disabled = videoLocked;
         this.hidDevicesSelect.disabled = this.hidConnected;
+        if (this.showHIDDiagnosticsBtn) {
+            this.showHIDDiagnosticsBtn.disabled = this.hidConnected;
+        }
     }
 
     updateVideoDisplay() {
@@ -3497,15 +3383,18 @@ class KVMClient {
 
     showFullscreenGuide() {
         if (!this.fullscreenGuide) return;
+        if (this.fullscreenGuideShown) {
+            this.fullscreenToolsHint.textContent = this.t('fullscreenToolsHint');
+            return;
+        }
+        this.fullscreenGuideShown = true;
         this.fullscreenGuide.querySelector('span').textContent = this.t('fullscreenGuide');
         this.fullscreenGuide.querySelector('strong').textContent = this.t('fullscreenGuideTitle');
         this.fullscreenToolsHint.textContent = this.t('fullscreenToolsHint');
         this.fullscreenGuide.classList.add('visible');
-        this.showFullscreenTools(true);
         setTimeout(() => {
             this.fullscreenGuide?.classList.remove('visible');
-            this.scheduleHideFullscreenTools(1200);
-        }, 3600);
+        }, 3000);
     }
 
     handleFullscreenChange() {
@@ -3878,9 +3767,10 @@ class KVMClient {
         }
 
         // Get current quit key combination
+        const overlayHint = this.getControlOverlayHint().replaceAll('<kbd>', '<kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">');
         notification.innerHTML = `
             <div style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">${this.t('overlayActive')}</div>
-            <div style="margin-bottom: 8px; font-size: 16px;">${this.t('overlayHint').replace('<kbd>', '<kbd style="background-color: rgba(255, 255, 255, 0.25); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 4px 10px; font-size: 14px; font-family: inherit; font-weight: 600; margin: 0 2px;">')}</div>
+            <div style="margin-bottom: 8px; font-size: 16px;">${overlayHint}</div>
             <div style="margin-bottom: 8px; font-size: 12px; color: #c9d7e8;">${this.t(`targetMode${this.capitalizeMode(this.targetMode)}`)} / ${this.t(`displayMode${this.capitalizeMode(this.displayMode)}`)}</div>
             <div style="font-size: 12px; color: #74d99f; opacity: 0.9;">${this.t('forwardingActive')}</div>
         `;
@@ -4013,7 +3903,7 @@ class KVMClient {
         if (overlayInfo) {
             overlayInfo.innerHTML = `
                 <div style="font-weight: 600; margin-bottom: 6px;">${this.t('overlayActive')}</div>
-                <div style="margin-bottom: 4px;">${this.t('overlayHint')}</div>
+                <div style="margin-bottom: 4px;">${this.getControlOverlayHint()}</div>
                 <div style="font-size: 11px; opacity: 0.8; margin-bottom: 4px;">${this.t(`targetMode${this.capitalizeMode(this.targetMode)}`)} / ${this.t(`displayMode${this.capitalizeMode(this.displayMode)}`)}</div>
                 <div style="font-size: 11px; opacity: 0.7;">${this.t('forwardingActive')}</div>
             `;

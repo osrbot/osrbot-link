@@ -31,7 +31,7 @@ body {
     border-right: 1px solid #2f343d;
     z-index: 1000;
     transition: opacity 0.3s ease;
-    pointer-events: none;
+    pointer-events: auto;
     overflow-y: auto;
 }
 
