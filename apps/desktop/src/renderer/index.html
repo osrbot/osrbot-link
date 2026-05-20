@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,9 +61,9 @@
         <main class="main-content">
             <div class="video-container">
                 <div id="videoPlaceholder" class="video-placeholder">
-                    <h2>Input Bridge Ready</h2>
-                    <p>Connect OSRBOT KVM, then click this area to share keyboard and mouse without a capture card.</p>
-                    <p class="video-placeholder-sub">Video preview is optional when the controlled device already has a screen.</p>
+                    <h2 data-i18n="inputBridgeReadyTitle">共享器就绪</h2>
+                    <p data-i18n="inputBridgeReadyBody">连接 OSRBOT KVM 后，点击此区域即可在无采集卡时共享键盘鼠标。</p>
+                    <p class="video-placeholder-sub" data-i18n="inputBridgeReadySub">当被控端本身有屏幕时，视频预览不是必需项。</p>
                 </div>
                 <video id="videoElement" class="video-stream" autoplay playsinline muted style="display: none;"></video>
             </div>

@@ -830,6 +830,9 @@ class KVMClient {
         }
 
         // Status labels via attributes already set; video/hid status updated elsewhere
+        if (!this.videoConnected) {
+            this.updateVideoDisplay();
+        }
         this.updateTargetModeDisplay();
         this.updateDisplayModeDisplay();
         this.updateFullscreenModeButtons();
