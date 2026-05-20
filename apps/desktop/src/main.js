@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog, clipboard } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -11,10 +11,7 @@ let isInControlMode = false;
 let isWindowFocused = false;
 const OSRBOT_PROVENANCE = Object.freeze({
   product: 'OSRBOT Link',
-  owner: 'OSRBOT',
-  hardwareContributor: 'Maxwell',
-  hardwareId: 'USB\\VID_413D&PID_2107',
-  marker: 'OSRBOT-LINK::413D:2107'
+  marker: 'OSRBOT Link'
 });
 
 function loadRdevGrabber() {
@@ -491,6 +488,10 @@ ipcMain.handle('get-build-info', async () => {
     arch: process.arch,
     provenance: OSRBOT_PROVENANCE.marker
   };
+});
+
+ipcMain.handle('read-clipboard-text', async () => {
+  return clipboard.readText() || '';
 });
 
 ipcMain.handle('save-capture-file', async (_event, payload) => {

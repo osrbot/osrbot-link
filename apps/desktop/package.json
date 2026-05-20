@@ -1,6 +1,6 @@
 {
   "name": "osrbot-link-desktop",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "OSRBOT Link desktop client",
   "main": "src/main.js",
   "author": {
@@ -71,7 +71,7 @@
       }
     ],
     "mac": {
-      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-mac-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.4-${env.BUILD_DATE}-mac-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
       "target": [
@@ -106,7 +106,7 @@
       ]
     },
     "win": {
-      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-win-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.4-${env.BUILD_DATE}-win-${arch}.${ext}",
       "icon": "icon.ico",
       "target": [
         {
@@ -128,10 +128,10 @@
       "allowToChangeInstallationDirectory": true
     },
     "portable": {
-      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-win-${arch}-portable.${ext}"
+      "artifactName": "OSRBOT-Link-v0.4-${env.BUILD_DATE}-win-${arch}-portable.${ext}"
     },
     "linux": {
-      "artifactName": "OSRBOT-Link-v0.3-${env.BUILD_DATE}-ubuntu-${arch}.${ext}",
+      "artifactName": "OSRBOT-Link-v0.4-${env.BUILD_DATE}-ubuntu-${arch}.${ext}",
       "icon": "build/icons",
       "category": "Utility",
       "executableArgs": [
@@ -148,6 +148,12 @@
       "target": [
         {
           "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
           "arch": [
             "x64"
           ]

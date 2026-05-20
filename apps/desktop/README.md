@@ -1,18 +1,22 @@
 # OSRBOT Link Desktop
 
-OSRBOT Link Desktop 是 OSRBOT Link 的桌面客户端，用于配合 OSRBOT 键盘鼠标共享器 2.0 完成键盘、鼠标共享和可选的视频预览。
+OSRBOT Link Desktop 是 OSRBOT Link 的桌面客户端，用于配合 OSRBOT 键盘鼠标共享器 2.0 完成键盘、鼠标共享和可选的视频预览控制。
 
-客户端可以在不接入采集卡时作为纯键鼠共享器使用，也可以配合 USB 采集卡在主控电脑上查看被控端画面。它适合机器人调试、嵌入式设备维护、无头主机管理和多设备桌面控制等场景。
+![OSRBOT Link workflow](../../docs/images/osrbot-link-overview.svg)
 
 ## 功能
 
-- HID 键盘鼠标共享。
+- OSRBOT HID 键盘鼠标共享。
 - 可选 USB 采集卡视频预览。
 - 无采集卡时可作为纯键鼠共享器使用。
+- 电脑/安卓目标设备模式。
+- 自适应、填满、原始三种画面缩放模式。
+- 全屏工具栏自动隐藏和手动显示/隐藏。
+- 右 Ctrl 退出控制模式，Shift+Esc 退出全屏和控制模式。
+- 终端命令粘贴，支持 ASCII 命令文本。
 - 自定义采集分辨率。
 - 手动切换被控端显示输出。
 - 截图、录屏和 GIF 录制。
-- 输出文件带 OSRBOT Link 溯源水印。
 - 明亮/深色皮肤切换。
 - 中文/英文界面。
 

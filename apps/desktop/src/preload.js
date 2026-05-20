@@ -21,5 +21,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // Local capture files
   saveCaptureFile: (payload) => ipcRenderer.invoke('save-capture-file', payload),
-  getBuildInfo: () => ipcRenderer.invoke('get-build-info')
+  getBuildInfo: () => ipcRenderer.invoke('get-build-info'),
+  readClipboardText: () => ipcRenderer.invoke('read-clipboard-text')
 });

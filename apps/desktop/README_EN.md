@@ -2,17 +2,21 @@
 
 OSRBOT Link Desktop is the desktop client for OSRBOT Link. It works with OSRBOT Keyboard/Mouse Sharing Hardware 2.0 to forward keyboard and mouse input from the host computer to a target device, with optional USB capture-card video preview.
 
-The client can be used as a standalone keyboard/mouse sharing tool when the target device already has its own display, or together with a USB capture card when video preview is needed on the host computer.
+![OSRBOT Link workflow](../../docs/images/osrbot-link-overview.svg)
 
 ## Features
 
-- HID keyboard and mouse sharing.
+- OSRBOT HID keyboard and mouse sharing.
 - Optional USB capture-card video preview.
 - Standalone input-sharing mode without a capture card.
+- Computer and Android target modes.
+- Fit, Fill, and Original display scaling.
+- Auto-hidden fullscreen toolbar with manual show/hide.
+- Right Ctrl exits control mode; Shift+Esc exits fullscreen and control mode.
+- Terminal command paste for ASCII command text.
 - Custom capture resolutions.
 - Manual display switching for the target device.
 - Screenshot, video recording, and GIF recording.
-- OSRBOT Link provenance watermark on exported captures.
 - Bright and dark skins.
 - Chinese and English UI.
 

@@ -11,7 +11,7 @@
         <header class="header">
             <div class="title-bar">
                 <h1 id="panelTitle">控制台</h1>
-                <p id="buildInfo">v0.3</p>
+                <p id="buildInfo">v0.4</p>
             </div>
             <div class="controls">
                 <div class="device-controls">
@@ -48,6 +48,7 @@
                     <div id="sectionActions" class="section-label">快捷操作</div>
                     <button id="sendCAD" class="btn btn-warning" disabled title="Send Ctrl+Alt+Delete">Ctrl+Alt+Del</button>
                     <button id="switchDisplay" class="btn btn-secondary" disabled title="Send Win+P to the controlled device">切换显示</button>
+                    <button id="pasteCommand" class="btn btn-secondary" disabled title="Paste ASCII command text from controller clipboard">粘贴命令</button>
                     <button id="captureScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
                     <button id="toggleRecording" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
                     <button id="recordGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
@@ -100,6 +101,26 @@
                     </select>
                     <p class="mode-description" data-i18n="themeHint">Choose a brighter daily skin or the original dark skin.</p>
                 </div>
+
+                <div class="target-mode-controls">
+                    <h3 data-i18n="targetModeTitle">Target Device</h3>
+                    <select id="targetModeSelect" class="device-select">
+                        <option value="desktop" data-i18n="targetModeDesktop">Computer</option>
+                        <option value="android" data-i18n="targetModeAndroid">Android phone/tablet</option>
+                    </select>
+                    <p class="mode-description" id="targetModeDescription">Computer mode keeps the current mouse behavior.</p>
+                </div>
+
+                <div class="display-mode-controls">
+                    <h3 data-i18n="displayModeTitle">Display Scaling</h3>
+                    <select id="displayModeSelect" class="device-select">
+                        <option value="fit" data-i18n="displayModeFit">Fit</option>
+                        <option value="fill" data-i18n="displayModeFill">Fill</option>
+                        <option value="original" data-i18n="displayModeOriginal">Original</option>
+                    </select>
+                    <p class="mode-description" id="displayModeDescription">Fit to the window while preserving aspect ratio.</p>
+                    <div id="displayScaleInfo" class="capture-info compact">显示：未连接</div>
+                </div>
                 
                 <div class="mouse-mode-controls">
                     <h3 data-i18n="mouseModeTitle">Mouse Mode</h3>
@@ -131,7 +152,7 @@
                         <span class="quit-key-display" id="quitKeyDisplay">Shift+Esc</span>
                         <button id="changeQuitKey" class="btn btn-secondary" data-i18n="changeBtn" disabled>Fixed</button>
                     </div>
-                    <p class="mode-description" data-i18n="quitKeyDesc">Press Shift+Esc to release control and leave fullscreen.</p>
+                    <p class="mode-description" data-i18n="quitKeyDesc">Shift+Esc exits fullscreen and control mode. Right Ctrl exits control mode only.</p>
                 </div>
                 
                 <div class="custom-resolution-controls">
@@ -146,6 +167,11 @@
         </main>
 
         <div class="fullscreen-tools" id="fullscreenTools" aria-label="Fullscreen actions">
+            <button id="fullscreenHideTools" class="btn btn-secondary" title="Hide toolbar">隐藏</button>
+            <button id="fullscreenExitControl" class="btn btn-primary" title="Exit control mode">退出</button>
+            <button id="fullscreenDisplayMode" class="btn btn-secondary state-btn" title="Switch display scaling">✓ 适应</button>
+            <button id="fullscreenTargetMode" class="btn btn-secondary state-btn" title="Switch target device mode">✓ 电脑</button>
+            <button id="fullscreenPasteCommand" class="btn btn-secondary" disabled title="Paste ASCII command text from controller clipboard">粘贴</button>
             <button id="fullscreenSwitchDisplay" class="btn btn-secondary" disabled title="Send Win+P to the controlled device">显示</button>
             <button id="fullscreenScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
             <button id="fullscreenRecord" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
@@ -153,10 +179,41 @@
             <button id="fullscreenExit" class="btn btn-secondary" title="Exit fullscreen and control mode">Shift+Esc</button>
         </div>
 
+        <button class="fullscreen-tools-hint" id="fullscreenToolsHint" type="button" data-i18n="fullscreenToolsHint">移到顶部显示工具栏</button>
+
+        <div class="fullscreen-guide" id="fullscreenGuide">
+            <strong data-i18n="fullscreenGuideTitle">工具栏</strong>
+            <span>鼠标移动到顶部显示工具栏 · Shift+Esc 退出全屏和控制 · 右 Ctrl 只退出控制</span>
+        </div>
+
         <div class="mouse-capture-overlay" id="mouseCaptureOverlay" style="display: none;">
             <div class="mouse-capture-info">
                 <div style="font-weight: 600; margin-bottom: 6px;" data-i18n="overlayActive">控制模式已开启</div>
-                <div style="margin-bottom: 4px;" data-i18n="overlayHint" data-i18n-html="true">按 <kbd>Shift+Esc</kbd> 退出</div>
+                <div style="margin-bottom: 4px;" data-i18n="overlayHint" data-i18n-html="true">按 <kbd>Shift+Esc</kbd> 或右 Ctrl 退出</div>
+            </div>
+        </div>
+
+        <div class="paste-modal" id="pasteModal" style="display: none;">
+            <div class="paste-content">
+                <h3 data-i18n="pasteTitle">Paste Command</h3>
+                <p class="mode-description" data-i18n="pasteDesc">Only ASCII terminal commands are supported in this build.</p>
+                <textarea id="pastePreview" spellcheck="false"></textarea>
+                <div id="pasteLimitInfo" class="paste-limit-info">0 / 1200</div>
+                <div class="paste-options">
+                    <label><input type="checkbox" id="pasteEnterToggle"> <span data-i18n="pasteEnter">Press Enter after paste</span></label>
+                    <label><span data-i18n="pasteSpeed">Speed</span>
+                        <select id="pasteSpeedSelect" class="device-select compact-select">
+                            <option value="20" data-i18n="pasteSpeedFast">Fast</option>
+                            <option value="45" data-i18n="pasteSpeedNormal">Normal</option>
+                            <option value="80" data-i18n="pasteSpeedSlow">Slow</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button id="confirmPaste" class="btn btn-primary" data-i18n="pasteSend">Send</button>
+                    <button id="stopPaste" class="btn btn-warning" data-i18n="pasteStop" style="display: none;">Stop</button>
+                    <button id="cancelPaste" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</button>
+                </div>
             </div>
         </div>
 
@@ -164,7 +221,7 @@
         <div class="quit-key-modal" id="quitKeyModal" style="display: none;">
             <div class="quit-key-content">
                 <h3>Exit Control Mode</h3>
-                <p>Shift+Esc is fixed as the control-mode and fullscreen exit key for this build.</p>
+                <p>Shift+Esc exits fullscreen and control mode. Right Ctrl exits control mode only.</p>
                 
                 <div class="key-capture-area" id="keyCaptureArea">
                     <div class="captured-keys" id="capturedKeys">Press keys...</div>
