@@ -11,7 +11,7 @@
         <header class="header">
             <div class="title-bar">
                 <h1 id="panelTitle">控制台</h1>
-                <p id="buildInfo">v0.4.1</p>
+                <p id="buildInfo">v0.5</p>
             </div>
             <div class="controls">
                 <div class="device-controls">
@@ -28,10 +28,17 @@
                     <select id="fpsSelect" class="device-select">
                         <option value="">Select FPS</option>
                     </select>
+                    <label data-i18n="displayModeTitle">画面缩放</label>
+                    <select id="displayModeSelect" class="device-select">
+                        <option value="fit" data-i18n="displayModeFit">自适应</option>
+                        <option value="fill" data-i18n="displayModeFill">填满</option>
+                        <option value="original" data-i18n="displayModeOriginal">原始</option>
+                    </select>
                     <button id="refreshDevices" class="btn btn-secondary" title="重新扫描设备" hidden>刷新</button>
                     <button id="startVideo" class="btn btn-primary">开始视频</button>
                     <button id="stopVideo" class="btn btn-secondary" disabled>停止视频</button>
                     <div id="actualCaptureInfo" class="capture-info" aria-live="polite">实际采集：未连接</div>
+                    <div id="displayScaleInfo" class="capture-info compact">显示：未连接</div>
                 </div>
                 <div class="hid-controls">
                     <div id="sectionInput" class="section-label">键鼠共享</div>
@@ -44,17 +51,21 @@
                     <button id="fixHIDPermissions" class="btn btn-warning hid-permission-btn" style="display: none;">修复 Linux 权限</button>
                     <div id="hidMessage" class="hid-message" aria-live="polite"></div>
                 </div>
-                <div class="quick-controls">
+                <div class="panel-controls">
+                    <button id="panelFullscreen" class="btn btn-secondary">全屏</button>
+                    <button id="hideControlPanel" class="btn btn-secondary">隐藏左侧</button>
+                </div>
+                <div class="quick-controls" hidden>
                     <div id="sectionActions" class="section-label">快捷操作</div>
                     <button id="sendCAD" class="btn btn-warning" disabled title="Send Ctrl+Alt+Delete">Ctrl+Alt+Del</button>
-                    <button id="switchDisplay" class="btn btn-secondary" disabled title="主要适用于 Windows 被控端">切换显示</button>
+                    <button id="switchDisplay" class="btn btn-secondary" disabled title="主要适用于 Windows 被控端">切换屏幕</button>
                     <button id="pasteCommand" class="btn btn-secondary" disabled title="Paste ASCII command text from controller clipboard">粘贴命令</button>
                     <button id="captureScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
                     <button id="toggleRecording" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
                     <button id="recordGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
                     <button id="toggleFullscreen" class="btn btn-secondary" title="Toggle Fullscreen">Fullscreen</button>
                 </div>
-                <button id="sidebarToggle" class="btn sidebar-toggle">设置</button>
+                <button id="sidebarToggle" class="btn sidebar-toggle" hidden>设置</button>
             </div>
         </header>
 
@@ -62,13 +73,13 @@
             <div class="video-container">
                 <div id="videoPlaceholder" class="video-placeholder">
                     <h2 data-i18n="inputBridgeReadyTitle">共享器就绪</h2>
-                    <p data-i18n="inputBridgeReadyBody">连接 OSRBOT KVM 后，点击此区域即可在无采集卡时共享键盘鼠标。</p>
+                    <p data-i18n="inputBridgeReadyBody">连接 OSRBOT KVM 后，点击工作区即可在无采集卡时共享键盘鼠标。</p>
                     <p class="video-placeholder-sub" data-i18n="inputBridgeReadySub">当被控端本身有屏幕时，视频预览不是必需项。</p>
                 </div>
                 <video id="videoElement" class="video-stream" autoplay playsinline muted style="display: none;"></video>
             </div>
             
-            <div class="info-panel">
+            <div class="info-panel" hidden>
                 <div class="sidebar-header">
                     <button id="closeSidebar" class="btn btn-fold">›</button>
                     <h2 data-i18n="settings">设置</h2>
@@ -111,17 +122,6 @@
                     <p class="mode-description" id="targetModeDescription">Computer mode keeps the current mouse behavior.</p>
                 </div>
 
-                <div class="display-mode-controls">
-                    <h3 data-i18n="displayModeTitle">Display Scaling</h3>
-                    <select id="displayModeSelect" class="device-select">
-                        <option value="fit" data-i18n="displayModeFit">Fit</option>
-                        <option value="fill" data-i18n="displayModeFill">Fill</option>
-                        <option value="original" data-i18n="displayModeOriginal">Original</option>
-                    </select>
-                    <p class="mode-description" id="displayModeDescription">Fit to the window while preserving aspect ratio.</p>
-                    <div id="displayScaleInfo" class="capture-info compact">显示：未连接</div>
-                </div>
-                
                 <div class="mouse-mode-controls">
                     <h3 data-i18n="mouseModeTitle">Mouse Mode</h3>
                     <div class="mode-toggle">
@@ -171,7 +171,7 @@
             <button id="fullscreenDisplayMode" class="btn btn-secondary state-btn" title="Switch display scaling">✓ 适应</button>
             <button id="fullscreenTargetMode" class="btn btn-secondary state-btn" title="Switch target device mode">✓ 电脑</button>
             <button id="fullscreenPasteCommand" class="btn btn-secondary" disabled title="Paste ASCII command text from controller clipboard">粘贴</button>
-            <button id="fullscreenSwitchDisplay" class="btn btn-secondary" disabled title="主要适用于 Windows 被控端">显示</button>
+            <button id="fullscreenSwitchDisplay" class="btn btn-secondary" disabled title="主要适用于 Windows 被控端">切换屏幕</button>
             <button id="fullscreenScreenshot" class="btn btn-secondary" disabled title="Capture current video frame">截图</button>
             <button id="fullscreenRecord" class="btn btn-secondary" disabled title="Record compressed capture-card video">录屏</button>
             <button id="fullscreenGif" class="btn btn-secondary" disabled title="Record a short GIF from capture-card video">GIF</button>
@@ -212,6 +212,19 @@
                     <button id="confirmPaste" class="btn btn-primary" data-i18n="pasteSend">Send</button>
                     <button id="stopPaste" class="btn btn-warning" data-i18n="pasteStop" style="display: none;">Stop</button>
                     <button id="cancelPaste" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="watermark-modal" id="watermarkModal" style="display: none;">
+            <div class="paste-content watermark-content">
+                <h3 data-i18n="watermarkTitle">水印设置</h3>
+                <p class="mode-description" data-i18n="watermarkPrompt">水印用户名（中文、英文、数字、下划线、中划线，最多 16 个字符）。留空则使用默认水印。</p>
+                <input id="watermarkInput" class="watermark-input" type="text" maxlength="16" spellcheck="false" placeholder="guguji" />
+                <p id="watermarkPreview" class="mode-description">OSRBOT Link</p>
+                <div class="modal-buttons">
+                    <button id="confirmWatermark" class="btn btn-primary" data-i18n="saveBtn">保存</button>
+                    <button id="cancelWatermark" class="btn btn-secondary" data-i18n="cancelBtn">取消</button>
                 </div>
             </div>
         </div>

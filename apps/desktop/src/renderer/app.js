@@ -49,11 +49,15 @@ class KVMClient {
                 changeBtn: 'Fixed',
                 customResTitle: 'Custom Resolutions',
                 customResDesc: 'Append to the resolution menu (no guarantee device supports them).',
+                customResPrompt: 'Custom resolutions, separated by commas. Leave empty to clear.',
+                customResSaved: 'Custom resolutions saved.',
                 addBtn: 'Add',
                 saveBtn: 'Save',
                 settings: 'Settings',
                 btnStartVideo: 'Start Video',
                 btnStopVideo: 'Stop Video',
+                btnHidePanel: 'Hide Panel',
+                btnFullscreen: 'Fullscreen',
                 btnRefresh: 'Refresh',
                 btnConnectHID: 'Connect HID',
                 btnShowHIDDiagnostics: 'Show All HID',
@@ -77,8 +81,8 @@ class KVMClient {
                 btnRecord: 'Record',
                 btnRecordStop: 'Stop Rec',
                 btnGif: 'GIF',
-                btnSwitchDisplay: 'Switch Display',
-                switchDisplayHint: 'Mainly for Windows target devices.',
+                btnSwitchDisplay: 'Switch Screen',
+                switchDisplayHint: 'Mainly works when the controlled device is Windows.',
                 btnExitFullscreen: 'Exit Fullscreen',
                 btnPasteCommand: 'Paste',
                 pasteTitle: 'Paste Command',
@@ -120,7 +124,7 @@ class KVMClient {
                 gifFilter: 'GIF Image',
                 noRecordingData: 'Recording stopped with no video data.',
                 noGifData: 'GIF stopped with no frames.',
-                switchDisplaySent: 'Sent display switch shortcut (Win+P).',
+                switchDisplaySent: 'Sent screen switch shortcut (Win+P). This mainly works when the controlled device is Windows.',
                 selectVideoOption: 'Select Video Device',
                 selectResolutionOption: 'Select Resolution',
                 selectHIDOption: 'Select HID Device',
@@ -144,13 +148,21 @@ class KVMClient {
                 connectHIDFirstMouse: 'Please connect HID device first for mouse/keyboard control',
                 startVideoFirst: 'Video is optional. Connect HID to use input bridge mode.',
                 inputBridgeReadyTitle: 'Input Bridge Ready',
-                inputBridgeReadyBody: 'Connect OSRBOT KVM, then click this area to share keyboard and mouse without a capture card.',
+                inputBridgeReadyBody: 'Connect OSRBOT KVM, then click the workspace to share keyboard and mouse without a capture card.',
                 inputBridgeReadySub: 'Video preview is optional when the controlled device already has a screen.',
                 fallbackResolution: 'Resolution {from} failed ({error}). Falling back to {to}.',
                 negotiatedResolution: 'Requested {from}, device provided {to}. Using {to}.',
                 actualCaptureDisconnected: 'Actual capture: disconnected',
                 actualCaptureInfo: 'Actual capture: {resolution} @ {fps}fps',
-                actualCaptureInfoNoFps: 'Actual capture: {resolution}'
+                actualCaptureInfoNoFps: 'Actual capture: {resolution}',
+                resetDevicesDone: 'Device state reset. Select and connect devices again.',
+                hidDeviceLost: 'HID connection was lost. Please reconnect the OSRBOT HID device.',
+                watermarkTitle: 'Watermark',
+                watermarkPrompt: 'Watermark name (Chinese, letters, numbers, underscore, hyphen; max 16 chars). Leave empty to use default watermark.',
+                watermarkInvalid: 'Use only Chinese, letters, numbers, underscore, or hyphen. Max 16 characters.',
+                watermarkSaved: 'Watermark setting saved.',
+                shortcutsHelp: 'macOS: Shift+Esc exits fullscreen and control mode. Windows/Linux: Right Ctrl exits control mode; Shift+Esc exits fullscreen and control mode.',
+                aboutText: 'OSRBOT Link v0.5'
             },
             zh: {
                 panelTitle: '控制台',
@@ -195,11 +207,15 @@ class KVMClient {
                 changeBtn: '固定',
                 customResTitle: '自定义分辨率',
                 customResDesc: '添加到分辨率列表（设备是否支持不保证）。',
+                customResPrompt: '自定义分辨率，多个请用逗号分隔。留空可清空。',
+                customResSaved: '自定义分辨率已保存。',
                 addBtn: '添加',
                 saveBtn: '保存',
                 settings: '设置',
                 btnStartVideo: '开始视频',
                 btnStopVideo: '停止视频',
+                btnHidePanel: '隐藏左侧',
+                btnFullscreen: '全屏',
                 btnRefresh: '刷新',
                 btnConnectHID: '连接 HID',
                 btnShowHIDDiagnostics: '显示全部 HID',
@@ -223,8 +239,8 @@ class KVMClient {
                 btnRecord: '录屏',
                 btnRecordStop: '停止录屏',
                 btnGif: '录制 GIF',
-                btnSwitchDisplay: '切换显示',
-                switchDisplayHint: '主要适用于 Windows 被控端。',
+                btnSwitchDisplay: '切换屏幕',
+                switchDisplayHint: '主要在被控端为 Windows 时有效。',
                 btnExitFullscreen: '退出全屏',
                 btnPasteCommand: '粘贴命令',
                 pasteTitle: '粘贴命令',
@@ -266,7 +282,7 @@ class KVMClient {
                 gifFilter: 'GIF 动图',
                 noRecordingData: '录屏停止，但没有生成视频数据。',
                 noGifData: 'GIF 停止，但没有生成帧数据。',
-                switchDisplaySent: '已发送切换显示快捷键（Win+P）。',
+                switchDisplaySent: '已发送切换屏幕快捷键（Win+P），主要在被控端为 Windows 时有效。',
                 selectVideoOption: '选择视频设备',
                 selectResolutionOption: '选择分辨率',
                 selectHIDOption: '选择 HID 设备',
@@ -290,13 +306,21 @@ class KVMClient {
                 connectHIDFirstMouse: '请先连接 HID 设备以控制鼠标/键盘',
                 startVideoFirst: '视频是可选的，连接 HID 后即可使用纯键鼠共享模式。',
                 inputBridgeReadyTitle: '共享器就绪',
-                inputBridgeReadyBody: '连接 OSRBOT KVM 后，点击此区域即可在无采集卡时共享键盘鼠标。',
+                inputBridgeReadyBody: '连接 OSRBOT KVM 后，点击工作区即可在无采集卡时共享键盘鼠标。',
                 inputBridgeReadySub: '当被控端本身有屏幕时，视频预览不是必需项。',
                 fallbackResolution: '分辨率 {from} 失败（{error}），切换到 {to}。',
                 negotiatedResolution: '请求 {from}，设备返回 {to}，已使用 {to}。',
                 actualCaptureDisconnected: '实际采集：未连接',
                 actualCaptureInfo: '实际采集：{resolution} @ {fps}fps',
-                actualCaptureInfoNoFps: '实际采集：{resolution}'
+                actualCaptureInfoNoFps: '实际采集：{resolution}',
+                resetDevicesDone: '设备状态已重置，请重新选择并连接设备。',
+                hidDeviceLost: 'HID 连接已失效，请重新连接 OSRBOT HID 设备。',
+                watermarkTitle: '水印设置',
+                watermarkPrompt: '水印用户名（中文、英文、数字、下划线、中划线，最多 16 个字符）。留空则使用默认水印。',
+                watermarkInvalid: '只能使用中文、英文、数字、下划线或中划线，最多 16 个字符。',
+                watermarkSaved: '水印设置已保存。',
+                shortcutsHelp: 'macOS：Shift+Esc 退出全屏和控制模式。Windows/Linux：右 Ctrl 退出控制模式；Shift+Esc 退出全屏和控制模式。',
+                aboutText: 'OSRBOT Link v0.5'
             }
         };
 
@@ -314,6 +338,7 @@ class KVMClient {
         this.mouseButtonsPressed = 0; // Track which buttons are pressed
         this.reverseScroll = true; // Traditional scrolling direction by default
         this.isFullscreen = false; // Track fullscreen state
+        this.controlPanelVisible = true;
         this.nativeInputAvailable = false;
         this.mediaRecorder = null;
         this.recordedChunks = [];
@@ -333,6 +358,10 @@ class KVMClient {
         this.pasteSending = false;
         this.toolsManuallyHidden = false;
         this.fullscreenGuideShown = false;
+        this.watermarkName = '';
+        this.pointerLockRecoverTimer = null;
+        this.pointerLockRetryCount = 0;
+        this.pointerLockMaxRetries = 2;
 
         // Compatible KVM device list for auto-detection
         // Add new compatible devices here with their VID/PID and description
@@ -404,6 +433,8 @@ class KVMClient {
         this.refreshDevicesBtn = document.getElementById('refreshDevices');
         this.startVideoBtn = document.getElementById('startVideo');
         this.stopVideoBtn = document.getElementById('stopVideo');
+        this.panelFullscreenBtn = document.getElementById('panelFullscreen');
+        this.hideControlPanelBtn = document.getElementById('hideControlPanel');
         this.actualCaptureInfo = document.getElementById('actualCaptureInfo');
         this.connectHIDBtn = document.getElementById('connectHID');
         this.showHIDDiagnosticsBtn = document.getElementById('showHIDDiagnostics');
@@ -485,6 +516,11 @@ class KVMClient {
         this.confirmPasteBtn = document.getElementById('confirmPaste');
         this.stopPasteBtn = document.getElementById('stopPaste');
         this.cancelPasteBtn = document.getElementById('cancelPaste');
+        this.watermarkModal = document.getElementById('watermarkModal');
+        this.watermarkInput = document.getElementById('watermarkInput');
+        this.watermarkPreview = document.getElementById('watermarkPreview');
+        this.confirmWatermarkBtn = document.getElementById('confirmWatermark');
+        this.cancelWatermarkBtn = document.getElementById('cancelWatermark');
     }
 
     loadSettings() {
@@ -500,6 +536,8 @@ class KVMClient {
             const savedTheme = localStorage.getItem('kvmTheme');
             this.theme = savedTheme === 'dark' ? 'dark' : 'bright';
             this.applyTheme();
+
+            this.watermarkName = this.sanitizeWatermarkName(localStorage.getItem('kvmWatermarkName') || '');
 
             const savedTargetMode = localStorage.getItem('kvmTargetMode');
             if (['desktop', 'android'].includes(savedTargetMode)) {
@@ -598,6 +636,7 @@ class KVMClient {
             if (this.theme) {
                 localStorage.setItem('kvmTheme', this.theme);
             }
+            localStorage.setItem('kvmWatermarkName', this.watermarkName || '');
             console.log('Saved settings:', { mouseMode: this.mouseMode, targetMode: this.targetMode, displayMode: this.displayMode, reverseScroll: this.reverseScroll, theme: this.theme, quitKeyCombo: this.quitKeyCombo });
         } catch (error) {
             console.error('Error saving settings:', error);
@@ -646,18 +685,22 @@ class KVMClient {
 
     addCustomResolutionsFromInput() {
         if (!this.customResInput) return;
-        const raw = this.customResInput.value || '';
+        return this.setCustomResolutionsFromText(this.customResInput.value || '');
+    }
+
+    setCustomResolutionsFromText(raw) {
         const parsed = this.parseCustomResolutions(raw);
         if (!raw.trim().length) {
             // Allow empty input to clear custom resolutions without warning
             this.customResolutions = [];
             localStorage.setItem('kvmCustomResolutions', JSON.stringify(this.customResolutions));
             this.buildResolutionFPS();
-            return;
+            this.showAutoConnectNotification(this.t('customResSaved'), 'success');
+            return true;
         }
         if (!parsed.length) {
             alert(this.t('noValidRes'));
-            return;
+            return false;
         }
         if (!this.customResolutions) this.customResolutions = [];
 
@@ -669,6 +712,8 @@ class KVMClient {
 
         localStorage.setItem('kvmCustomResolutions', JSON.stringify(this.customResolutions));
         this.buildResolutionFPS();
+        this.showAutoConnectNotification(this.t('customResSaved'), 'success');
+        return true;
     }
 
     parseCustomResolutions(text) {
@@ -688,6 +733,59 @@ class KVMClient {
             .filter(Boolean);
     }
 
+    sanitizeWatermarkName(name) {
+        const chars = Array.from(String(name || '').trim()).slice(0, 16).join('');
+        return /^[\p{Script=Han}A-Za-z0-9_-]{0,16}$/u.test(chars) ? chars : '';
+    }
+
+    setWatermarkName(name) {
+        const raw = String(name || '').trim();
+        const sanitized = this.sanitizeWatermarkName(raw);
+        if (raw && !sanitized) {
+            alert(this.t('watermarkInvalid'));
+            return false;
+        }
+        this.watermarkName = sanitized;
+        localStorage.setItem('kvmWatermarkName', sanitized);
+        this.showAutoConnectNotification(this.t('watermarkSaved'), 'success');
+        return true;
+    }
+
+    async openWatermarkSettings() {
+        if (this.mouseCaptured) {
+            await this.releaseControlModeOnly();
+        }
+        if (!this.watermarkModal || !this.watermarkInput) return;
+        this.watermarkInput.value = this.watermarkName || '';
+        this.updateWatermarkPreview();
+        this.watermarkModal.style.display = 'flex';
+        requestAnimationFrame(() => {
+            this.watermarkInput.focus();
+            this.watermarkInput.select();
+        });
+    }
+
+    hideWatermarkSettings() {
+        if (this.watermarkModal) {
+            this.watermarkModal.style.display = 'none';
+        }
+    }
+
+    confirmWatermarkSettings() {
+        if (!this.watermarkInput) return;
+        if (this.setWatermarkName(this.watermarkInput.value || '')) {
+            this.hideWatermarkSettings();
+        }
+    }
+
+    updateWatermarkPreview() {
+        if (!this.watermarkPreview || !this.watermarkInput) return;
+        const name = this.sanitizeWatermarkName(this.watermarkInput.value || '');
+        this.watermarkPreview.textContent = name
+            ? `OSRBOT Link by ${name} · ${this.getCaptureDateStamp()}`
+            : 'OSRBOT Link';
+    }
+
     setLanguage(lang) {
         if (!this.I18N[lang]) return;
         this.language = lang;
@@ -696,12 +794,14 @@ class KVMClient {
         this.loadBuildInfo();
         this.updateMouseModeDisplay();
         this.updateScrollDirectionDisplay();
+        this.updateMenuState();
     }
 
     setTheme(theme) {
         this.theme = theme === 'dark' ? 'dark' : 'bright';
         localStorage.setItem('kvmTheme', this.theme);
         this.applyTheme();
+        this.updateMenuState();
     }
 
     setTargetMode(mode) {
@@ -712,6 +812,7 @@ class KVMClient {
         this.updateMouseModeDisplay();
         this.updateFullscreenModeButtons();
         this.saveSettings();
+        this.updateMenuState();
     }
 
     applyTargetModeDefaults() {
@@ -729,6 +830,7 @@ class KVMClient {
         this.updateDisplayModeDisplay();
         this.updateFullscreenModeButtons();
         this.saveSettings();
+        this.updateMenuState();
     }
 
     applyTheme() {
@@ -767,6 +869,8 @@ class KVMClient {
             { id: 'sectionActions', key: 'sectionActions' },
             { id: 'startVideo', key: 'btnStartVideo' },
             { id: 'stopVideo', key: 'btnStopVideo' },
+            { id: 'panelFullscreen', key: 'btnFullscreen' },
+            { id: 'hideControlPanel', key: 'btnHidePanel' },
             { id: 'refreshDevices', key: 'btnRefresh' },
             { id: 'connectHID', key: 'btnConnectHID' },
             { id: 'showHIDDiagnostics', key: 'btnShowHIDDiagnostics' },
@@ -779,6 +883,8 @@ class KVMClient {
             { id: 'captureScreenshot', key: 'btnScreenshot' },
             { id: 'toggleRecording', key: this.isRecording ? 'btnRecordStop' : 'btnRecord' },
             { id: 'recordGif', key: this.isRecordingGif ? 'btnRecordStop' : 'btnGif' },
+            { id: 'confirmWatermark', key: 'saveBtn' },
+            { id: 'cancelWatermark', key: 'cancelBtn' },
             { id: 'fullscreenHideTools', key: 'btnHideTools' },
             { id: 'fullscreenExit', key: 'btnExitFullscreen' },
             { id: 'fullscreenSwitchDisplay', key: 'btnSwitchDisplay' },
@@ -850,6 +956,111 @@ class KVMClient {
         return this.isMacPlatform() ? this.t('overlayHint') : this.t('overlayHintOther');
     }
 
+    updateMenuState() {
+        if (!window.electronAPI?.updateMenuState) return;
+        window.electronAPI.updateMenuState({
+            targetMode: this.targetMode,
+            displayMode: this.displayMode,
+            reverseScroll: this.reverseScroll,
+            language: this.language,
+            theme: this.theme,
+            mouseCaptured: this.mouseCaptured,
+            isFullscreen: this.isFullscreen,
+            controlPanelVisible: this.controlPanelVisible,
+            videoConnected: this.videoConnected,
+            hidConnected: this.hidConnected,
+            isRecording: this.isRecording,
+            isRecordingGif: this.isRecordingGif
+        }).catch(error => console.warn('Failed to update menu state:', error));
+    }
+
+    async handleMenuCommand(command, payload = {}) {
+        switch (command) {
+            case 'enter-control-mode':
+                if (!this.mouseCaptured) await this.toggleMouseCapture();
+                break;
+            case 'exit-control-mode':
+                await this.releaseControlModeOnly();
+                break;
+            case 'toggle-fullscreen':
+                await this.toggleFullscreen();
+                break;
+            case 'exit-fullscreen':
+                await this.exitControlAndFullscreen();
+                break;
+            case 'enter-fullscreen':
+                await this.enterFullscreen();
+                break;
+            case 'exit-fullscreen-only':
+                await this.exitFullscreenOnly();
+                break;
+            case 'set-control-panel-visible':
+                this.setControlPanelVisible(payload.visible !== false);
+                break;
+            case 'reset-devices':
+                await this.resetDevices();
+                break;
+            case 'set-target-mode':
+                this.setTargetMode(payload.mode);
+                break;
+            case 'set-display-mode':
+                this.setDisplayMode(payload.mode);
+                break;
+            case 'set-scroll-direction':
+                this.reverseScroll = !!payload.reverseScroll;
+                if (this.scrollReverseToggle) this.scrollReverseToggle.checked = this.reverseScroll;
+                this.updateScrollDirectionDisplay();
+                this.saveSettings();
+                this.updateMenuState();
+                break;
+            case 'set-language':
+                this.setLanguage(payload.language);
+                break;
+            case 'set-theme':
+                this.setTheme(payload.theme);
+                break;
+            case 'send-ctrl-alt-del':
+                await this.sendCtrlAltDelete();
+                break;
+            case 'switch-display':
+                await this.switchRemoteDisplay();
+                break;
+            case 'paste-command':
+                await this.openPasteCommandModal();
+                break;
+            case 'screenshot':
+                await this.captureScreenshot();
+                break;
+            case 'toggle-recording':
+                this.toggleRecording();
+                break;
+            case 'toggle-gif':
+                this.toggleGifRecording();
+                break;
+            case 'open-watermark-settings':
+                await this.openWatermarkSettings();
+                break;
+            case 'show-shortcuts':
+                if (this.mouseCaptured) await this.releaseControlModeOnly();
+                alert(this.t('shortcutsHelp'));
+                break;
+            case 'focus-custom-resolution':
+                if (this.mouseCaptured) await this.releaseControlModeOnly();
+                {
+                    const current = (this.customResolutions || []).map(r => `${r.width}x${r.height}`).join(',');
+                    const value = window.prompt(this.t('customResPrompt'), current);
+                    if (value !== null) this.setCustomResolutionsFromText(value);
+                }
+                break;
+            case 'show-about':
+                if (this.mouseCaptured) await this.releaseControlModeOnly();
+                alert(this.t('aboutText'));
+                break;
+            default:
+                console.warn('Unknown menu command:', command, payload);
+        }
+    }
+
     capitalizeMode(mode) {
         if (!mode) return '';
         return mode.charAt(0).toUpperCase() + mode.slice(1);
@@ -895,6 +1106,7 @@ class KVMClient {
         this.applyTranslations();
         this.loadBuildInfo();
         this.updateDeviceSelectionLocks();
+        this.updateMenuState();
         
         console.log('Applied loaded settings to UI');
     }
@@ -915,6 +1127,13 @@ class KVMClient {
     }
 
     bindEvents() {
+        if (window.electronAPI?.onMenuCommand) {
+            window.electronAPI.onMenuCommand((command, payload) => this.handleMenuCommand(command, payload));
+        }
+        if (window.electronAPI?.onHIDDeviceLost) {
+            window.electronAPI.onHIDDeviceLost((error) => this.handleHIDDeviceLost(error));
+        }
+
         // Video controls
         if (this.refreshDevicesBtn) {
             this.refreshDevicesBtn.addEventListener('click', () => this.refreshAllDevices());
@@ -993,6 +1212,12 @@ class KVMClient {
         if (this.displayModeSelect) {
             this.displayModeSelect.addEventListener('change', (e) => this.setDisplayMode(e.target.value));
         }
+        if (this.panelFullscreenBtn) {
+            this.panelFullscreenBtn.addEventListener('click', () => this.enterFullscreen());
+        }
+        if (this.hideControlPanelBtn) {
+            this.hideControlPanelBtn.addEventListener('click', () => this.setControlPanelVisible(false));
+        }
         
         // Quick control buttons
         this.sendCADBtn.addEventListener('click', () => this.sendCtrlAltDelete());
@@ -1047,8 +1272,26 @@ class KVMClient {
         this.stopPasteBtn.addEventListener('click', () => this.stopPasteCommand());
         this.cancelPasteBtn.addEventListener('click', () => this.hidePasteCommandModal());
         this.pastePreview.addEventListener('input', () => this.updatePasteLimitInfo());
+        this.confirmWatermarkBtn?.addEventListener('click', () => this.confirmWatermarkSettings());
+        this.cancelWatermarkBtn?.addEventListener('click', () => this.hideWatermarkSettings());
+        this.watermarkInput?.addEventListener('input', () => this.updateWatermarkPreview());
+        this.watermarkInput?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.confirmWatermarkSettings();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.hideWatermarkSettings();
+            }
+        });
         
         // Video stream mouse/keyboard capture
+        document.addEventListener('click', (e) => {
+            if (this.shouldActivateControlFromClick(e)) {
+                this.toggleMouseCapture();
+            }
+        });
+
         this.videoElement.addEventListener('click', (e) => {
             if (!this.mouseCaptured) {
                 // Toggle capture mode
@@ -1064,6 +1307,34 @@ class KVMClient {
                 e.preventDefault();
             }
         });
+        this.videoPlaceholder.addEventListener('mousemove', (e) => {
+            if (this.mouseCaptured && this.hidConnected && this.mouseMode === 'absolute' && !this.videoConnected) {
+                this.handleMouseMove(e);
+            }
+        });
+        this.videoPlaceholder.addEventListener('mousedown', (e) => {
+            if (this.mouseCaptured && this.hidConnected && this.mouseMode === 'absolute' && !this.videoConnected) {
+                this.handleMouseEvent(e);
+                e.preventDefault();
+            }
+        });
+        this.videoPlaceholder.addEventListener('mouseup', (e) => {
+            if (this.mouseCaptured && this.hidConnected && this.mouseMode === 'absolute' && !this.videoConnected) {
+                this.handleMouseEvent(e);
+                e.preventDefault();
+            }
+        });
+        this.videoPlaceholder.addEventListener('wheel', (e) => {
+            if (this.mouseCaptured && this.hidConnected && this.mouseMode === 'absolute' && !this.videoConnected) {
+                this.handleMouseWheel(e);
+                e.preventDefault();
+            }
+        }, { passive: false });
+        this.videoPlaceholder.addEventListener('mouseleave', () => {
+            if (this.mouseCaptured && this.mouseMode === 'absolute' && !this.videoConnected) {
+                this.releaseMouseCaptureWithKeyReset();
+            }
+        });
         
         document.addEventListener('keydown', (e) => this.handleDocumentKey(e, true), true);
         document.addEventListener('keyup', (e) => this.handleDocumentKey(e, false), true);
@@ -1072,8 +1343,9 @@ class KVMClient {
         document.addEventListener('pointerlockchange', () => {
             console.log('Pointer lock changed:', document.pointerLockElement);
             if (!document.pointerLockElement && this.mouseCaptured && this.requiresPointerLockControl()) {
-                // Pointer lock was lost, release capture with key reset
-                this.releaseMouseCaptureWithKeyReset();
+                this.schedulePointerLockRecovery();
+            } else if (document.pointerLockElement) {
+                this.pointerLockRetryCount = 0;
             }
         });
         
@@ -1081,7 +1353,13 @@ class KVMClient {
         document.addEventListener('pointerlockerror', () => {
             console.error('Pointer lock failed');
             if (this.mouseCaptured && this.requiresPointerLockControl()) {
-                this.releaseMouseCaptureWithKeyReset();
+                this.schedulePointerLockRecovery();
+            }
+        });
+
+        window.addEventListener('focus', () => {
+            if (this.mouseCaptured && this.requiresPointerLockControl() && !document.pointerLockElement) {
+                this.schedulePointerLockRecovery(100);
             }
         });
         
@@ -1318,7 +1596,7 @@ class KVMClient {
     }
 
     async handleDocumentKey(event, isDown) {
-        if (event.defaultPrevented || this.quitKeyModal?.style.display === 'flex' || this.pasteModal?.style.display === 'flex') {
+        if (event.defaultPrevented || this.quitKeyModal?.style.display === 'flex' || this.pasteModal?.style.display === 'flex' || this.watermarkModal?.style.display === 'flex') {
             return;
         }
 
@@ -1395,15 +1673,37 @@ class KVMClient {
             await this.releaseMouseCaptureWithKeyReset();
         }
 
-        if (this.isFullscreen) {
-            try {
-                await window.electronAPI.exitFullscreen();
-                this.isFullscreen = false;
-                this.applyWorkspaceFullscreen(false);
-            } catch (error) {
-                console.error('Error exiting fullscreen:', error);
-            }
+        await this.exitFullscreenOnly();
+        this.updateMenuState();
+    }
+
+    async enterFullscreen() {
+        if (this.isFullscreen) return;
+        await this.toggleFullscreen();
+    }
+
+    async exitFullscreenOnly() {
+        if (!this.isFullscreen) return;
+        try {
+            await window.electronAPI.exitFullscreen();
+            this.isFullscreen = false;
+            this.applyWorkspaceFullscreen(false);
+        } catch (error) {
+            console.error('Error exiting fullscreen:', error);
         }
+        this.updateMenuState();
+    }
+
+    setControlPanelVisible(visible) {
+        this.controlPanelVisible = !!visible;
+        document.body.classList.toggle('control-panel-hidden', !this.controlPanelVisible);
+        if (!this.isFullscreen) {
+            this.header.style.display = this.controlPanelVisible ? '' : 'none';
+            this.header.style.pointerEvents = this.controlPanelVisible ? '' : 'none';
+            this.header.classList.toggle('hidden', !this.controlPanelVisible);
+            this.headerVisible = this.controlPanelVisible;
+        }
+        this.updateMenuState();
     }
 
     async releaseControlModeOnly() {
@@ -1895,7 +2195,7 @@ class KVMClient {
         this.updateDeviceSelectionLocks();
 
         if (this.mouseCaptured) {
-            this.releaseMouseCapture();
+            await this.releaseMouseCapture();
         }
     }
 
@@ -2095,6 +2395,10 @@ class KVMClient {
         return new Date().toISOString().replace(/[:.]/g, '-');
     }
 
+    getCaptureDateStamp() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
     toggleGifRecording() {
         if (this.isRecordingGif) {
             this.stopGifRecording();
@@ -2197,15 +2501,23 @@ class KVMClient {
         const scale = Math.max(0.65, Math.min(1.45, width / 1920));
         const padding = Math.round(18 * scale);
         const titleFont = Math.max(13, Math.round(18 * scale));
+        const metaFont = Math.max(10, Math.round(13 * scale));
         const title = this.PROVENANCE.product;
+        const metaLines = this.watermarkName
+            ? [`by ${this.watermarkName}`, this.getCaptureDateStamp()]
+            : [];
 
         context.save();
         context.textBaseline = 'top';
-        context.font = `700 ${titleFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+        const watermarkFontFamily = '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", sans-serif';
+        context.font = `700 ${titleFont}px ${watermarkFontFamily}`;
         const titleWidth = context.measureText(title).width;
+        context.font = `600 ${metaFont}px ${watermarkFontFamily}`;
+        const metaWidth = metaLines.reduce((max, line) => Math.max(max, context.measureText(line).width), 0);
 
-        const boxWidth = Math.ceil(titleWidth + padding * 2);
-        const boxHeight = Math.ceil(titleFont + padding * 1.55);
+        const boxWidth = Math.ceil(Math.max(titleWidth, metaWidth) + padding * 2);
+        const lineGap = Math.round(4 * scale);
+        const boxHeight = Math.ceil(titleFont + (metaLines.length ? metaLines.length * (metaFont + lineGap) + lineGap : 0) + padding * 1.55);
         const x = Math.max(padding, width - boxWidth - padding);
         const y = Math.max(padding, height - boxHeight - padding);
         const radius = Math.round(9 * scale);
@@ -2217,8 +2529,18 @@ class KVMClient {
 
         context.globalAlpha = 0.95;
         context.fillStyle = '#ffffff';
-        context.font = `700 ${titleFont}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
-        context.fillText(title, x + padding, y + Math.round(padding * 0.75));
+        context.font = `700 ${titleFont}px ${watermarkFontFamily}`;
+        let textY = y + Math.round(padding * 0.75);
+        context.fillText(title, x + padding, textY);
+        if (metaLines.length) {
+            context.globalAlpha = 0.86;
+            context.font = `600 ${metaFont}px ${watermarkFontFamily}`;
+            textY += titleFont + lineGap;
+            metaLines.forEach((line) => {
+                context.fillText(line, x + padding, textY);
+                textY += metaFont + lineGap;
+            });
+        }
         context.restore();
     }
 
@@ -2644,6 +2966,13 @@ class KVMClient {
     }
 
     async resetDevices() {
+        if (this.isRecording) {
+            this.stopVideoRecording();
+        }
+        if (this.isRecordingGif) {
+            await this.stopGifRecording();
+        }
+
         if (this.hidConnected) {
             try {
                 await window.electronAPI.sendMouseEvent({ type: 'reset' });
@@ -2652,12 +2981,54 @@ class KVMClient {
                 console.error('Error resetting devices:', error);
             }
         }
+
+        if (this.mouseCaptured) {
+            await this.releaseMouseCaptureWithKeyReset();
+        }
+
+        if (this.isFullscreen) {
+            try {
+                await window.electronAPI.exitFullscreen();
+                this.isFullscreen = false;
+                this.applyWorkspaceFullscreen(false);
+            } catch (error) {
+                console.error('Error exiting fullscreen during reset:', error);
+            }
+        }
+
+        if (this.videoConnected || this.currentStream) {
+            await this.stopVideo();
+        }
+
+        if (this.hidConnected) {
+            try {
+                await window.electronAPI.disconnectHIDDevice();
+            } catch (error) {
+                console.error('Error disconnecting HID during reset:', error);
+            }
+            this.hidConnected = false;
+        }
+
+        this.mouseButtonsPressed = 0;
+        this.manualHIDDisconnect = false;
+        this.updateHIDStatus();
+        this.updateVideoStatus();
+        this.updateDeviceSelectionLocks();
+        await Promise.allSettled([
+            this.refreshVideoDevices(),
+            this.loadHIDDevices()
+        ]);
+        this.showAutoConnectNotification(this.t('resetDevicesDone'), 'success');
+        this.updateMenuState();
     }
 
     async openPasteCommandModal() {
         if (!this.hidConnected) {
             alert(this.t('pasteNeedHID'));
             return;
+        }
+        if (this.mouseCaptured) {
+            await this.releaseControlModeOnly();
         }
 
         const text = await window.electronAPI.readClipboardText();
@@ -2898,6 +3269,11 @@ class KVMClient {
 
     async releaseMouseCapture() {
         this.mouseCaptured = false;
+        this.pointerLockRetryCount = 0;
+        if (this.pointerLockRecoverTimer) {
+            clearTimeout(this.pointerLockRecoverTimer);
+            this.pointerLockRecoverTimer = null;
+        }
         this.mouseCaptureOverlay.style.display = 'none';
         document.body.style.cursor = 'default';
         this.mouseButtonsPressed = 0;
@@ -2924,12 +3300,65 @@ class KVMClient {
         
         // Restore all header and video container styles
         this.applyWorkspaceFullscreen(this.isFullscreen);
+        this.updateMenuState();
         
         console.log('macOS: Header and video container fully restored');
     }
 
+    schedulePointerLockRecovery(delayMs = 250) {
+        if (!this.mouseCaptured || !this.requiresPointerLockControl()) return;
+        if (this.pointerLockRecoverTimer) {
+            clearTimeout(this.pointerLockRecoverTimer);
+        }
+
+        this.pointerLockRecoverTimer = setTimeout(async () => {
+            this.pointerLockRecoverTimer = null;
+            if (!this.mouseCaptured || !this.requiresPointerLockControl() || document.pointerLockElement) {
+                return;
+            }
+            if (!document.hasFocus()) {
+                return;
+            }
+            if (this.pointerLockRetryCount >= this.pointerLockMaxRetries) {
+                console.warn('Pointer lock recovery failed too many times; keeping control mode active without pointer lock.');
+                return;
+            }
+
+            this.pointerLockRetryCount += 1;
+            try {
+                await Promise.resolve(this.getPointerLockTarget().requestPointerLock());
+                console.log('Pointer lock recovered');
+            } catch (error) {
+                console.warn('Pointer lock recovery failed:', error);
+                this.schedulePointerLockRecovery(500);
+            }
+        }, delayMs);
+    }
+
+    async handleHIDDeviceLost(error) {
+        if (!this.hidConnected && !this.mouseCaptured) return;
+        console.warn('HID device lost:', error);
+        this.hidConnected = false;
+        this.manualHIDDisconnect = false;
+        if (this.mouseCaptured) {
+            await this.releaseMouseCapture();
+        } else {
+            try {
+                await window.electronAPI.setControlMode(false);
+                this.nativeInputAvailable = false;
+            } catch (controlError) {
+                console.error('Error disabling control mode after HID loss:', controlError);
+            }
+        }
+        this.mouseButtonsPressed = 0;
+        this.updateHIDStatus();
+        this.updateDeviceSelectionLocks();
+        this.showAutoConnectNotification(this.t('hidDeviceLost'), 'error');
+        await this.loadHIDDevices();
+    }
+
     requiresPointerLockControl() {
-        return this.mouseMode === 'relative' || !this.videoConnected;
+        return this.mouseMode === 'relative';
     }
 
     async handleMouseMove(event) {
@@ -3003,7 +3432,7 @@ class KVMClient {
         try {
             // In relative mode, only send button press/release without position
             // In absolute mode, include the click position
-            if (this.mouseMode === 'relative' || !this.videoConnected) {
+            if (this.mouseMode === 'relative') {
                 // Relative mode: Send only button state, no position
                 await window.electronAPI.sendMouseEvent({
                     type: event.type === 'mousedown' ? 'mousedown' : 'mouseup',
@@ -3036,7 +3465,7 @@ class KVMClient {
             // Apply scroll direction preference
             const scrollMultiplier = this.reverseScroll ? -1 : 1;
 
-            if (this.mouseMode === 'absolute' && this.videoConnected) {
+            if (this.mouseMode === 'absolute') {
                 const { x, y } = this.getAbsoluteHIDCoordinates(event);
 
                 // Send wheel events for both X and Y scroll
@@ -3188,6 +3617,7 @@ class KVMClient {
         this.videoStatus.textContent = this.videoConnected ? this.t('videoConnected') : this.t('videoDisconnected');
         this.videoStatus.setAttribute('data-status', this.videoConnected ? 'connected' : 'disconnected');
         this.updateCaptureControls();
+        this.updateMenuState();
     }
 
     updateHIDStatus() {
@@ -3208,6 +3638,7 @@ class KVMClient {
         this.pasteCommandBtn.disabled = !this.hidConnected;
         this.fullscreenPasteCommandBtn.disabled = !this.hidConnected;
         this.fullscreenSwitchDisplayBtn.disabled = !this.hidConnected;
+        this.updateMenuState();
     }
 
     updateDeviceSelectionLocks() {
@@ -3256,6 +3687,7 @@ class KVMClient {
         this.recordGifBtn.textContent = gifLabel;
         this.fullscreenGifBtn.textContent = this.isRecordingGif ? (this.language === 'zh' ? '停止' : 'Stop') : 'GIF';
         this.updateFullscreenModeButtons();
+        this.updateMenuState();
     }
 
     cycleDisplayMode() {
@@ -3412,6 +3844,7 @@ class KVMClient {
             clearTimeout(this.hideTimer);
             this.showHeader();
         }
+        this.updateMenuState();
     }
 
     showHeader() {
@@ -3440,7 +3873,8 @@ class KVMClient {
             this.nativeInputAvailable = false;
         }
         
-        this.applyWorkspaceFullscreen(this.isFullscreen || this.requiresPointerLockControl());
+        this.applyWorkspaceFullscreen(this.isFullscreen);
+        this.updateMenuState();
         
         console.log('Control mode enabled');
         
@@ -3450,13 +3884,15 @@ class KVMClient {
         if (this.requiresPointerLockControl()) {
             // Relative mode: hide cursor and request pointer lock
             document.body.style.cursor = 'none';
+            this.pointerLockRetryCount = 0;
             
             // Request pointer lock for relative mode
             console.log('Requesting pointer lock for relative/input-bridge mode');
-            this.getPointerLockTarget().requestPointerLock().then(() => {
+            Promise.resolve(this.getPointerLockTarget().requestPointerLock()).then(() => {
                 console.log('Pointer lock request succeeded');
             }).catch(error => {
                 console.error('Pointer lock request failed:', error);
+                this.schedulePointerLockRecovery();
             });
         } else {
             // Absolute mode: keep cursor visible
@@ -3472,6 +3908,7 @@ class KVMClient {
         this.reverseScroll = this.scrollReverseToggle.checked;
         this.updateScrollDirectionDisplay();
         this.saveSettings();
+        this.updateMenuState();
     }
 
     updateScrollDirectionDisplay() {
@@ -3599,8 +4036,21 @@ class KVMClient {
         if (!(target instanceof Element)) return false;
 
         return !!target.closest(
-            '.fullscreen-tools, .header, .info-panel, .quit-key-modal'
+            '.fullscreen-tools, .fullscreen-tools-hint, .header, .info-panel, .quit-key-modal, .paste-modal, .watermark-modal'
         );
+    }
+
+    shouldActivateControlFromClick(event) {
+        if (this.mouseCaptured || !this.hidConnected || event.defaultPrevented) {
+            return false;
+        }
+        if (this.isLocalControlEvent(event) || this.isEditableTarget(event.target)) {
+            return false;
+        }
+        if (event.target instanceof Element && event.target.closest('button, select, input, textarea, label, a')) {
+            return false;
+        }
+        return !!event.target?.closest?.('.main-content, .video-container, .video-placeholder, .video-stream');
     }
 
     getDisplayKeyFromCode(code, fallbackKey) {
@@ -3801,7 +4251,8 @@ class KVMClient {
             
             // Store fullscreen state for header auto-hide logic
             this.isFullscreen = isFullscreen;
-            this.applyWorkspaceFullscreen(isFullscreen || this.mouseCaptured);
+            this.applyWorkspaceFullscreen(isFullscreen);
+            this.updateMenuState();
         } catch (error) {
             console.error('Error toggling fullscreen:', error);
         }
@@ -3844,12 +4295,13 @@ class KVMClient {
         this.hideFullscreenTools(false);
         this.toolsManuallyHidden = false;
         this.fullscreenGuide?.classList.remove('visible');
-        this.header.style.display = '';
+        this.header.style.display = this.controlPanelVisible ? '' : 'none';
         this.header.style.position = '';
         this.header.style.top = '';
-        this.header.style.pointerEvents = '';
-        this.header.classList.remove('hidden');
-        this.headerVisible = true;
+        this.header.style.pointerEvents = this.controlPanelVisible ? '' : 'none';
+        this.header.classList.toggle('hidden', !this.controlPanelVisible);
+        this.headerVisible = this.controlPanelVisible;
+        document.body.classList.toggle('control-panel-hidden', !this.controlPanelVisible);
 
         if (mainContent) {
             mainContent.style.marginLeft = '';

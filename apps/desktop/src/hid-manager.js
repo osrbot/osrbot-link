@@ -219,6 +219,23 @@ class HIDManager {
     }
   }
 
+  markDeviceLost(error) {
+    const message = error?.message || 'HID write failed';
+    try {
+      if (this.device) {
+        this.device.close();
+      }
+    } catch (closeError) {
+      console.warn('Error closing lost HID device:', closeError);
+    }
+    this.device = null;
+    this.connected = false;
+    this.currentButtonState = 0;
+    this.modifierState = 0;
+    this.activeKeys.clear();
+    return { success: false, error: message, disconnected: true };
+  }
+
   sendMouseEvent(data) {
     if (!this.connected || !this.device) {
       return { success: false, error: 'Device not connected' };
@@ -310,8 +327,11 @@ class HIDManager {
           this.currentButtonState = 0;
           this.lastX = 0;
           this.lastY = 0;
-          buffer = [2, 0, 0, 0, 0, 0, 0, 0, 0];
-          break;
+          // Clear both absolute and relative mouse reports. Some firmware keeps
+          // button state per report type, so only clearing one can leave stale state.
+          this.device.write([0, 2, 0, 0, 0, 0, 0, 0, 0]);
+          this.device.write([0, 7, 0, 0, 0, 0, 0, 0, 0]);
+          return { success: true };
         default:
           buffer = [2, 0, 0, 0, 0, 0, 0, 0, 0];
       }
@@ -322,7 +342,7 @@ class HIDManager {
       return { success: true };
     } catch (error) {
       console.error('Error sending mouse event:', error);
-      return { success: false, error: error.message };
+      return this.markDeviceLost(error);
     }
   }
 
@@ -389,7 +409,7 @@ class HIDManager {
       return { success: true };
     } catch (error) {
       console.error('Error sending keyboard event:', error);
-      return { success: false, error: error.message };
+      return this.markDeviceLost(error);
     }
   }
 

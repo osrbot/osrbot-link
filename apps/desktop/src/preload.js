@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen'),
   exitFullscreen: () => ipcRenderer.invoke('exit-fullscreen'),
   setControlMode: (inControlMode) => ipcRenderer.invoke('set-control-mode', inControlMode),
+  updateMenuState: (state) => ipcRenderer.invoke('update-menu-state', state),
+  onMenuCommand: (callback) => ipcRenderer.on('menu-command', (_event, command, payload) => callback(command, payload)),
+  onHIDDeviceLost: (callback) => ipcRenderer.on('hid-device-lost', (_event, error) => callback(error)),
 
   // Local capture files
   saveCaptureFile: (payload) => ipcRenderer.invoke('save-capture-file', payload),

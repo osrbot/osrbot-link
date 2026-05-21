@@ -277,6 +277,129 @@ if (app && app.commandLine) {
 
 let mainWindow;
 let hidManager;
+let menuState = {
+  targetMode: 'desktop',
+  displayMode: 'fit',
+  reverseScroll: true,
+  language: 'zh',
+  theme: 'bright',
+  mouseCaptured: false,
+  isFullscreen: false,
+  controlPanelVisible: true,
+  videoConnected: false,
+  hidConnected: false,
+  isRecording: false,
+  isRecordingGif: false
+};
+
+function sendMenuCommand(command, payload = {}) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('menu-command', command, payload);
+  }
+}
+
+function buildApplicationMenu() {
+  const isMac = process.platform === 'darwin';
+  const template = [
+    ...(isMac ? [{
+      label: 'OSRBOT Link',
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'quit', label: '退出 OSRBOT Link' }
+      ]
+    }] : []),
+    {
+      label: '屏幕模式',
+      submenu: [
+        { label: '窗口模式', type: 'checkbox', checked: !menuState.isFullscreen, click: () => sendMenuCommand('exit-fullscreen-only') },
+        { label: '全屏模式', type: 'checkbox', checked: menuState.isFullscreen, accelerator: 'CmdOrCtrl+F', click: () => sendMenuCommand('enter-fullscreen') },
+        { type: 'separator' },
+        { label: '显示左侧栏', type: 'checkbox', checked: menuState.controlPanelVisible, click: () => sendMenuCommand('set-control-panel-visible', { visible: true }) },
+        { label: '隐藏左侧栏', type: 'checkbox', checked: !menuState.controlPanelVisible, click: () => sendMenuCommand('set-control-panel-visible', { visible: false }) }
+      ]
+    },
+    {
+      label: '设备',
+      submenu: [
+        { label: '重置设备', click: () => sendMenuCommand('reset-devices') },
+        { type: 'separator' },
+        {
+          label: '目标设备',
+          submenu: [
+            { label: '电脑', type: 'checkbox', checked: menuState.targetMode === 'desktop', click: () => sendMenuCommand('set-target-mode', { mode: 'desktop' }) },
+            { label: '安卓', type: 'checkbox', checked: menuState.targetMode === 'android', click: () => sendMenuCommand('set-target-mode', { mode: 'android' }) }
+          ]
+        },
+        {
+          label: '画面缩放',
+          submenu: [
+            { label: '自适应', type: 'checkbox', checked: menuState.displayMode === 'fit', click: () => sendMenuCommand('set-display-mode', { mode: 'fit' }) },
+            { label: '填满', type: 'checkbox', checked: menuState.displayMode === 'fill', click: () => sendMenuCommand('set-display-mode', { mode: 'fill' }) },
+            { label: '原始', type: 'checkbox', checked: menuState.displayMode === 'original', click: () => sendMenuCommand('set-display-mode', { mode: 'original' }) }
+          ]
+        },
+        {
+          label: '滚动方向',
+          submenu: [
+            { label: '传统', type: 'checkbox', checked: menuState.reverseScroll === true, click: () => sendMenuCommand('set-scroll-direction', { reverseScroll: true }) },
+            { label: '自然', type: 'checkbox', checked: menuState.reverseScroll === false, click: () => sendMenuCommand('set-scroll-direction', { reverseScroll: false }) }
+          ]
+        }
+      ]
+    },
+    {
+      label: '快捷操作',
+      submenu: [
+        { label: 'Ctrl+Alt+Del', click: () => sendMenuCommand('send-ctrl-alt-del') },
+        { label: '切换屏幕', click: () => sendMenuCommand('switch-display') },
+        { type: 'separator' },
+        { label: '粘贴命令...', click: () => sendMenuCommand('paste-command') },
+        { type: 'separator' },
+        { label: '截图', click: () => sendMenuCommand('screenshot') },
+        { label: menuState.isRecording ? '停止录屏' : '录屏', click: () => sendMenuCommand('toggle-recording') },
+        { label: menuState.isRecordingGif ? '停止 GIF' : '录制 GIF', click: () => sendMenuCommand('toggle-gif') }
+      ]
+    },
+    {
+      label: '设置',
+      submenu: [
+        {
+          label: '语言',
+          submenu: [
+            { label: '中文', type: 'checkbox', checked: menuState.language === 'zh', click: () => sendMenuCommand('set-language', { language: 'zh' }) },
+            { label: 'English', type: 'checkbox', checked: menuState.language === 'en', click: () => sendMenuCommand('set-language', { language: 'en' }) }
+          ]
+        },
+        {
+          label: '皮肤',
+          submenu: [
+            { label: '明亮', type: 'checkbox', checked: menuState.theme === 'bright', click: () => sendMenuCommand('set-theme', { theme: 'bright' }) },
+            { label: '深色', type: 'checkbox', checked: menuState.theme === 'dark', click: () => sendMenuCommand('set-theme', { theme: 'dark' }) }
+          ]
+        },
+        { type: 'separator' },
+        { label: '水印设置...', click: () => sendMenuCommand('open-watermark-settings') },
+        { label: '快捷键说明', click: () => sendMenuCommand('show-shortcuts') },
+        { label: '自定义分辨率', click: () => sendMenuCommand('focus-custom-resolution') }
+      ]
+    },
+    {
+      label: '帮助',
+      submenu: [
+        { label: '关于 OSRBOT Link', click: () => sendMenuCommand('show-about') }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
+function updateApplicationMenuState(partialState = {}) {
+  menuState = { ...menuState, ...partialState };
+  buildApplicationMenu();
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -296,7 +419,7 @@ function createWindow() {
     title: 'OSRBOT Link',
     show: false,
     icon: path.join(__dirname, '..', 'icon.png'),
-    autoHideMenuBar: process.platform !== 'darwin',
+    autoHideMenuBar: false,
     // Try to prevent macOS from handling function keys
     alwaysOnTop: false,
   skipTaskbar: false
@@ -325,40 +448,8 @@ function createWindow() {
     updateGrabState();
   });
 
-  if (process.platform !== 'darwin') {
-    mainWindow.setMenuBarVisibility(false);
-    mainWindow.removeMenu();
-    return;
-  }
-
-  // Create menu
-  const template = [
-    {
-      label: 'OSRBOT Link',
-      submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'quit' }
-      ]
-    },
-    {
-      label: 'View',
-      submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
-      ]
-    }
-  ];
-
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  buildApplicationMenu();
+  mainWindow.setMenuBarVisibility(true);
 }
 
 app.whenReady().then(() => {
@@ -493,11 +584,19 @@ ipcMain.handle('install-linux-hid-permissions', async () => {
 });
 
 ipcMain.handle('send-mouse-event', async (event, data) => {
-  return hidManager.sendMouseEvent(data);
+  const result = hidManager.sendMouseEvent(data);
+  if (!result.success && result.disconnected && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('hid-device-lost', result.error || 'HID device disconnected');
+  }
+  return result;
 });
 
 ipcMain.handle('send-keyboard-event', async (event, data) => {
-  return hidManager.sendKeyboardEvent(data);
+  const result = hidManager.sendKeyboardEvent(data);
+  if (!result.success && result.disconnected && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('hid-device-lost', result.error || 'HID device disconnected');
+  }
+  return result;
 });
 
 ipcMain.handle('get-build-info', async () => {
@@ -512,6 +611,11 @@ ipcMain.handle('get-build-info', async () => {
 
 ipcMain.handle('read-clipboard-text', async () => {
   return clipboard.readText() || '';
+});
+
+ipcMain.handle('update-menu-state', async (_event, state) => {
+  updateApplicationMenuState(state || {});
+  return { success: true };
 });
 
 ipcMain.handle('save-capture-file', async (_event, payload) => {
@@ -542,10 +646,7 @@ ipcMain.handle('toggle-fullscreen', async () => {
     const isFullscreen = mainWindow.isFullScreen();
     mainWindow.setFullScreen(!isFullscreen);
     
-    // Hide menu bar on Windows when fullscreen
-    if (process.platform === 'win32') {
-      mainWindow.setMenuBarVisibility(isFullscreen);
-    }
+    mainWindow.setMenuBarVisibility(true);
     
     return !isFullscreen;
   }
