@@ -1,0 +1,78 @@
+OSRBOT Link Third-Party Notices
+===============================
+
+OSRBOT Link contains OSRBOT proprietary code and third-party open-source
+components. This notice is provided for attribution and license compliance.
+
+The list below is a practical notice list for the desktop client. It should be
+reviewed before each public release, especially when dependencies change.
+
+Runtime and Framework Components
+--------------------------------
+
+Electron
+- Project: https://github.com/electron/electron
+- License: MIT
+- Used for the cross-platform desktop runtime.
+
+Node.js / Chromium components bundled by Electron
+- Licenses: multiple permissive and open-source licenses.
+- Electron release packages include their own Chromium and Electron license
+  files; preserve those files when redistributing packaged clients.
+
+node-hid
+- Project: https://github.com/node-hid/node-hid
+- License: BSD-style license for node-hid; it wraps HIDAPI.
+- Used for OSRBOT HID device enumeration and report writing.
+
+HIDAPI
+- Project: https://github.com/libusb/hidapi
+- License: HIDAPI is available under multiple license choices, including
+  BSD-style terms and GPL terms. OSRBOT Link should be distributed under a
+  permissive HIDAPI license path where applicable.
+
+Rust rdev
+- Project: https://github.com/rustdesk-org/rdev
+- Source reference: git revision f9b60b1dd0f3300a1b797d7a74c116683cd232c8
+- Used by the native input grabber module.
+- Before a closed-source public release, confirm the exact upstream license
+  terms for the pinned revision and preserve any required notices.
+
+Node.js Packages
+----------------
+
+The desktop package depends on npm packages including express, socket.io, ws,
+electron-builder, and their transitive dependencies. These dependencies are
+primarily permissive open-source packages such as MIT, ISC, BSD, and Apache-2.0
+licensed components.
+
+Before public release, generate or review dependency notices from:
+- apps/desktop/package-lock.json
+- package-lock.json
+- packaged Electron license files
+
+Design and Project References
+-----------------------------
+
+MotorBottle
+- GitHub: https://github.com/MotorBottle
+- Related client design and exploration references are acknowledged in the
+  OSRBOT Link documentation.
+
+Jackadminx/KVM-Card-Mini
+- Project: https://github.com/Jackadminx/KVM-Card-Mini
+- Acknowledged for original open-source work in the KVM direction.
+
+OSRBOT Contributors
+-------------------
+
+- https://github.com/sunmaxwll
+- https://github.com/dajianli
+- https://github.com/kitso666
+
+Notes
+-----
+
+This file is not legal advice. If OSRBOT Link is distributed commercially or as
+closed-source software, review all direct and transitive dependencies with a
+license-compliance process before release.

@@ -1,0 +1,19 @@
+OSRBOT LINK PROPRIETARY LICENSE
+
+Copyright (c) OSRBOT. All rights reserved.
+
+This repository contains proprietary OSRBOT Link source code, product assets,
+build scripts, and related documentation unless a file explicitly states
+otherwise.
+
+You may not copy, modify, publish, distribute, sublicense, sell, or use this
+source code or any substantial portion of it without prior written permission
+from OSRBOT.
+
+This license does not override third-party open-source licenses. Third-party
+components remain governed by their own license terms. See
+THIRD-PARTY-NOTICES.txt and docs/third-party-notices.md for attribution and
+license notes.
+
+OSRBOT Link release binaries may include open-source components. Their notices
+must be preserved when redistributing the binaries.
