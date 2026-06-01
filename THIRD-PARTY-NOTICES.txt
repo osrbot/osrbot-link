@@ -41,10 +41,10 @@ Rust rdev
 Node.js Packages
 ----------------
 
-The desktop package depends on npm packages including express, socket.io, ws,
-electron-builder, and their transitive dependencies. These dependencies are
-primarily permissive open-source packages such as MIT, ISC, BSD, and Apache-2.0
-licensed components.
+The desktop package currently uses node-hid at runtime and electron /
+electron-builder for desktop packaging, together with their transitive
+dependencies. These dependencies are primarily permissive open-source packages
+such as MIT, ISC, BSD, and Apache-2.0 licensed components.
 
 Before public release, generate or review dependency notices from:
 - apps/desktop/package-lock.json
