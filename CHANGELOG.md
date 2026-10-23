@@ -1,40 +1,55 @@
-# Changelog
+<img src="docs/images/osrbot-primary.png" alt="OSRBOT" width="240">
 
-## v0.7.0
+# Release notes
 
-OSRBOT Link Pro v0.7.0 focuses on LAN access, network sharing, diagnostics, and UI polish.
+[Product overview](README.md) · [中文产品说明](README_CN.md) · [Downloads](https://github.com/osrbot/osrbot-link/releases)
 
-### Added
+Lite and Pro are separate editions. The release pages provide downloads, complete notes and a Simplified Chinese section.
 
-- LAN browser control with WebRTC video transport.
-- One-time LAN pairing tokens with independent browser sessions.
-- Manual token generation for multiple LAN clients.
-- LAN browser page controls for fit, fill, and fullscreen display.
-- Network sharing panel for Windows and Linux.
-- Network adapter discovery with virtual-adapter prioritization rules.
-- Diagnostics panel covering HID, network sharing, LAN control, and video quality.
-- HID write self-test, network sharing self-test, and video capture quality diagnostics.
-- English and Chinese UI coverage improvements across menus, panels, status text, and LAN browser pages.
+## OSRBOT Link Lite v0.2
 
-### Changed
+Local keyboard and mouse sharing with optional capture-card preview, in a lightweight desktop client.
 
-- LAN access URLs no longer include the pairing token; users open the IP address and enter the token manually.
-- LAN display mode changes no longer rebuild the WebRTC connection.
-- WebRTC sender settings now prefer image detail and maintain resolution where supported.
-- Language switching now refreshes text in one synchronized pass to avoid staggered UI updates.
-- Select controls have been restyled to match the desktop UI more consistently.
-- Debian packaging is repaired after electron-builder output when the generated `.deb` is invalid.
+- Manual OSRBOT HID selection, reconnect and reset controls.
+- Computer absolute mouse mode and Android relative mouse mode.
+- Capture-device refresh, resolution and frame-rate selection, fit / fill / original scaling and fullscreen.
+- Screenshots, video recording, GIF recording and ASCII command paste.
+- Chinese and English interface; `Shift+Esc` releases control and exits fullscreen.
 
-### Fixed
+Lite does not include LAN control or network sharing. This release is currently marked as a preview.
 
-- LAN control preferred IP selection no longer defaults to common virtual adapters such as VirtualBox host-only addresses.
-- Several English-mode UI strings that still appeared in Chinese have been localized.
-- LAN browser layout no longer grows gradually as video metadata arrives.
-- The generated Linux `.deb` artifact is checked and rebuilt to avoid tiny invalid packages.
+[Download Lite and read the full notes](https://github.com/osrbot/osrbot-link/releases/tag/lite-v0.2.0)
 
-### Known Limitations
+## OSRBOT Link Pro v0.7.0
 
-- macOS Internet Sharing still needs to be configured manually in System Settings.
-- LAN browser control depends on local-network reachability, firewall rules, and browser WebRTC support.
-- Command paste is intended for ASCII terminal commands, not full clipboard synchronization.
-- Windows 7 is not a support target.
+LAN browser control and network-sharing tools, alongside local keyboard, mouse and video capture features.
+
+- WebRTC video and keyboard / mouse control from a browser on the LAN.
+- One-time pairing tokens, manual token generation and independent browser sessions.
+- Fit, fill and fullscreen browser display without rebuilding the video connection.
+- Network-sharing assistance for Windows and Linux, with adapter selection.
+- Diagnostics for HID input, network sharing, LAN access and video capture quality.
+- Improved LAN address selection, browser layout, Chinese / English text and language switching.
+
+macOS Internet Sharing requires manual setup. LAN access depends on network reachability, firewall rules and browser support. Command paste is ASCII-only; Windows 7 is not supported.
+
+[Download Pro and read the full notes](https://github.com/osrbot/osrbot-link/releases/tag/pro-v0.7.0)
+
+---
+
+<details>
+<summary>简体中文</summary>
+
+## 更新摘要
+
+**Lite v0.2**：本地键鼠共享与可选采集预览。支持手动选择、重连和重置 HID，电脑绝对模式与安卓相对模式，采集设备刷新、分辨率与帧率选择，适应 / 填满 / 原始尺寸 / 全屏，截图、录屏、GIF 和 ASCII 命令粘贴。支持中英文，`Shift+Esc` 统一释放控制并退出全屏。当前为预览版，不包含局域网控制和网络共享。
+
+**Pro v0.7.0**：在本地控制基础上增加 WebRTC 局域网浏览器控制、一次性配对码、多浏览器独立会话，以及 Windows / Linux 网络共享辅助。支持在不重新连接视频的情况下切换网页缩放与全屏，并提供 HID、网络、局域网与视频质量诊断。本版改善局域网地址选择、网页布局、中英文文案与语言切换体验。
+
+Pro 的 macOS 互联网共享需手动设置；局域网访问受网络、防火墙与浏览器支持情况影响。命令粘贴仅支持 ASCII，不支持 Windows 7。下载与完整说明见上方对应版本链接。
+
+</details>
+
+---
+
+[OSRBOT](https://www.osrbot.com) · [winter@osrbot.com](mailto:winter@osrbot.com)

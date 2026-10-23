@@ -1,160 +1,110 @@
+<img src="docs/images/osrbot-primary.png" alt="OSRBOT" width="240">
+
 # OSRBOT Link
 
-OSRBOT Link 是 OSRBOT 键盘鼠标共享器的跨平台桌面客户端，用于在一台主控电脑上控制另一台电脑、手机、平板或嵌入式设备。客户端的核心能力是键盘鼠标共享；当接入 USB 采集卡时，也可以在同一窗口内完成画面预览、全屏控制、截图、录屏和 GIF 录制。
+**Keyboard and mouse sharing. Optional video capture. One workspace.**
 
-![OSRBOT Link workflow](docs/images/osrbot-link-overview.svg)
+OSRBOT Link connects your computer to another computer, Android device or embedded system through OSRBOT sharing hardware. Use your existing keyboard and mouse to operate the connected device. Add a USB capture card to see its screen in the same window, or use input sharing on its own when the device already has a display.
 
-## 项目定位
+The controlled device does not need OSRBOT client software. Pro extends this workflow with LAN browser access and network sharing on supported host systems.
 
-OSRBOT Link 面向机器人调试、嵌入式设备维护、实验室设备运维、无头主机管理、多系统桌面切换等场景。它把键盘鼠标共享、可选视频预览和常用远端操作整合在一个客户端里，减少外设、显示器和采集软件之间反复切换的成本。
+**English** · [简体中文](README_CN.md) · [Downloads](#download) · [Get started](#get-started) · [Release notes](CHANGELOG.md)
 
-客户端支持两类工作方式：
+## Choose your edition
 
-- 纯键鼠共享：被控端本身有屏幕，或用户可以直接看到被控端画面时，只连接 OSRBOT 键盘鼠标共享器即可。
-- 视频预览控制：需要在主控端查看被控端画面时，同时连接 USB 采集卡，客户端会显示采集画面并在画面区域内完成控制。
-- 局域网浏览器控制：主控端开启局域网控制后，同一局域网内的浏览器可以通过一次性配对码访问主控端画面和键鼠控制能力。
-- 网络共享：在支持的平台上，可将主控端可联网的网卡共享给被控端连接的网口，让无网络的被控端通过主控端上网。
+Choose **Lite** for local USB control and video capture. Choose **Pro** when you also need browser access from another device on your LAN, or network-sharing assistance.
 
-## 主要功能
+| Capability | Lite | Pro |
+| --- | --- | --- |
+| OSRBOT keyboard and mouse sharing | Included | Included |
+| Use without a capture card | Included | Included |
+| Computer / Android mouse modes | Included | Included |
+| Video preview, scaling and fullscreen | Included | Included |
+| Screenshots, video and GIF recording | Included | Included |
+| ASCII command paste | Included | Included |
+| Chinese / English interface | Included | Included |
+| LAN browser control with WebRTC | Not included | Included |
+| Network-sharing configuration | Not included | Windows / Linux |
+| Network and LAN diagnostics | Not included | Included |
 
-- OSRBOT HID 键盘、鼠标输入转发。
-- 支持无采集卡的纯键鼠共享模式。
-- 支持 USB 采集卡视频预览。
-- 支持电脑和安卓两种目标设备模式。
-- 电脑模式使用绝对鼠标坐标，适合 Windows、macOS、Ubuntu 等桌面系统。
-- 安卓模式使用相对鼠标移动，适合安卓手机和平板。
-- 支持自适应、填满、原始三种画面缩放方式。
-- 支持全屏显示和侧栏隐藏，方便在小屏或采集画面场景下操作。
-- 支持截图、压缩录屏和 GIF 录制。
-- 支持终端命令粘贴，通过 HID 键盘逐字符输入常用命令文本。
-- 支持自定义采集分辨率，并显示实际协商到的采集参数。
-- 支持被控端显示切换快捷操作。
-- 支持中文和英文界面。
-- 支持明亮和深色皮肤。
-- 支持局域网 WebRTC 视频控制页面。
-- 支持一次性局域网配对码和多客户端配对。
-- 支持 Windows / Linux 网络共享配置辅助。
-- 支持诊断面板、HID 写入自检、网络共享自检和视频采集质量诊断。
+On macOS, Pro can list network adapters, but Internet Sharing must be configured manually in System Settings. Android mode controls an attached Android device; it is not a mobile client download.
 
-## 使用方式
+## Download
 
-### 键鼠共享
+**[Lite v0.2](https://github.com/osrbot/osrbot-link/releases/tag/lite-v0.2.0)** is currently a preview release. **[Pro v0.7.0](https://github.com/osrbot/osrbot-link/releases/tag/pro-v0.7.0)** is the available full-featured release. Check each release page for its system requirements and installation notes.
 
-1. 将 OSRBOT 键盘鼠标共享器连接到主控电脑。
-2. 在客户端左侧选择 HID 设备并连接。
-3. 点击右侧工作区或采集画面进入控制。
-4. 需要退出控制时：
-   - macOS 主控端使用 `Shift+Esc`。
-   - Windows / Linux 主控端可使用右 `Ctrl` 退出控制模式。
-   - `Shift+Esc` 会同时退出全屏和控制模式。
+| Host platform | Lite v0.2 | Pro v0.7.0 |
+| --- | --- | --- |
+| Windows x64 | [Portable](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-win-x64-portable.exe) · [Installer](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-win-x64.exe) | [Portable](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-win-x64-portable.exe) · [Installer](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-win-x64.exe) |
+| macOS | [Apple Silicon](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-mac-arm64.dmg) · [Intel](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-mac-x64.dmg) | [Apple Silicon](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-mac-arm64.dmg) · [Intel](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-mac-x64.dmg) |
+| Ubuntu x64 | [DEB](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-ubuntu-amd64.deb) · [AppImage](https://github.com/osrbot/osrbot-link/releases/download/lite-v0.2.0/OSRBOT-Link-Lite-v0.2-20261002-ubuntu-x86_64.AppImage) | [DEB](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-ubuntu-amd64.deb) · [AppImage](https://github.com/osrbot/osrbot-link/releases/download/pro-v0.7.0/OSRBOT-Link-Pro-v0.7.0-20260601-ubuntu-x86_64.AppImage) |
 
-纯键鼠共享不要求接入采集卡。被控端本身有屏幕时，可以只用共享器完成键盘鼠标控制。
+Windows packages target Windows 10 / 11. Lite requires WebView2 on Windows, macOS 12 or later on Mac, and Ubuntu 22.04 with compatible GTK / WebKitGTK libraries on Linux. Windows 7 is not supported. [Package and release guide](docs/release-strategy.md).
 
-### 视频预览
+## Built for hands-on work
 
-1. 将 USB 采集卡连接到主控电脑。
-2. 在客户端左侧选择视频设备、分辨率、FPS 和画面缩放方式。
-3. 点击开始视频。
-4. 在画面区域内点击进入控制。
+- **Device maintenance:** work with computers and embedded systems without moving a separate keyboard and mouse between devices.
+- **Robotics and lab work:** keep the target screen, terminal interaction and capture tools together during setup and troubleshooting.
+- **Screen capture:** select a capture card, resolution and frame rate; use fit, fill or original-size display, then take screenshots or record video and GIFs.
+- **Command entry:** send ASCII terminal commands through the keyboard-sharing hardware, with a preview and a stop control for long input.
+- **LAN access with Pro:** use another computer or tablet browser to access the host's capture preview and connected OSRBOT input hardware.
 
-如果采集卡没有按请求分辨率输出，客户端会显示实际协商到的采集参数。画面缩放只影响客户端显示方式，不改变采集卡自身输出。
+## Get started
 
-### 局域网控制
+### Connect your devices
 
-局域网控制适合在同一局域网内临时从另一台电脑或平板浏览器访问主控端。它不要求被控端安装软件，浏览器连接的是主控端客户端。
+| Connection | Purpose |
+| --- | --- |
+| Host computer → OSRBOT sharing hardware → controlled device | Keyboard and mouse input |
+| Controlled device video output → USB capture card → host computer | Optional screen preview |
+| Internet-connected host → Ethernet → controlled device | Optional network sharing in Pro |
 
-1. 在主控端客户端开启局域网控制。
-2. 将客户端显示的访问地址发送给同一局域网内的浏览器用户。
-3. 浏览器打开地址后，输入主控端显示的一次性配对码。
-4. 配对成功后，浏览器页面会通过 WebRTC 显示主控端采集画面，并通过主控端已连接的 OSRBOT HID 发送键鼠输入。
+Follow the hardware manual for the correct ports and cabling. Input sharing, video capture and network sharing are separate functions; each can be used independently.
 
-局域网控制使用一次性配对码。每个配对码只能成功使用一次，成功后客户端会自动生成新的配对码。需要多台设备同时连接时，可以点击“生成配对码”为下一台设备创建新的配对码。已连接的网页使用独立会话，关闭网页后会话失效。
+1. Connect the OSRBOT sharing hardware to the host computer and the controlled device.
+2. Open the client, select your OSRBOT HID device and connect. Device selection remains manual.
+3. If you need video, connect the capture card, select its resolution and frame rate, and start the preview separately.
+4. Click the workspace to begin control. Press `Shift+Esc` to release keyboard and mouse control and exit fullscreen.
 
-局域网网页提供适应、填满和全屏显示模式。显示模式只改变浏览器端画面缩放，不会重新建立 WebRTC 连接。
+### Choose a mouse mode
 
-### 网络共享
+**Computer** is the default. It uses absolute mouse positioning for desktop systems. **Android** uses relative mouse movement for Android phones and tablets; the pointer is captured while controlling the device. Use `Shift+Esc` when you need to return to the host.
 
-网络共享用于把主控端可访问外网的网络共享给被控端连接的有线网口。该功能与键鼠共享、视频采集相互独立，可以单独使用。
+### Access over the LAN with Pro
 
-1. 选择主控端可联网的外网网卡。
-2. 选择连接被控端的网卡。
-3. 确认两台设备已通过网线连接。
-4. 点击开启共享，并等待被控端获取 IP。
+1. Connect the HID hardware and start video preview on the host if needed, then enable LAN control.
+2. Open the displayed host address in a browser on the same reachable local network.
+3. Enter the one-time pairing token. Generate another token when pairing an additional browser.
 
-Windows 下通常需要以管理员权限运行客户端。Linux 下依赖 NetworkManager shared mode，可能需要系统授权。macOS 当前仅提供网卡检测和提示，系统“互联网共享”仍需在系统设置中手动开启。
+Each token can be used once. Browsers use independent sessions, and closing the page ends its session. Fit, fill and fullscreen change the browser's display without reconnecting the video session. Use this feature on a trusted local network; direct public-Internet access is not the intended setup.
 
-### 电脑与安卓模式
+### Share a network connection with Pro
 
-电脑模式是默认模式，适合桌面系统。它使用绝对鼠标坐标，非全屏时鼠标可以正常离开客户端窗口；再次控制时，重新点击工作区或采集画面即可。
+Select the host's Internet adapter and the adapter connected to the controlled device. Connect the Ethernet cable, then enable sharing. Adapter discovery does not require the cable to be connected.
 
-安卓模式适合安卓手机和平板。该模式使用相对鼠标移动，进入控制后需要使用退出快捷键离开控制模式。
+Windows may require administrator authorization. Linux sharing depends on NetworkManager and system permissions. On macOS, enable Internet Sharing manually in System Settings. This function provides connectivity; it does not carry OSRBOT keyboard and mouse input.
 
-### 命令粘贴
+## Before you start
 
-命令粘贴适合把主控端剪贴板中的终端命令发送到被控端。当前实现基于 HID 键盘逐字符输入，适合英文命令、数字、路径和常见 shell 符号。
+- **Hardware:** OSRBOT sharing hardware is required for keyboard and mouse control. A compatible USB capture card is optional. [Contact OSRBOT](mailto:winter@osrbot.com) for hardware purchases and compatibility questions.
+- **Capture quality:** available resolution and frame rate depend on the capture card, cable, USB connection and target video output. Scaling changes the displayed size, not the captured resolution or detail.
+- **Permissions:** allow camera or input access when the operating system requests it. Linux HID access may require the supplied permission rules and reconnecting the USB device.
+- **Application security:** Windows and macOS may display security prompts. Use the official downloads and check the installation notes for your edition; current macOS packages are not Developer ID signed or notarized.
+- **Command paste:** ASCII text only. It is not clipboard synchronization and does not transfer Chinese text, images or files.
+- **LAN access:** Pro requires network reachability, suitable firewall rules and browser WebRTC support. A successful USB connection does not establish a working LAN connection.
 
-当前限制：
+## Contributors and acknowledgements
 
-- 仅支持 ASCII 文本。
-- 不支持中文、图片、文件或完整剪贴板同步。
-- 长文本会被限制，发送前可预览，发送过程中可以停止。
+Co-authors: [dajianli](https://github.com/dajianli) and [sunmaxwll](https://github.com/sunmaxwll).
 
-完整剪贴板同步需要被控端 Agent 或额外数据通道配合，属于后续能力。
+Thanks to [kitso666](https://github.com/kitso666), [MotorBottle](https://github.com/MotorBottle), and the original [Jackadminx/KVM-Card-Mini](https://github.com/Jackadminx/KVM-Card-Mini) project for their contributions and inspiration.
 
-## 平台支持
+## Support and licensing
 
-- macOS
-- Windows 10 / 11
-- Ubuntu Linux
+For support, include your client edition, version, host operating system, connected hardware and a brief description of the issue. Remove passwords, pairing tokens and personal information from screenshots and logs before sharing them.
 
-不同系统对输入监听、摄像头、HID 访问和应用沙盒有不同权限要求。首次使用时，请根据系统提示授予相机、辅助功能、输入监听或 HID 设备访问权限。Ubuntu 用户可能需要安装 deb 包或按客户端提示配置 HID 访问权限。
+This repository provides product documentation and packaged client downloads. See the [license](LICENSE), [third-party notices](THIRD-PARTY-NOTICES.txt) and [attributions](docs/third-party-notices.md) for applicable terms. Third-party open-source components retain their original licenses.
 
-## 硬件
+---
 
-OSRBOT Link 配套 OSRBOT 键盘鼠标共享器使用。硬件连接、接口说明、典型使用方式和注意事项，请以 OSRBOT 官方产品说明书为准。
-
-如需购买 OSRBOT 键盘鼠标共享器硬件，请联系 OSRBOT。
-
-## 技术栈
-
-- Electron
-- HTML / CSS / JavaScript
-- Chromium MediaDevices API
-- WebRTC
-- node-hid / HIDAPI
-- Rust N-API 原生输入模块
-- NetworkManager / Windows ICS 辅助配置
-
-## 源码与许可证
-
-OSRBOT Link 的完整客户端源码、硬件协议实现、原生输入模块、网络共享实现和构建流程由 OSRBOT 私有维护。公开仓库主要用于产品介绍、文档、第三方声明和客户端 Release 下载。
-
-OSRBOT 自有代码为专有代码，未经 OSRBOT 书面许可，不得复制、修改、分发、再发布或用于商业派生项目。第三方开源组件仍遵循其原始许可证，相关说明见 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) 和 [docs/third-party-notices.md](docs/third-party-notices.md)。
-
-## 当前限制
-
-- Windows 7 暂不作为支持目标。
-- 命令粘贴不是完整剪贴板同步，当前仅用于常见终端命令输入。
-- USB 采集画质受采集卡、线材、被控端输出分辨率、系统缩放和采集参数共同影响。
-- Linux HID 权限依赖系统 udev、plugdev 和桌面环境策略，首次使用可能需要重新插拔设备或重新登录。
-- macOS 输入监听和辅助功能权限由系统控制，授权后可能需要重新启动客户端。
-- 局域网控制依赖同网段访问和浏览器 WebRTC 能力；网络隔离、防火墙或浏览器安全策略可能影响连接。
-- 当前 macOS 客户端不自动配置系统互联网共享。
-
-## Contributors
-
-- [sunmaxwll](https://github.com/sunmaxwll)
-- [dajianli](https://github.com/dajianli)
-- [kitso666](https://github.com/kitso666)
-
-## Thanks
-
-感谢 [MotorBottle](https://github.com/MotorBottle) 在相关客户端设计方向上的探索与参考。
-
-感谢 [Jackadminx/KVM-Card-Mini](https://github.com/Jackadminx/KVM-Card-Mini) 原始项目在 KVM 方向上的开源工作。
-
-## Source Availability
-
-This public repository is used for OSRBOT Link product information,
-documentation, release notes, and packaged client downloads. The complete
-application source code is maintained privately by OSRBOT.
+[OSRBOT](https://www.osrbot.com) · Hardware & support: [winter@osrbot.com](mailto:winter@osrbot.com)
