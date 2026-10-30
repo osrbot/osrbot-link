@@ -4,7 +4,7 @@
 
 ## Installation
 
-Download a client package from the [official releases](https://github.com/osrbot/osrbot-link/releases). Confirm the control computer's platform and CPU. Hashes and exact sizes are provided in `SHA256SUMS.txt`. Complete wiring and operating instructions are in the [English product manual](manual/OSRBOT_Link_Product_Manual_EN_v1.0.pdf).
+Download a client package from the [official releases](https://github.com/osrbot/osrbot-link/releases). Confirm the control computer's platform and CPU. Hashes and exact sizes are provided in `SHA256SUMS.txt`.
 
 ### Windows
 

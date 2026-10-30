@@ -4,7 +4,7 @@
 
 ## 安装
 
-从[官方发布页](https://github.com/osrbot/osrbot-link/releases)下载对应客户端。确认主控端的系统与处理器类型；`SHA256SUMS.txt` 提供校验值和准确文件大小。完整接线和操作说明见[中文产品手册](manual/OSRBOT_Link_Product_Manual_CN_v1.0.pdf)。
+从[官方发布页](https://github.com/osrbot/osrbot-link/releases)下载对应客户端。确认主控端的系统与处理器类型；`SHA256SUMS.txt` 提供校验值和准确文件大小。
 
 ### Windows
 

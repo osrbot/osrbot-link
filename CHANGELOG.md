@@ -18,11 +18,20 @@ Local USB keyboard and mouse control, optional video capture, trusted-LAN browse
 
 LAN streaming keeps the selected quality profile during idle periods; actual performance still depends on hardware and the network.
 
+### Fixes in the current 1.0.0 download
+
+- Capture exports are saved in order so overlapping saves do not discard recordings.
+- Linux can recognize and disable active network sharing even when the Internet connection is unavailable or changes.
+- Small wheel and touchpad scroll movements are preserved in LAN browser control.
+- Browser input now forwards additional keys, including Num Lock, the context-menu key and F13-F24.
+
 [Full release notes and installation reminders](docs/releases/v1.0.0.md) · [中文更新说明](docs/releases/v1.0.0_CN.md)
 
 ## 简体中文
 
 1.0.0 支持本地键鼠共享、可选视频采集、局域网 WebRTC 控制与独立网络共享，提供可拖动工具栏、跟随系统外观、时间戳文件名、快捷粘贴与本地诊断日志。局域网串流在空闲期间保持所选画质模式。
+
+当前 1.0.0 下载已修复录制文件重叠保存丢失、Linux 断网后共享状态识别与关闭、局域网小幅滚动丢失及扩展按键转发问题。
 
 ## Licensing records
 
