@@ -16,6 +16,7 @@ const files = walk(out);
 const documents = new Map();
 for (const file of files) {
   assert.ok(!/\.(?:pdf|docx|exe|dmg|deb|AppImage|map)$/i.test(file), `Unexpected delivery file: ${file}`);
+  assert.ok(!/\.(?:woff2?|ttf|otf|eot)$/i.test(file), `Bundled font in system-font site: ${file}`);
   if (file.endsWith('.html')) documents.set(base + relative(out, file), load(readFileSync(file, 'utf8')));
 }
 assert.equal(documents.size, 17, 'Expected 16 bilingual pages plus the 404 page');
@@ -36,6 +37,7 @@ function checkURL(value, pageURL, anchor = false) {
   checked++;
 }
 for (const [path, $] of documents) {
+  assert.equal($('link[as="font"]').length, 0, `Font preload in system-font site: ${path}`);
   $('a[href], link[href], script[src], img[src]').each((_, element) => {
     checkURL($(element).attr('href') || $(element).attr('src'), origin + path, element.tagName === 'a');
   });
@@ -45,7 +47,9 @@ for (const [path, $] of documents) {
   }
 }
 for (const file of files.filter(file => file.endsWith('.css'))) {
-  for (const match of readFileSync(file, 'utf8').matchAll(/url\(\s*['"]?([^'"\s)]+)['"]?\s*\)/g)) {
+  const css = readFileSync(file, 'utf8');
+  assert.ok(!/@font-face\b/i.test(css), `Web font declaration in system-font site: ${file}`);
+  for (const match of css.matchAll(/url\(\s*['"]?([^'"\s)]+)['"]?\s*\)/g)) {
     checkURL(match[1], origin + base + relative(out, file));
   }
 }

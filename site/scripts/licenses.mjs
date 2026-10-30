@@ -7,7 +7,7 @@ const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'));
 const notices = ['OSRBOT Link Online Manual - Third-Party Notices',
   'The following packages are used by the website or its build tools.',
   'OSRBOT product text and artwork remain governed by the repository license.',
-  'Font licenses are provided separately under brand/fonts/.'];
+  'The website uses system fonts; no font files are distributed.'];
 let count = 0;
 for (const path of Object.keys(lock.packages).filter(Boolean).sort()) {
   const dir = join(root, path);

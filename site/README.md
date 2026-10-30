@@ -1,6 +1,8 @@
 # OSRBOT Link Online Manual
 
-Bilingual product manual using OSRBOT Design 1.4.4.
+Bilingual product manual using the OSRBOT Design 1.4.4 colors, layout and artwork.
+Body text and headings use system fonts for fast reading without font downloads.
+The approved outlined logo is unchanged and does not require a font file.
 
 [English](https://osrbot.github.io/osrbot-link/) · [简体中文](https://osrbot.github.io/osrbot-link/zh/)
 
@@ -16,7 +18,7 @@ supports local previews. `OSRBOT_SITE_OUT` can override the build output directo
 
 The `Deploy product manual` workflow builds changes to `site/` on `main` and
 deploys only the static output to GitHub Pages. The build includes notices for
-third-party packages and the original font licenses. Do not expose a development
-server as the public site.
+third-party packages and checks that no font files, font preloads or web-font
+declarations are included. Do not expose a development server as the public site.
 
 No PDF manuals, client source, firmware or installation packages belong here.
