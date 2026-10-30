@@ -1,29 +1,13 @@
-# Third-Party Notices
+# Third-party notices
 
-OSRBOT Link contains OSRBOT proprietary code and third-party open-source
-components. Third-party components remain governed by their own licenses.
+OSRBOT Link contains OSRBOT code and third-party components. Each third-party component remains governed by its own license.
 
-## Electron-KVM-rdev Client Reference
+## OSRBOT Link 1.0
 
-The initial macOS desktop test client under `apps/desktop` was informed by a reviewed third-party Electron KVM client source archive provided for this project evaluation.
+The [complete notice file](../THIRD-PARTY-NOTICES.txt) includes the Go runtime, Wails, native HID components, WebRTC transport and supporting modules, and Lucide action icons. The same notices are accessible from the application's About panel.
 
-The upstream package metadata declares:
+Native HID uses go-hid and the BSD license option of HIDAPI. Linux packages include replaceable GTK, WebKitGTK 4.1 and GStreamer shared libraries; host graphics, session and USB libraries remain system-provided. Windows uses the system WebView2 Runtime; macOS uses the system WebKit framework.
 
-- License: MIT
-- Original author metadata: MotorBottle
-- Original homepage metadata: `https://github.com/MotorBottle/USB-KVM-Electron`
+The Linux runtime's exact component versions, checksums, upstream source references and per-package copyright/license texts are included in each package. In an extracted AppImage, see `runtime-manifest.json` and `usr/share/doc/osrbot-link-runtime/`; the DEB stores the same runtime under `/opt/osrbot-link/`. These libraries retain their upstream terms. They are not installed into the system library directories.
 
-Applicable MIT license notices should be preserved where source or substantial
-derived portions are redistributed.
-
-## KVM-Card-Mini Reference
-
-- Project: `https://github.com/Jackadminx/KVM-Card-Mini`
-- Acknowledged for original open-source work in the KVM direction.
-
-## Dependency Notices
-
-Packaged clients include Electron, Chromium/Node.js components, node-hid,
-HIDAPI, Rust crates, npm packages, and related transitive dependencies. Public
-binary releases should include `THIRD-PARTY-NOTICES.txt` and preserve bundled
-Electron/Chromium license files.
+The approved OSRBOT brand assets remain OSRBOT assets.
