@@ -1,6 +1,6 @@
 # OSRBOT Link 键盘鼠标共享器
 
-[English](README.md) · **[软件下载](https://github.com/osrbot/osrbot-link/releases)**
+[English](README.md) · [产品手册](https://osrbot.github.io/osrbot-link/zh/) · **[软件下载](https://github.com/osrbot/osrbot-link/releases)**
 
 OSRBOT Link 让你用自己电脑的键盘和鼠标，操作另一台电脑、开发板或工控设备，方便调试、维护和教学演示。
 

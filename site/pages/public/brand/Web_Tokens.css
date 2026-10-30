@@ -1,0 +1,28 @@
+/* Generated from Brand_Tokens.json.web; edit tokens, then regenerate. */
+:root{
+  --web-color-body:#101820;
+  --web-color-heading:#0076DF;
+  --web-color-supporting:#354551;
+  --web-color-background:#FFFFFF;
+  --web-color-panel:#F3F6F8;
+  --web-color-border:#BFC9CF;
+  --web-body-px:16px;
+  --web-small-px:14px;
+  --web-content-max-px:1120px;
+  --web-gutter-px:24px;
+  --web-gutter-mobile-px:16px;
+  --web-breakpoint-px:700px;
+  --web-icon-px:24px;
+  --web-icon-min-px:20px;
+  --web-icon-stroke-px:2px;
+  --web-control-min-px:44px;
+  --web-logo-width-px:224px;
+  --web-logo-mobile-width-px:200px;
+  --web-symbol-box-px:64px;
+  --web-body-line-height:1.7;
+  --web-reading-max:76ch;
+  --web-h1:2.5rem;
+  --web-h2:1.75rem;
+  --web-h3:1.375rem;
+  --web-h4:1.125rem;
+}

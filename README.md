@@ -1,6 +1,6 @@
 # OSRBOT Link Keyboard and Mouse Sharing Device
 
-[简体中文](README_CN.md) · **[Download](https://github.com/osrbot/osrbot-link/releases)**
+[简体中文](README_CN.md) · [Product manual](https://osrbot.github.io/osrbot-link/) · **[Download](https://github.com/osrbot/osrbot-link/releases)**
 
 OSRBOT Link lets you use your computer's keyboard and mouse to operate another computer, development board or industrial device for debugging, maintenance and teaching.
 
