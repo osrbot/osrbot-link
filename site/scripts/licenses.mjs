@@ -25,6 +25,10 @@ for (const path of Object.keys(lock.packages).filter(Boolean).sort()) {
     else if (pkg.name.startsWith('@esbuild/')) fallback = 'node_modules/esbuild/LICENSE.md';
     else if (pkg.name.startsWith('@rollup/')) fallback = 'node_modules/rollup/LICENSE.md';
     else if (pkg.name === 'boolbase') fallback = 'scripts/licenses/boolbase-ISC.txt';
+    else if (pkg.name === '@napi-rs/lzma-linux-x64-gnu' && pkg.license === 'MIT') {
+      // Rollup's Linux cross-build helper is not bundled into the website.
+      notices.push('Build-tool dependency only; no package code is distributed by this static site. The upstream npm package declares MIT but includes no license file. Source: https://github.com/Brooooooklyn/lzma');
+    }
     else if (pkg.license === 'CC0-1.0') notices.push('Public domain dedication: https://creativecommons.org/publicdomain/zero/1.0/');
     else assert.fail(`Missing license text: ${pkg.name}`);
     if (fallback) notices.push(readFileSync(join(root, fallback), 'utf8').trim());
@@ -32,4 +36,4 @@ for (const path of Object.keys(lock.packages).filter(Boolean).sort()) {
   count++;
 }
 writeFileSync(join(root, 'pages/public/third-party-notices.txt'), notices.join('\n') + '\n');
-console.log(`Included license texts for ${count} installed packages.`);
+console.log(`Included dependency notices and available license texts for ${count} installed packages.`);
