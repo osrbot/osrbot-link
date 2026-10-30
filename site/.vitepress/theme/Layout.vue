@@ -11,6 +11,7 @@ const viewer = ref(null);
 const current = ref({ src: '', alt: '' });
 const zoomed = ref(false);
 let origin = null;
+let imageRequest = 0;
 
 function openImage(event) {
   const button = event.target.closest?.('.manual-image');
@@ -18,12 +19,22 @@ function openImage(event) {
   const image = button.querySelector('img');
   if (!image) return;
   origin = button;
-  current.value = { src: image.currentSrc || image.src, alt: image.alt, width: image.naturalWidth };
+  const request = ++imageRequest;
+  const preview = image.currentSrc || image.src;
+  current.value = { src: preview, alt: image.alt, width: Number(image.dataset.fullWidth) || image.naturalWidth };
   zoomed.value = false;
   viewer.value.showModal();
+  // Keep the preview visible while the original loads, only after an explicit click.
+  if (image.dataset.fullSrc) {
+    const original = new Image();
+    original.onload = () => {
+      if (request === imageRequest && viewer.value?.open) current.value = { ...current.value, src: original.src, width: original.naturalWidth };
+    };
+    original.src = image.dataset.fullSrc;
+  }
 }
 function closeImage() { viewer.value?.close(); }
-function restoreFocus() { origin?.focus({ preventScroll: true }); }
+function restoreFocus() { imageRequest++; current.value = { src: '', alt: '' }; origin?.focus({ preventScroll: true }); }
 async function preparePage() {
   await nextTick();
   const main = document.querySelector('#VPContent');
@@ -53,7 +64,7 @@ async function preparePage() {
 }
 watch(() => route.path, () => { closeImage(); preparePage(); });
 onMounted(() => { preparePage(); document.addEventListener('click', openImage); });
-onUnmounted(() => document.removeEventListener('click', openImage));
+onUnmounted(() => { imageRequest++; document.removeEventListener('click', openImage); });
 </script>
 
 <template>

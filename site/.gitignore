@@ -1,5 +1,7 @@
 node_modules/
 .vitepress/cache/
 .vitepress/dist/
+.vitepress/image-manifest.json
 *.log
 pages/public/third-party-notices.txt
+pages/public/manual/previews/

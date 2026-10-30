@@ -41,6 +41,22 @@ for (const [path, $] of documents) {
   $('a[href], link[href], script[src], img[src]').each((_, element) => {
     checkURL($(element).attr('href') || $(element).attr('src'), origin + path, element.tagName === 'a');
   });
+  $('.vp-doc figure img').each((_, element) => {
+    const image = $(element);
+    assert.ok(Number(image.attr('width')) > 0 && Number(image.attr('height')) > 0, `Image has no intrinsic size: ${path}`);
+    assert.ok(['eager', 'lazy'].includes(image.attr('loading')), `Missing image loading policy: ${path}`);
+    assert.ok(image.attr('data-full-src'), `Missing original image: ${path}`);
+    checkURL(image.attr('data-full-src'), origin + path);
+    if (image.attr('srcset')) {
+      assert.ok(image.attr('sizes'), `Responsive image has no sizes: ${path}`);
+      assert.ok(image.attr('src').endsWith('.webp'), `Responsive fallback is not a preview: ${path}`);
+      for (const source of image.attr('srcset').split(',')) {
+        const [url, width] = source.trim().split(/\s+/);
+        assert.match(width, /^\d+w$/);
+        checkURL(url, origin + path);
+      }
+    }
+  });
   if (!path.endsWith('/404.html')) {
     assert.equal($('.vp-doc h1').length, 1, `Incorrect page heading: ${path}`);
     assert.ok(!$('.vp-doc').text().includes('功能未启用'), `Internal figure note: ${path}`);

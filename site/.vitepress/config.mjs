@@ -1,4 +1,8 @@
 import { defineConfig } from 'vitepress';
+import { readFileSync } from 'node:fs';
+import { responsiveImages } from '../scripts/responsive-images.mjs';
+
+const images = JSON.parse(readFileSync(new URL('./image-manifest.json', import.meta.url), 'utf8'));
 
 const release = 'https://github.com/osrbot/osrbot-link/releases';
 const base = process.env.OSRBOT_SITE_BASE || '/';
@@ -71,5 +75,8 @@ export default defineConfig({
       },
     },
   },
-  markdown: { image: { lazyLoading: true } },
+  markdown: {
+    image: { lazyLoading: true },
+    config(md) { responsiveImages(md, images, base); },
+  },
 });

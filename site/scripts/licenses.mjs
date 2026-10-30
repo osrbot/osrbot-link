@@ -25,6 +25,9 @@ for (const path of Object.keys(lock.packages).filter(Boolean).sort()) {
     else if (pkg.name.startsWith('@esbuild/')) fallback = 'node_modules/esbuild/LICENSE.md';
     else if (pkg.name.startsWith('@rollup/')) fallback = 'node_modules/rollup/LICENSE.md';
     else if (pkg.name === 'boolbase') fallback = 'scripts/licenses/boolbase-ISC.txt';
+    else if (pkg.name.startsWith('@img/sharp-libvips-') && pkg.license === 'LGPL-3.0-or-later') {
+      notices.push('Image build tool only; libvips and its native dependencies are not distributed by this static site. Source and license information: https://github.com/lovell/sharp-libvips and https://www.libvips.org/');
+    }
     else if (pkg.name === '@napi-rs/lzma-linux-x64-gnu' && pkg.license === 'MIT') {
       // Rollup's Linux cross-build helper is not bundled into the website.
       notices.push('Build-tool dependency only; no package code is distributed by this static site. The upstream npm package declares MIT but includes no license file. Source: https://github.com/Brooooooklyn/lzma');

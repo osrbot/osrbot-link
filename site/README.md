@@ -9,12 +9,20 @@ The approved outlined logo is unchanged and does not require a font file.
 - `pages/`: English and Simplified Chinese reading pages.
 - `pages/public/`: approved product images, localized screenshots and brand assets.
 - `.vitepress/`: navigation, search, theme and responsive reading layout.
-- `scripts/`: third-party notices and static build checks.
+- `scripts/`: responsive image generation, third-party notices and static build checks.
 
 Use Node.js 24. Run `npm ci`, then `npm run dev` for a localhost-only preview.
 Use `npm run build` and `npm run check` to validate a static site. Set
 `OSRBOT_SITE_BASE=/osrbot-link/` when building for GitHub Pages; the default `/`
 supports local previews. `OSRBOT_SITE_OUT` can override the build output directory.
+
+Build and dev commands generate width-specific WebP previews from the approved
+PNG originals. Product photos use quality 84; annotated figures and screenshots
+use lossless WebP encoding after resizing. Small diagrams and QR codes are not
+re-encoded. Generated previews and metadata are ignored by Git and reproducible
+with `npm run images`; no original is overwritten. Pages include intrinsic image
+dimensions and responsive sources. The image viewer fetches the full original
+only when opened, keeping the preview visible while it loads.
 
 The `Deploy product manual` workflow builds changes to `site/` on `main` and
 deploys only the static output to GitHub Pages. The build includes notices for
