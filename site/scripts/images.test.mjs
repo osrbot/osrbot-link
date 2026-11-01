@@ -34,6 +34,13 @@ test('original image URLs respect root and GitHub Pages deployments', () => {
   }
 });
 
+test('responsive sizes preserve the wide reading column and delayed outline', () => {
+  const sizes = render()('img').attr('sizes');
+  assert.match(sizes, /\(max-width: 1439px\) min\(800px, calc\(100vw - 392px\)\)/);
+  assert.ok(sizes.endsWith('min(800px, calc(100vw - 648px))'));
+  assert.ok(!sizes.includes('472px'), 'Do not retain the former squeezed desktop width');
+});
+
 test('first image is eager; subsequent images are lazy independently per page', () => {
   let process;
   responsiveImages({ core: { ruler: { push: (_, fn) => { process = fn; } } } }, manifest, '/');

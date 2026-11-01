@@ -4,6 +4,11 @@ Bilingual product manual using the OSRBOT Design 1.4.4 colors, layout and artwor
 Body text and headings use system fonts for fast reading without font downloads.
 The approved outlined logo is unchanged and does not require a font file.
 
+The navigation shell is capped at 1568px, separately from the 1120px document
+region and 800px reading column. The right outline appears from 1440px; smaller
+viewports keep its dropdown instead of squeezing the article. Keep image `sizes`
+in sync with these breakpoints. Do not apply the document limit to the whole shell.
+
 [English](https://osrbot.github.io/osrbot-link/) · [简体中文](https://osrbot.github.io/osrbot-link/zh/)
 
 - `pages/`: English and Simplified Chinese reading pages.

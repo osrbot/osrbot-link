@@ -14,7 +14,8 @@
   --vp-c-divider: #dbe1e5;
   --vp-c-gutter: #dbe1e5;
   --vp-nav-height: 96px;
-  --vp-layout-max-width: 1120px;
+  /* The shell includes navigation; the document keeps its own reading width. */
+  --vp-layout-max-width: min(100vw, 1568px);
   --vp-sidebar-width: 264px;
   --vp-code-color: #101820;
 }
@@ -42,7 +43,7 @@ button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
 .VPSidebarItem.is-active > .item .link { border-left-color: #0076df; background: #e8ecef; }
 .VPSidebarItem.is-active > .item .text { color: #101820 !important; font-weight: 600; }
 .VPDoc .content { min-width: 0; padding-left: 32px; padding-right: 32px; }
-.VPDoc .content-container { max-width: 76ch !important; }
+.VPDoc .content-container { max-width: 800px !important; }
 .VPDoc .container { max-width: 1120px !important; }
 .VPDocAsideOutline .outline-title { font-size: 14px; }
 .VPDocAsideOutline .outline-link { min-height: 32px; font-size: 14px; white-space: normal; line-height: 1.7; padding-top: 4px; padding-bottom: 4px; }
@@ -100,6 +101,10 @@ button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
 @media (min-width: 960px) {
   .VPSidebar { padding-top: calc(var(--vp-nav-height) + 32px) !important; }
   .VPSidebar .curtain { top: calc(var(--vp-nav-height) * -1) !important; }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .VPDoc.has-sidebar .aside { display: none; }
+  .VPLocalNav.has-sidebar:not(.empty) { display: block; }
 }
 @media (max-width: 959px) { .VPDoc .content { padding-left: 0; padding-right: 0; } .VPDoc .content-container { margin: 0 auto; } }
 @media (max-width: 700px) {

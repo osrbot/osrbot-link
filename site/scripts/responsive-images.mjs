@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { load } from 'cheerio';
 
-// Match VitePress's sidebar/outline breakpoints and the custom document padding.
-const sizes = '(max-width: 700px) calc(100vw - 32px), (max-width: 767px) min(76ch, calc(100vw - 48px)), (max-width: 959px) min(76ch, calc(100vw - 64px)), (max-width: 1279px) min(76ch, calc(100vw - 392px)), (max-width: 1439px) min(76ch, calc(100vw - 648px)), 472px';
+// Match the 800px reading column, 264px sidebar and 1440px outline breakpoint.
+const sizes = '(max-width: 700px) calc(100vw - 32px), (max-width: 767px) min(800px, calc(100vw - 48px)), (max-width: 959px) min(800px, calc(100vw - 64px)), (max-width: 1439px) min(800px, calc(100vw - 392px)), min(800px, calc(100vw - 648px))';
 
 export function responsiveFigure(html, manifest, base, firstImage = false) {
   if (!html.includes('<figure')) return html;
