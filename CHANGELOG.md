@@ -2,6 +2,15 @@
 
 [Product overview](README.md) · [简体中文](README_CN.md) · [Downloads](https://github.com/osrbot/osrbot-link/releases)
 
+## OSRBOT Link 1.0.1
+
+- Restarting LAN control invalidates pending connections from the previous session.
+- Revoking control releases a remote drag without releasing locally held mouse buttons.
+- Relative pointer movements within one frame are combined; stale movement is dropped after congestion.
+- Updated Wails, Go and Gorilla WebSocket to include upstream security fixes.
+
+[Downloads / 下载](https://github.com/osrbot/osrbot-link/releases/tag/v1.0.1)
+
 ## OSRBOT Link 1.0.0
 
 Local USB keyboard and mouse control, optional video capture, trusted-LAN browser access and network sharing on supported systems.
